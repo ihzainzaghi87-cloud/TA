@@ -39,6 +39,37 @@
 
     <!-- Form Card -->
     <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden">
+        <!-- Current Images Section -->
+        @if($product->images->count() > 0)
+        <div class="border-b border-gray-200 dark:border-gray-700 pb-6">
+            <h2 class="text-xl font-bold text-gray-900 dark:text-gray-100 mb-4">Current Images</h2>
+            
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                @foreach($product->images as $image)
+                <div class="relative group">
+                    <img src="{{ asset('storage/' . $image->image) }}" 
+                            alt="Product Image" 
+                            class="w-full h-full object-cover rounded-lg">
+                    @can('products.destroy-image')
+                    <form action="{{ route('admin.products.destroyImage', $image) }}" 
+                            method="POST" 
+                            onsubmit="return confirm('Delete this image?');"
+                            class="absolute top-2 right-2">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" 
+                                class="bg-red-500 hover:bg-red-600 text-white p-2 rounded-lg shadow-lg opacity-0 group-hover:opacity-100 transition-opacity">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                            </svg>
+                        </button>
+                    </form>
+                    @endcan
+                </div>
+                @endforeach
+            </div>
+        </div>
+        @endif
         <form action="{{ route('admin.products.update', $product) }}" method="POST" enctype="multipart/form-data">
             @csrf
             @method('PUT')
@@ -145,38 +176,6 @@
                         </div>
                     </div>
                 </div>
-
-                <!-- Current Images Section -->
-                @if($product->images->count() > 0)
-                <div class="border-b border-gray-200 dark:border-gray-700 pb-6">
-                    <h2 class="text-xl font-bold text-gray-900 dark:text-gray-100 mb-4">Current Images</h2>
-                    
-                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-                        @foreach($product->images as $image)
-                        <div class="relative group">
-                            <img src="{{ asset('storage/' . $image->image) }}" 
-                                 alt="Product Image" 
-                                 class="w-full h-32 object-cover rounded-lg">
-                            @can('products.destroy-image')
-                            <form action="{{ route('admin.products.destroyImage', $image) }}" 
-                                  method="POST" 
-                                  onsubmit="return confirm('Delete this image?');"
-                                  class="absolute top-2 right-2">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" 
-                                        class="bg-red-500 hover:bg-red-600 text-white p-2 rounded-lg shadow-lg opacity-0 group-hover:opacity-100 transition-opacity">
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
-                                    </svg>
-                                </button>
-                            </form>
-                            @endcan
-                        </div>
-                        @endforeach
-                    </div>
-                </div>
-                @endif
 
                 <!-- Add New Images Section -->
                 <div class="border-b border-gray-200 dark:border-gray-700 pb-6">
