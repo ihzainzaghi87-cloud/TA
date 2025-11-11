@@ -23,7 +23,7 @@ class ProductController extends Controller implements HasMiddleware
             // Lihat daftar & detail produk
             (new ControllerMiddleware('permission:products.index|products.view'))->only(['index', 'show']),
             
-            // Buat produk baru
+            // Buat products baru
             (new ControllerMiddleware('permission:products.create'))->only(['create', 'store']),
             
             // Edit produk
