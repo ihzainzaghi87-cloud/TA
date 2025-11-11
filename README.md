@@ -1,224 +1,61 @@
-# Laravel Role & Permission Starter Kit
+<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
 
-<div align="center">
+<p align="center">
+<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
+<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
+<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
+<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
+</p>
 
-![Laravel](https://img.shields.io/badge/Laravel-10.x-FF2D20?style=for-the-badge&logo=laravel&logoColor=white)
-![PHP](https://img.shields.io/badge/PHP-8.1+-777BB4?style=for-the-badge&logo=php&logoColor=white)
-![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-3.0-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)
-![Alpine.js](https://img.shields.io/badge/Alpine.js-3.x-8BC34A?style=for-the-badge&logo=alpine.js&logoColor=white)
-![License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)
+## About Laravel
 
-**A modern, feature-rich role and permission management system for Laravel applications with beautiful UI and comprehensive admin panel**
+Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
 
+- [Simple, fast routing engine](https://laravel.com/docs/routing).
+- [Powerful dependency injection container](https://laravel.com/docs/container).
+- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
+- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
+- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
+- [Robust background job processing](https://laravel.com/docs/queues).
+- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
 
+Laravel is accessible, powerful, and provides tools required for large, robust applications.
 
-</div>
+## Learning Laravel
 
----
+Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
 
-## ✨ Features
+You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
 
-### 🎯 **Core Functionality**
-- **Complete Role Management** - Create, edit, and manage user roles with ease
-- **Advanced Permission System** - Fine-grained permission control with role-based and direct user permissions
-- **User Management** - Comprehensive user administration with role assignments
-- **Authentication System** - Secure login/register with password reset functionality
+If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
 
-### 🎨 **Modern UI/UX**
-- **🌓 Dark/Light Mode** - Automatic theme detection with manual toggle
-- **📱 Fully Responsive** - Mobile-first design that works on all devices
-- **🎭 Beautiful Interface** - Modern design with Tailwind CSS and smooth animations
-- **⚡ Interactive Elements** - Alpine.js powered components for enhanced user experience
+## Laravel Sponsors
 
-### 🔐 **Security Features**
-- **Laravel Sanctum Integration** - API authentication ready
-- **Spatie Permission Package** - Industry-standard permission management
-- **Middleware Protection** - Route protection with role and permission checks
-- **Secure Password Handling** - Bcrypt encryption with password strength requirements
+We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
 
-### 🛠️ **Admin Panel Features**
-- **Dashboard Analytics** - User and system statistics
-- **Bulk Operations** - Mass user management capabilities
-- **Search & Filtering** - Advanced search across all entities
+### Premium Partners
 
----
+- **[Vehikl](https://vehikl.com)**
+- **[Tighten Co.](https://tighten.co)**
+- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
+- **[64 Robots](https://64robots.com)**
+- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
+- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
+- **[Redberry](https://redberry.international/laravel-development)**
+- **[Active Logic](https://activelogic.com)**
 
-## 🖼️ Screenshots
+## Contributing
 
-<div align="center">
+Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
 
-### 🌟 Dashboard Overview
-![Dashboard](https://i.imgur.com/6d76UVg.png)
+## Code of Conduct
 
-### 👥 User Management
-![User Management](https://i.imgur.com/5as4h5t.png)
+In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
 
-### 🛡️ Role & Permission System
-![Roles](https://i.imgur.com/warINbH.png)
-![permissions](https://i.imgur.com/HGdul72.png)
+## Security Vulnerabilities
 
-### 🌓 Dark Mode Support
-![Dark Mode](https://i.imgur.com/A8YvYmv.png)
-![Dark Mode](https://i.imgur.com/Z5EHFIl.png)
+If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
 
-</div>
+## License
 
----
-
-## ⚡ Installation
-
-### 📋 Prerequisites
-- PHP 8.1 or higher
-- Laravel 12.x
-- Composer
-
-### 🚀 Quick Start
-
-1. **Clone the repository**
-   ```bash
-   git clone https://github.com/IlyasBudi/Laravel-RolePermission.git
-   cd Laravel-RolePermission
-2. **Install dependencies**
-   ```bash
-   # Install PHP dependencies
-   composer install
-3. **Environment setup**
-   ```bash
-   # Copy environment file
-   cp .env.example .env
-   
-   # Generate application key
-   php artisan key:generate
-4. **Database configuration**
-   ```bash
-   # Update .env with your database credentials
-   DB_CONNECTION=mysql
-   DB_HOST=127.0.0.1
-   DB_PORT=3306
-   DB_DATABASE=laravel
-   DB_USERNAME=your_username
-   DB_PASSWORD=your_password
-5. **Run migrations and seeders**
-   ```bash
-   # Run migrations
-   php artisan migrate
-   
-   # Seed the database with sample data
-   php artisan db:seed
-6. Start the application
-   ```bash
-   php artisan serve
-7. Access the application
-- URL: http://localhost:8000
-- Default Admin: admin@example.com / password
-
-## 📖Usage Guide
-### 🎯 Basic Usage
-
-- **Controller Directives**
-   ```bash
-   public static function middleware(): array
-    {
-        return [
-            // Always need to login
-            new ControllerMiddleware('auth'),
-
-            // List roles
-            (new ControllerMiddleware('permission:roles.index|roles.view'))->only(['index']),
-
-            // Form create + store
-            (new ControllerMiddleware('permission:roles.create'))->only(['create','store']),
-
-            // Form edit + update nama role
-            (new ControllerMiddleware('permission:roles.update'))->only(['edit','update']),
-
-            // Destroy role
-            (new ControllerMiddleware('permission:roles.delete'))->only(['destroy']),
-
-            // Synchronize permissions to roles
-            (new ControllerMiddleware('permission:roles.sync-permissions|roles.update'))->only(['syncPermissions']),
-        ];
-    }
-
-- **Blade Directives**
-   ```bash
-   {{-- Check roles in views --}}
-   @role('admin')
-       <p>You are an admin!</p>
-   @endrole
-   
-   {{-- Check permissions in views --}}
-   @can('edit posts')
-       <a href="{{ route('posts.edit', $post) }}">Edit Post</a>
-   @endcan
-   
-   {{-- Check multiple roles --}}
-   @hasanyrole('admin|editor')
-       <p>You have admin or editor access!</p>
-   @endhasanyrole
-
-## 🏗️ Project Structure
-   ```bash
-Laravel-RolePermission/
-├── 📁 app/
-│   ├── 📁 Http/
-│   │   ├── 📁 Controllers/
-│   │   │   ├── 📁 Admin/          # Admin panel controllers
-│   │   │   └── 📁 Auth/           # Authentication controllers
-│   │   └── 📁 Middleware/         # Custom middleware
-│   ├── 📁 Models/                 # Eloquent models
-│   └── 📁 Providers/              # Service providers
-├── 📁 resources/
-│   ├── 📁 views/
-│   │   ├── 📁 admin/              # Admin panel views
-│   │   ├── 📁 auth/               # Authentication views
-│   │   └── 📁 layouts/            # Layout templates
-│   └── 📁 js/                     # JavaScript assets
-├── 📁 database/
-│   ├── 📁 migrations/             # Database migrations
-│   └── 📁 seeders/                # Database seeders
-└── 📁 routes/
-    ├── web.php                    # Web routes
-    └── api.php                    # API routes
-```
-## 🔧 Configuration
-   ```bash
-   # Application
-   APP_NAME="Laravel Role Permission"
-   APP_ENV=local
-   APP_DEBUG=true
-   APP_URL=http://localhost
-   
-   # Database
-   DB_CONNECTION=mysql
-   DB_HOST=127.0.0.1
-   DB_PORT=3306
-   DB_DATABASE=laravel_rolepermission
-   DB_USERNAME=root
-   DB_PASSWORD=
-   
-   # Mail
-   MAIL_MAILER=smtp
-   MAIL_HOST=smtp.gmail.com
-   MAIL_PORT=587
-   MAIL_USERNAME=email@domain.com
-   MAIL_PASSWORD=app-password-or-password
-   MAIL_ENCRYPTION=tls
-   MAIL_FROM_ADDRESS="no-reply@domain.com"
-   MAIL_FROM_NAME="${APP_NAME}"
-   ```
-
-### Permission Configuration
-The system uses Spatie Permission package. You can publish and modify the config:
-   ```bash
-   php artisan vendor:publish --provider="Spatie\Permission\PermissionServiceProvider"
-```
-## Acknowledgments
-- Laravel
-- Sanctum
-- Spatie Permission
-- Tailwind CSS
-- Alpine.js 
-- Heroicons
-
-**Made by [IlyasBudi](https://github.com/IlyasBudi)**
+The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
