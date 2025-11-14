@@ -22,7 +22,7 @@ Route::post('/register',[AuthController::class, 'register'])->name('register.att
 Route::post('/logout',  [AuthController::class, 'logout'])->name('logout')->middleware('auth');
 
 // ---------- Dashboard ----------
-Route::get('/admin', DashboardController::class)->name('dashboard')->middleware('auth');
+Route::get('/admin', DashboardController::class)->name('dashboard')->middleware('auth', 'role:superadmin|admin|staff');
 
 // ---------- Admin Panel (web) ----------
 Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () {
