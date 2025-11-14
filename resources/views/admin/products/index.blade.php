@@ -4,21 +4,26 @@
 
 @section('content')
 <div class="container mx-auto px-4 py-6">
-    <!-- Header -->
-    <div class="flex justify-between items-center mb-6">
-        <div>
-            <h1 class="text-3xl font-bold text-gray-800 dark:text-white">Products</h1>
-            <p class="text-gray-600 dark:text-gray-400 mt-1">Manage your product catalog</p>
+    <!-- Header Section - Compact -->
+    <div class="relative bg-gradient-to-r from-blue-600 to-cyan-600 dark:from-blue-800 dark:to-cyan-800 overflow-hidden shadow-lg rounded-xl">
+        <div class="absolute inset-0 bg-black opacity-20"></div>
+        <div class="relative p-6 text-white">
+            <div class="flex items-center justify-between">
+                <div>
+                    <h1 class="text-xl font-bold mb-1">Product Management</h1>
+                    <p class="text-blue-100 text-sm">Manage your product catalog</p>
+                </div>
+                @can('products.create')
+                <a href="{{ route('admin.products.create') }}" 
+                   class="inline-flex items-center gap-2 px-4 py-2 bg-white bg-opacity-20 backdrop-blur-sm border border-white border-opacity-30 rounded-lg text-white hover:bg-opacity-30 transition-all duration-200 text-sm font-medium">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                    </svg>
+                    Create Product
+                </a>
+                @endcan
+            </div>
         </div>
-        @can('products.create')
-        <a href="{{ route('admin.products.create') }}" 
-           class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg shadow-md transition duration-150 ease-in-out flex items-center">
-            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
-            </svg>
-            Add Product
-        </a>
-        @endcan
     </div>
 
     <!-- Success Message -->
@@ -37,13 +42,13 @@
 
     <!-- Filters -->
     <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 mb-6">
-        <form method="GET" action="{{ route('admin.products.index') }}" class="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <form method="GET" action="{{ route('admin.products.index') }}" class="grid grid-cols-1 md:grid-cols-5 gap-4">
             <!-- Search -->
             <div>
                 <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Search</label>
                 <input type="text" name="search" value="{{ request('search') }}" 
-                       placeholder="Search products..."
-                       class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                    placeholder="Search products..."
+                    class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
             </div>
 
             <!-- Category Filter -->
@@ -59,7 +64,7 @@
                 </select>
             </div>
 
-            <!-- Status Filter -->
+            <!-- Status Filter (Active/Inactive) -->
             <div>
                 <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Status</label>
                 <select name="is_active" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
@@ -69,7 +74,17 @@
                 </select>
             </div>
 
-            <!-- Submit -->
+            <!-- Reward Filter (NEW) -->
+            <div>
+                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Reward</label>
+                <select name="is_reward" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                    <option value="">All Products</option>
+                    <option value="1" {{ request('is_reward') === '1' ? 'selected' : '' }}>Reward Only</option>
+                    <option value="0" {{ request('is_reward') === '0' ? 'selected' : '' }}>Non-Reward</option>
+                </select>
+            </div>
+
+            <!-- Submit Button -->
             <div class="flex items-end">
                 <button type="submit" class="w-full bg-gray-600 hover:bg-gray-700 text-white font-semibold py-2 px-4 rounded-lg transition duration-150">
                     Filter
@@ -79,10 +94,17 @@
     </div>
 
     <!-- Products Table -->
-    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden">
+    <div class="bg-white dark:bg-gray-800 shadow rounded-xl border border-gray-200 dark:border-gray-700 overflow-hidden">
+        <div class="px-4 py-3 border-b border-gray-200 dark:border-gray-700">
+            <div class="flex items-center justify-between">
+                <h3 class="text-sm font-semibold text-gray-900 dark:text-white">Product List</h3>
+                <span class="text-xs text-gray-600 dark:text-gray-400">Total {{ $products->total() }} products</span>
+            </div>
+        </div>
+
         <div class="overflow-x-auto">
             <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-                <thead class="bg-gray-50 dark:bg-gray-700">
+                <thead class="bg-gray-50 dark:bg-gray-900/40">
                     <tr>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">#</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Product</th>
@@ -98,7 +120,7 @@
                         $start = ($products->currentPage() - 1) * $products->perPage();
                     @endphp
                     @forelse($products as $i => $product)
-                    <tr class="hover:bg-gray-50 dark:hover:bg-gray-700 transition duration-150">
+                    <tr class="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition duration-150">
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-300">
                             {{ $start + $i + 1 }}
                         </td>
@@ -221,6 +243,11 @@
                         </td>
                     </tr>
                     @endforelse
+                    <tr aria-hidden="true" class="pointer-events-none">
+                        <td colspan="7" class="p-0">
+                            <div class="h-6"></div> <!-- 3rem ruang -->
+                        </td>
+                    </tr>
                 </tbody>
             </table>
         </div>

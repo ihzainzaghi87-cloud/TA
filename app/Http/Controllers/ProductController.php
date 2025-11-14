@@ -51,6 +51,11 @@ class ProductController extends Controller
             $query->where('is_active', $request->is_active);
         }
 
+        // Filter by reward status (is_reward) - TAMBAHAN BARU
+        if ($request->filled('is_reward')) {
+            $query->where('is_reward', $request->is_reward);
+        }
+
         // Search by name
         if ($request->filled('search')) {
             $query->where('name', 'like', '%' . $request->search . '%');

@@ -125,7 +125,7 @@
                             <!-- Product Image -->
                             <div class="relative h-48 bg-gray-100 dark:bg-gray-600 overflow-hidden">
                                 @if($product->images->first())
-                                <img src="{{ asset('storage/' . $product->images->first()->image) }}" 
+                                <img src="{{ asset('storage/products/' . $product->images->first()->image) }}" 
                                      alt="{{ $product->name }}"
                                      class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
                                 @else
@@ -148,7 +148,7 @@
 
                                 <!-- Stock Badge -->
                                 <div class="absolute top-2 left-2">
-                                    @if($product->stock > 0)
+                                    @if($product->variations->sum('stock') > 0)
                                     <span class="bg-green-500 text-white text-xs px-2 py-1 rounded-full font-medium">In Stock</span>
                                     @else
                                     <span class="bg-red-500 text-white text-xs px-2 py-1 rounded-full font-medium">Out of Stock</span>
