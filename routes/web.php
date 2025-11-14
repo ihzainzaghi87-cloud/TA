@@ -69,8 +69,18 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
 
     // Product
     Route::resource('products', ProductController::class);
+    // Toggle product active status
+    Route::patch('products/{product}/toggle-active', [ProductController::class, 'toggleActive'])
+        ->name('products.toggle-active');
+    // Update variation stock
+    Route::patch('products/{product}/variations/{variation}/stock', [ProductController::class, 'updateVariationStock'])
+        ->name('products.variations.update-stock');
+    // Bulk update product status
+    Route::post('products/bulk/update-status', [ProductController::class, 'bulkUpdateStatus'])
+        ->name('products.bulk.update-status');
+    // Delete image (jika ada method destroyImage di controller)
     Route::delete('products/images/{image}', [ProductController::class, 'destroyImage'])
-        ->name('products.destroyImage');
+        ->name('products.images.destroy');
 });
 
 // ---------- Password Reset ----------

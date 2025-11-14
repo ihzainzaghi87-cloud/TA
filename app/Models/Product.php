@@ -24,7 +24,14 @@ class Product extends Model
         'name',
         'description',
         'price',
-        'stock',
+        'is_active',
+        'is_reward',
+    ];
+
+    protected $casts = [
+        'price' => 'decimal:2',
+        'is_active' => 'boolean',
+        'is_reward' => 'boolean',
     ];
 
     /**

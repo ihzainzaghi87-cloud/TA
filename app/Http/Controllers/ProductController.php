@@ -2,17 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
-use App\Models\Category;
 use App\Models\Product;
-use App\Models\ProductImage;
+use App\Models\Category;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\Rule;
 use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware as ControllerMiddleware;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Str;
 
-class ProductController extends Controller implements HasMiddleware
+class ProductController extends Controller
 {
     /**
      * Middleware untuk mengatur akses berdasarkan permission.
@@ -20,37 +20,50 @@ class ProductController extends Controller implements HasMiddleware
     public static function middleware(): array
     {
         return [
-            // Lihat daftar & detail produk
+            // Lihat daftar product
             (new ControllerMiddleware('permission:products.index|products.view'))->only(['index', 'show']),
             
-            // Buat products baru
+            // Buat product baru
             (new ControllerMiddleware('permission:products.create'))->only(['create', 'store']),
             
-            // Edit produk
+            // Edit product
             (new ControllerMiddleware('permission:products.update'))->only(['edit', 'update']),
             
-            // Hapus produk
+            // Hapus product
             (new ControllerMiddleware('permission:products.delete'))->only(['destroy']),
-            
-            // Hapus gambar produk
-            (new ControllerMiddleware('permission:products.destroy-image'))->only(['destroyImage']),
         ];
     }
 
     /**
-     * Tampilkan daftar produk dengan kategori dan gambar.
+     * Display a listing of products.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $products = Product::with(['category', 'images'])
-            ->latest()
-            ->paginate(10);
+        $query = Product::with(['category', 'images', 'variations']);
 
-        return view('admin.products.index', compact('products'));
+        // Filter by category
+        if ($request->filled('category_id')) {
+            $query->where('category_id', $request->category_id);
+        }
+
+        // Filter by status
+        if ($request->filled('is_active')) {
+            $query->where('is_active', $request->is_active);
+        }
+
+        // Search by name
+        if ($request->filled('search')) {
+            $query->where('name', 'like', '%' . $request->search . '%');
+        }
+
+        $products = $query->latest()->paginate(15);
+        $categories = Category::all();
+
+        return view('admin.products.index', compact('products', 'categories'));
     }
 
     /**
-     * Tampilkan form untuk menambah produk baru.
+     * Show the form for creating a new product.
      */
     public function create()
     {
@@ -59,210 +72,427 @@ class ProductController extends Controller implements HasMiddleware
     }
 
     /**
-     * Simpan produk baru ke database (beserta gambar dan variations).
+     * Store a newly created product in storage.
      */
     public function store(Request $request)
     {
         $validated = $request->validate([
             'category_id' => 'required|exists:categories,id',
             'name' => 'required|string|max:255',
-            'slug' => 'nullable|string|max:255|unique:products,slug',
+            'slug' => 'nullable|string|unique:products,slug',
             'description' => 'nullable|string',
             'price' => 'required|numeric|min:0',
-            'stock' => 'required|integer|min:0',
-            'images.*' => 'nullable|image|mimes:jpeg,jpg,png|max:2048',
+            'is_active' => 'boolean',
+            'is_reward' => 'boolean',
+            
+            // Images validation
+            'images' => 'nullable|array|max:5',
+            'images.*' => 'image|mimes:jpeg,png,jpg,gif,webp|max:2048',
+            
+            // Variations validation (nullable - product dapat tidak memiliki variasi)
             'variations' => 'nullable|array',
-            'variations.*.name' => 'required|string|max:255',
-            'variations.*.values' => 'required|array',
-            'variations.*.values.*' => 'required|string',
+            'variations.*.color' => 'required_with:variations|string|max:255',
+            'variations.*.size' => 'required_with:variations|string|max:255',
+            'variations.*.stock' => 'required_with:variations|integer|min:0',
         ]);
 
-        // Generate slug otomatis jika tidak diisi
-        if (empty($validated['slug'])) {
-            $validated['slug'] = Str::slug($validated['name']);
-        }
-
-        // Pastikan slug unique
-        $slug = $validated['slug'];
-        $count = 1;
-        while (Product::where('slug', $slug)->exists()) {
-            $slug = $validated['slug'] . '-' . $count;
-            $count++;
-        }
-        $validated['slug'] = $slug;
-
-        // Simpan produk
-        $product = Product::create([
-            'category_id' => $validated['category_id'],
-            'slug' => $validated['slug'],
-            'name' => $validated['name'],
-            'description' => $validated['description'],
-            'price' => $validated['price'],
-            'stock' => $validated['stock'],
-        ]);
-
-        // Upload gambar jika ada
-        if ($request->hasFile('images')) {
-            foreach ($request->file('images') as $image) {
-                $path = $image->store('products', 'public');
-                $product->images()->create([
-                    'image' => $path,
-                ]);
-            }
-        }
-
-        // Simpan variations jika ada
+        // Custom validation: Pastikan tidak ada duplikat kombinasi color-size
         if (!empty($validated['variations'])) {
-            foreach ($validated['variations'] as $variation) {
-                $product->variations()->create([
-                    'name' => $variation['name'],
-                    'values' => $variation['values'],
-                ]);
+            $combinations = [];
+            foreach ($validated['variations'] as $index => $variation) {
+                $key = strtolower($variation['color']) . '-' . strtolower($variation['size']);
+                if (in_array($key, $combinations)) {
+                    return back()->withInput()->withErrors([
+                        "variations.{$index}" => "Kombinasi warna '{$variation['color']}' dan ukuran '{$variation['size']}' sudah ada."
+                    ]);
+                }
+                $combinations[] = $key;
             }
         }
 
-        return redirect()->route('admin.products.index')
-            ->with('success', 'Produk berhasil ditambahkan.');
+        DB::beginTransaction();
+        try {
+            // Generate slug if not provided
+            $slug = $validated['slug'] ?? Str::slug($validated['name']);
+            
+            // Check for unique slug
+            $originalSlug = $slug;
+            $counter = 1;
+            while (Product::where('slug', $slug)->exists()) {
+                $slug = $originalSlug . '-' . $counter;
+                $counter++;
+            }
+
+            // Create product
+            $product = Product::create([
+                'category_id' => $validated['category_id'],
+                'name' => $validated['name'],
+                'slug' => $slug,
+                'description' => $validated['description'] ?? null,
+                'price' => $validated['price'],
+                'is_active' => $request->boolean('is_active', true),
+                'is_reward' => $request->boolean('is_reward', false),
+            ]);
+
+            // Handle product images
+            if ($request->hasFile('images')) {
+                foreach ($request->file('images') as $image) {
+                    $filename = time() . '_' . uniqid() . '.' . $image->getClientOriginalExtension();
+                    $path = $image->storeAs('products', $filename, 'public');
+                    
+                    $product->images()->create([
+                        'image' => $filename,
+                    ]);
+                }
+            }
+
+            // Handle variations (nullable - bisa tidak ada)
+            if (!empty($validated['variations'])) {
+                foreach ($validated['variations'] as $variation) {
+                    $product->variations()->create([
+                        'color' => $variation['color'],
+                        'size' => $variation['size'],
+                        'stock' => $variation['stock'] ?? 0,
+                    ]);
+                }
+            }
+
+            DB::commit();
+            
+            return redirect()->route('admin.products.index')
+                ->with('success', 'Produk berhasil ditambahkan.');
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            
+            // Delete uploaded images if transaction fails
+            if (isset($product) && $product->images->count() > 0) {
+                foreach ($product->images as $image) {
+                    Storage::disk('public')->delete('products/' . $image->image);
+                }
+            }
+            
+            return back()->withInput()
+                ->with('error', 'Gagal menambahkan produk: ' . $e->getMessage());
+        }
     }
 
     /**
-     * Tampilkan detail produk.
+     * Display the specified product.
      */
     public function show(Product $product)
     {
         $product->load(['category', 'images', 'variations']);
-        return view('admin.products.show', compact('product'));
+        
+        // Get stock information
+        $totalStock = $product->variations->sum('stock');
+        $availableVariations = $product->variations->where('stock', '>', 0)->count();
+        
+        return view('admin.products.show', compact('product', 'totalStock', 'availableVariations'));
     }
 
     /**
-     * Tampilkan form edit produk.
+     * Show the form for editing the specified product.
      */
     public function edit(Product $product)
     {
         $categories = Category::all();
         $product->load(['images', 'variations']);
+        
         return view('admin.products.edit', compact('product', 'categories'));
     }
 
     /**
-     * Perbarui data produk di database.
+     * Update the specified product in storage.
      */
     public function update(Request $request, Product $product)
     {
         $validated = $request->validate([
             'category_id' => 'required|exists:categories,id',
             'name' => 'required|string|max:255',
-            'slug' => 'nullable|string|max:255|unique:products,slug,' . $product->id,
+            'slug' => [
+                'nullable',
+                'string',
+                Rule::unique('products', 'slug')->ignore($product->id)
+            ],
             'description' => 'nullable|string',
             'price' => 'required|numeric|min:0',
-            'stock' => 'required|integer|min:0',
-            'images.*' => 'nullable|image|mimes:jpeg,jpg,png|max:2048',
+            'is_active' => 'boolean',
+            'is_reward' => 'boolean',
+            
+            // Images
+            'images' => 'nullable|array|max:5',
+            'images.*' => 'image|mimes:jpeg,png,jpg,gif,webp|max:2048',
+            'delete_images' => 'nullable|array',
+            'delete_images.*' => 'exists:product_images,id',
+            
+            // Variations (nullable)
             'variations' => 'nullable|array',
             'variations.*.id' => 'nullable|exists:variations,id',
-            'variations.*.name' => 'required|string|max:255',
-            'variations.*.values' => 'required|array',
-            'variations.*.values.*' => 'required|string',
+            'variations.*.color' => 'required_with:variations|string|max:255',
+            'variations.*.size' => 'required_with:variations|string|max:255',
+            'variations.*.stock' => 'required_with:variations|integer|min:0',
+            'delete_variations' => 'nullable|array',
+            'delete_variations.*' => 'exists:variations,id',
         ]);
 
-        // Generate slug otomatis jika tidak diisi
-        if (empty($validated['slug'])) {
-            $validated['slug'] = Str::slug($validated['name']);
-        }
-
-        // Pastikan slug unique (kecuali untuk produk ini sendiri)
-        $slug = $validated['slug'];
-        $count = 1;
-        while (Product::where('slug', $slug)->where('id', '!=', $product->id)->exists()) {
-            $slug = $validated['slug'] . '-' . $count;
-            $count++;
-        }
-        $validated['slug'] = $slug;
-
-        // Update data produk
-        $product->update([
-            'category_id' => $validated['category_id'],
-            'slug' => $validated['slug'],
-            'name' => $validated['name'],
-            'description' => $validated['description'],
-            'price' => $validated['price'],
-            'stock' => $validated['stock'],
-        ]);
-
-        // Upload gambar baru jika ada
-        if ($request->hasFile('images')) {
-            foreach ($request->file('images') as $image) {
-                $path = $image->store('products', 'public');
-                $product->images()->create([
-                    'image' => $path,
-                ]);
+        // Validasi duplikat kombinasi color-size
+        if (!empty($validated['variations'])) {
+            $combinations = [];
+            foreach ($validated['variations'] as $index => $variation) {
+                $key = strtolower($variation['color']) . '-' . strtolower($variation['size']);
+                
+                // Skip jika ini adalah update untuk variation yang sama
+                if (isset($variation['id'])) {
+                    $existingVar = $product->variations()->find($variation['id']);
+                    if ($existingVar && 
+                        strtolower($existingVar->color) === strtolower($variation['color']) && 
+                        strtolower($existingVar->size) === strtolower($variation['size'])) {
+                        continue;
+                    }
+                }
+                
+                if (in_array($key, $combinations)) {
+                    return back()->withInput()->withErrors([
+                        "variations.{$index}" => "Kombinasi warna '{$variation['color']}' dan ukuran '{$variation['size']}' sudah ada."
+                    ]);
+                }
+                $combinations[] = $key;
             }
         }
 
-        // Update variations
-        if (isset($validated['variations'])) {
-            $existingVariationIds = [];
+        DB::beginTransaction();
+        try {
+            // Update product
+            $slug = $validated['slug'] ?? Str::slug($validated['name']);
             
-            foreach ($validated['variations'] as $variationData) {
-                if (isset($variationData['id'])) {
-                    // Update existing variation
-                    $variation = $product->variations()->find($variationData['id']);
-                    if ($variation) {
-                        $variation->update([
-                            'name' => $variationData['name'],
-                            'values' => $variationData['values'],
-                        ]);
-                        $existingVariationIds[] = $variation->id;
-                    }
-                } else {
-                    // Create new variation
-                    $newVariation = $product->variations()->create([
-                        'name' => $variationData['name'],
-                        'values' => $variationData['values'],
+            $product->update([
+                'category_id' => $validated['category_id'],
+                'name' => $validated['name'],
+                'slug' => $slug,
+                'description' => $validated['description'] ?? null,
+                'price' => $validated['price'],
+                'is_active' => $request->boolean('is_active'),
+                'is_reward' => $request->boolean('is_reward'),
+            ]);
+
+            // Handle new images
+            if ($request->hasFile('images')) {
+                foreach ($request->file('images') as $image) {
+                    $filename = time() . '_' . uniqid() . '.' . $image->getClientOriginalExtension();
+                    $path = $image->storeAs('products', $filename, 'public');
+                    
+                    $product->images()->create([
+                        'image' => $filename,
                     ]);
-                    $existingVariationIds[] = $newVariation->id;
                 }
             }
-            
-            // Delete variations that are not in the request
-            $product->variations()->whereNotIn('id', $existingVariationIds)->delete();
-        }
 
-        return redirect()->route('admin.products.show', $product)
-            ->with('success', 'Produk berhasil diperbarui.');
+            // Handle image deletion
+            if (!empty($validated['delete_images'])) {
+                $imagesToDelete = $product->images()
+                    ->whereIn('id', $validated['delete_images'])
+                    ->get();
+                
+                foreach ($imagesToDelete as $image) {
+                    Storage::disk('public')->delete('products/' . $image->image);
+                    $image->delete();
+                }
+            }
+
+            // Handle variations
+            if (isset($validated['variations'])) {
+                foreach ($validated['variations'] as $variationData) {
+                    if (isset($variationData['id'])) {
+                        // Update existing variation
+                        $product->variations()
+                            ->where('id', $variationData['id'])
+                            ->update([
+                                'color' => $variationData['color'],
+                                'size' => $variationData['size'],
+                                'stock' => $variationData['stock'] ?? 0,
+                            ]);
+                    } else {
+                        // Create new variation
+                        $product->variations()->create([
+                            'color' => $variationData['color'],
+                            'size' => $variationData['size'],
+                            'stock' => $variationData['stock'] ?? 0,
+                        ]);
+                    }
+                }
+            }
+
+            // Handle variation deletion
+            if (!empty($validated['delete_variations'])) {
+                $product->variations()
+                    ->whereIn('id', $validated['delete_variations'])
+                    ->delete();
+            }
+
+            DB::commit();
+            
+            return redirect()->route('admin.products.index')
+                ->with('success', 'Produk berhasil diperbarui.');
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return back()->withInput()
+                ->with('error', 'Gagal memperbarui produk: ' . $e->getMessage());
+        }
     }
 
     /**
-     * Hapus produk dari database beserta gambar dan variations.
+     * Remove the specified product from storage.
      */
     public function destroy(Product $product)
     {
-        // Hapus semua gambar dari storage
-        foreach ($product->images as $image) {
-            if (Storage::disk('public')->exists($image->image)) {
-                Storage::disk('public')->delete($image->image);
+        DB::beginTransaction();
+        try {
+            // Delete associated images from storage
+            foreach ($product->images as $image) {
+                Storage::disk('public')->delete('products/' . $image->image);
             }
+
+            // Delete product (cascade akan menghapus images dan variations)
+            $product->delete();
+
+            DB::commit();
+            
+            return redirect()->route('admin.products.index')
+                ->with('success', 'Produk berhasil dihapus.');
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return back()->with('error', 'Gagal menghapus produk: ' . $e->getMessage());
         }
-
-        // Hapus produk (images dan variations akan terhapus otomatis karena cascade)
-        $product->delete();
-
-        return redirect()->route('admin.products.index')
-            ->with('success', 'Produk berhasil dihapus.');
     }
 
     /**
-     * Hapus gambar produk tertentu.
+     * Toggle product active status.
      */
-    public function destroyImage(ProductImage $image)
+    public function toggleActive(Product $product)
     {
-        // Hapus file dari storage
-        if (Storage::disk('public')->exists($image->image)) {
-            Storage::disk('public')->delete($image->image);
+        $product->update([
+            'is_active' => !$product->is_active
+        ]);
+
+        $status = $product->is_active ? 'diaktifkan' : 'dinonaktifkan';
+        return back()->with('success', "Produk berhasil {$status}.");
+    }
+
+    /**
+     * Check stock availability for a specific variation.
+     */
+    public function checkStock(Request $request, Product $product)
+    {
+        $validated = $request->validate([
+            'color' => 'required|string',
+            'size' => 'required|string',
+        ]);
+
+        $variation = $product->variations()
+            ->where('color', $validated['color'])
+            ->where('size', $validated['size'])
+            ->first();
+
+        if (!$variation) {
+            return response()->json([
+                'available' => false,
+                'message' => 'Variasi tidak ditemukan.'
+            ], 404);
         }
 
-        // Hapus record dari database
-        $image->delete();
+        return response()->json([
+            'available' => $variation->stock > 0,
+            'stock' => $variation->stock,
+            'variation_id' => $variation->id,
+        ]);
+    }
 
-        return back()->with('success', 'Gambar berhasil dihapus.');
+    /**
+     * Get all available variations for a product (API).
+     */
+    public function getVariations(Product $product)
+    {
+        $variations = $product->variations()
+            ->where('stock', '>', 0)
+            ->get()
+            ->groupBy('color')
+            ->map(function ($items) {
+                return [
+                    'color' => $items->first()->color,
+                    'sizes' => $items->pluck('size', 'id')->toArray(),
+                    'stocks' => $items->pluck('stock', 'id')->toArray(),
+                ];
+            })
+            ->values();
+
+        return response()->json([
+            'product' => $product->name,
+            'variations' => $variations,
+            'total_stock' => $product->variations->sum('stock'),
+        ]);
+    }
+
+    /**
+     * Update stock for a specific variation.
+     */
+    public function updateVariationStock(Request $request, Product $product, $variationId)
+    {
+        $validated = $request->validate([
+            'stock' => 'required|integer|min:0',
+        ]);
+
+        $variation = $product->variations()->findOrFail($variationId);
+        $variation->update(['stock' => $validated['stock']]);
+
+        return back()->with('success', 'Stock variasi berhasil diperbarui.');
+    }
+
+    /**
+     * Get products by category (API).
+     */
+    public function getByCategory($categoryId)
+    {
+        $products = Product::with(['images', 'variations'])
+            ->where('category_id', $categoryId)
+            ->where('is_active', true)
+            ->get()
+            ->map(function ($product) {
+                return [
+                    'id' => $product->id,
+                    'name' => $product->name,
+                    'slug' => $product->slug,
+                    'price' => $product->price,
+                    'description' => $product->description,
+                    'images' => $product->images->pluck('image'),
+                    'has_variations' => $product->variations->count() > 0,
+                    'total_stock' => $product->variations->sum('stock'),
+                    'variations_count' => $product->variations->count(),
+                ];
+            });
+
+        return response()->json($products);
+    }
+
+    /**
+     * Bulk update product status.
+     */
+    public function bulkUpdateStatus(Request $request)
+    {
+        $validated = $request->validate([
+            'product_ids' => 'required|array',
+            'product_ids.*' => 'exists:products,id',
+            'is_active' => 'required|boolean',
+        ]);
+
+        Product::whereIn('id', $validated['product_ids'])
+            ->update(['is_active' => $validated['is_active']]);
+
+        $status = $validated['is_active'] ? 'diaktifkan' : 'dinonaktifkan';
+        $count = count($validated['product_ids']);
+
+        return back()->with('success', "{$count} produk berhasil {$status}.");
     }
 }

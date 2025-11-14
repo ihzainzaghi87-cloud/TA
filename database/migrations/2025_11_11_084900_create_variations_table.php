@@ -14,9 +14,12 @@ return new class extends Migration
         Schema::create('variations', function (Blueprint $table) {
             $table->id();
             $table->foreignId('product_id')->constrained('products')->onDelete('cascade');
-            $table->string('name');
-            $table->json('values');
+            $table->string('color');
+            $table->string('size');
+            $table->integer('stock')->default(0);
             $table->timestamps();
+
+            $table->index(['product_id', 'color', 'size']);
         });
     }
 

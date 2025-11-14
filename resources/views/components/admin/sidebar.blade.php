@@ -172,7 +172,7 @@
     </nav>
 
     <!-- User Info Card at Bottom - Lebih Kecil -->
-    <div class="p-3 border-t border-gray-200 dark:border-gray-700">
+    <div class="p-3 bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 sticky bottom-0">
         <div class="p-3 bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-700 dark:to-gray-600 rounded-lg border border-gray-200 dark:border-gray-600">
             <div class="flex items-center space-x-3">
                 <div class="w-8 h-8 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-lg flex items-center justify-center">
