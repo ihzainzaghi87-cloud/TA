@@ -5,16 +5,23 @@
 @section('content')
 <div class="container mx-auto px-4 py-6">
     <!-- Header -->
-    <div class="mb-6">
-        <div class="flex items-center text-sm text-gray-600 dark:text-gray-400 mb-2">
-            <a href="{{ route('admin.products.index') }}" class="hover:text-blue-600">Products</a>
-            <svg class="w-4 h-4 mx-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-            </svg>
-            <span>Edit Product</span>
+    <div class="relative mb-6 bg-gradient-to-r from-amber-600 to-orange-600 dark:from-amber-800 dark:to-orange-800 overflow-hidden shadow-lg rounded-xl">
+        <div class="absolute inset-0 bg-black opacity-20"></div>
+        <div class="relative p-6 text-white">
+            <div class="flex items-center justify-between">
+                <div>
+                    <h1 class="text-xl font-bold mb-1">Edit Product</h1>
+                    <p class="text-amber-100 text-sm">Edit product information: {{ $product->name }}</p>
+                </div>
+                <a href="{{ route('admin.products.index') }}" 
+                   class="inline-flex items-center gap-2 px-4 py-2 bg-white bg-opacity-20 backdrop-blur-sm border border-white border-opacity-30 rounded-lg text-white hover:bg-opacity-30 transition-all duration-200 text-sm font-medium">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+                    </svg>
+                    Back to Categories
+                </a>
+            </div>
         </div>
-        <h1 class="text-3xl font-bold text-gray-800 dark:text-white">Edit Product</h1>
-        <p class="text-gray-600 dark:text-gray-400 mt-1">Update product information</p>
     </div>
 
     <!-- Error Messages -->
@@ -33,7 +40,7 @@
         @method('PUT')
 
         <!-- Basic Information -->
-        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 mb-6">
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow border p-6 mb-6">
             <h2 class="text-xl font-semibold text-gray-800 dark:text-white mb-4">Basic Information</h2>
             <p class="text-sm text-gray-600 dark:text-gray-400 mb-6">Update basic product information</p>
 
@@ -199,7 +206,7 @@
             <div id="new-variations-container"></div>
 
             <button type="button" onclick="addNewVariation()" 
-                    class="mt-4 bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded-lg transition duration-150">
+                    class="mt-4 bg-gradient-to-r from-blue-600 to-cyan-600 dark:from-blue-800 dark:to-cyan-800 text-white font-semibold py-2 px-4 rounded-lg transition duration-150">
                 + Add Variation
             </button>
         </div>
@@ -211,7 +218,7 @@
                 Cancel
             </a>
             <button type="submit" 
-                    class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-6 rounded-lg transition duration-150">
+                    class="bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-700 hover:to-orange-700 text-white font-semibold py-2 px-6 rounded-lg transition duration-150">
                 Update Product
             </button>
         </div>
@@ -219,20 +226,36 @@
 
     <!-- Delete Product -->
     @can('products.delete')
-    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 mt-6 border-l-4 border-red-500">
-        <h2 class="text-xl font-semibold text-red-600 mb-2">Danger Zone</h2>
-        <p class="text-sm text-gray-600 dark:text-gray-400 mb-4">
-            Once you delete this product, all its data will be permanently removed. This action cannot be undone.
-        </p>
-        <form action="{{ route('admin.products.destroy', $product) }}" method="POST" 
-              onsubmit="return confirm('Are you sure you want to delete this product? This action cannot be undone!');">
-            @csrf
-            @method('DELETE')
-            <button type="submit" 
-                    class="bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-6 rounded-lg transition duration-150">
-                Delete Product
-            </button>
-        </form>
+    <div class="mt-6 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-700 rounded-xl p-5">
+        <div class="flex items-start">
+            <div class="flex-shrink-0">
+                <div class="w-10 h-10 bg-red-100 dark:bg-red-900/30 rounded-xl flex items-center justify-center">
+                    <svg class="w-5 h-5 text-red-600 dark:text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16c-.77.833.192 2.5 1.732 2.5z"></path>
+                    </svg>
+                </div>
+            </div>
+            <div class="ml-4 flex-1">
+                <h3 class="text-sm font-medium text-red-800 dark:text-red-200">Delete Product</h3>
+                <div class="mt-2 text-sm text-red-700 dark:text-red-300">
+                    <p>Once you delete this product, all its data will be permanently removed. This action cannot be undone.</p>
+                </div>
+                <div class="mt-4">
+                    <form method="POST" action="{{ route('admin.products.destroy', $product) }}" 
+                          onsubmit="return confirm('Are you sure you want to delete this product? This action cannot be undone.')">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" 
+                                class="inline-flex items-center px-4 py-2 bg-red-600 hover:bg-red-700 text-white font-medium rounded-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 dark:focus:ring-offset-red-900 text-sm transition-all duration-200">
+                            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                            </svg>
+                            Delete Product
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
     </div>
     @endcan
 </div>

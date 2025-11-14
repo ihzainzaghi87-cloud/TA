@@ -5,16 +5,23 @@
 @section('content')
 <div class="container mx-auto px-4 py-6">
     <!-- Header -->
-    <div class="mb-6">
-        <div class="flex items-center text-sm text-gray-600 dark:text-gray-400 mb-2">
-            <a href="{{ route('admin.products.index') }}" class="hover:text-blue-600">Products</a>
-            <svg class="w-4 h-4 mx-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-            </svg>
-            <span>Add Product</span>
+    <div class="relative mb-6 bg-gradient-to-r from-emerald-600 to-green-600 dark:from-emerald-800 dark:to-green-800 overflow-hidden shadow-lg rounded-xl">
+        <div class="absolute inset-0 bg-black opacity-20"></div>
+        <div class="relative p-6 text-white">
+            <div class="flex items-center justify-between">
+                <div>
+                    <h1 class="text-xl font-bold mb-1">Create New Product</h1>
+                    <p class="text-emerald-100 text-sm">Create a new product for your catalog</p>
+                </div>
+                <a href="{{ route('admin.products.index') }}" 
+                   class="inline-flex items-center gap-2 px-4 py-2 bg-white bg-opacity-20 backdrop-blur-sm border border-white border-opacity-30 rounded-lg text-white hover:bg-opacity-30 transition-all duration-200 text-sm font-medium">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+                    </svg>
+                    Back to Products
+                </a>
+            </div>
         </div>
-        <h1 class="text-3xl font-bold text-gray-800 dark:text-white">Add New Product</h1>
-        <p class="text-gray-600 dark:text-gray-400 mt-1">Create a new product for your catalog</p>
     </div>
 
     <!-- Error Messages -->
@@ -32,7 +39,7 @@
         @csrf
 
         <!-- Basic Information -->
-        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 mb-6">
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow border p-6 mb-6">
             <h2 class="text-xl font-semibold text-gray-800 dark:text-white mb-4">Basic Information</h2>
             <p class="text-sm text-gray-600 dark:text-gray-400 mb-6">Enter basic product information</p>
 
@@ -177,7 +184,7 @@
                     </div>
                     <div class="flex items-end">
                         <button type="button" onclick="removeVariation(this)" 
-                                class="w-full bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-4 rounded-lg transition duration-150">
+                                class="w-full bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white font-semibold py-2 px-4 rounded-lg transition duration-150">
                             Remove
                         </button>
                     </div>
@@ -185,7 +192,7 @@
             </div>
 
             <button type="button" onclick="addVariation()" 
-                    class="mt-4 bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded-lg transition duration-150">
+                    class="mt-4 bg-gradient-to-r from-blue-600 to-cyan-600 dark:from-blue-800 dark:to-cyan-800 text-white font-semibold py-2 px-4 rounded-lg transition duration-150">
                 + Add Variation
             </button>
         </div>
@@ -197,7 +204,7 @@
                 Cancel
             </a>
             <button type="submit" 
-                    class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-6 rounded-lg transition duration-150">
+                    class="bg-gradient-to-r from-emerald-600 to-green-600 hover:from-emerald-700 hover:to-green-700 text-white font-semibold py-2 px-6 rounded-lg transition duration-150">
                 Create Product
             </button>
         </div>

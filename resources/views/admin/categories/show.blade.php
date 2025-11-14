@@ -181,7 +181,7 @@
                                     <div class="text-right">
                                         <p class="text-xs text-gray-500 dark:text-gray-400">Stock</p>
                                         <p class="text-lg font-bold text-gray-900 dark:text-white">
-                                            {{ $product->stock }}
+                                            {{ $product->variations->sum('stock') }}
                                         </p>
                                     </div>
                                 </div>

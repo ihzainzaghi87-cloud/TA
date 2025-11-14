@@ -5,33 +5,32 @@
 @section('content')
 <div class="container mx-auto px-4 py-6">
     <!-- Header -->
-    <div class="mb-6">
-        <div class="flex items-center text-sm text-gray-600 dark:text-gray-400 mb-2">
-            <a href="{{ route('admin.products.index') }}" class="hover:text-blue-600">Products</a>
-            <svg class="w-4 h-4 mx-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-            </svg>
-            <span>Product Detail</span>
-        </div>
-        <div class="flex justify-between items-center">
-            <div>
-                <h1 class="text-3xl font-bold text-gray-800 dark:text-white">{{ $product->name }}</h1>
-                <p class="text-gray-600 dark:text-gray-400 mt-1">Complete product information</p>
-            </div>
-            <div class="flex gap-2">
-                @can('products.update')
-                <a href="{{ route('admin.products.edit', $product) }}" 
-                   class="bg-yellow-600 hover:bg-yellow-700 text-white font-semibold py-2 px-4 rounded-lg transition duration-150 flex items-center">
-                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
-                    </svg>
-                    Edit Product
-                </a>
-                @endcan
-                <a href="{{ route('admin.products.index') }}" 
-                   class="bg-gray-600 hover:bg-gray-700 text-white font-semibold py-2 px-4 rounded-lg transition duration-150">
-                    Back
-                </a>
+    <div class="relative mb-6 bg-gradient-to-r from-indigo-600 to-purple-600 dark:from-indigo-800 dark:to-purple-800 overflow-hidden shadow-lg rounded-xl">
+        <div class="absolute inset-0 bg-black opacity-20"></div>
+        <div class="relative p-6 text-white">
+            <div class="flex items-center justify-between">
+                <div>
+                    <h1 class="text-xl font-bold mb-1">Product Details</h1>
+                    <p class="text-indigo-100 text-sm">Product: {{ $product->name }}</p>
+                </div>
+                <div class="flex gap-2">
+                    @can('products.update')
+                    <a href="{{ route('admin.products.edit', $product) }}" 
+                       class="inline-flex items-center gap-2 px-4 py-2 bg-white bg-opacity-20 backdrop-blur-sm border border-white border-opacity-30 rounded-lg text-white hover:bg-opacity-30 transition-all duration-200 text-sm font-medium">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                        </svg>
+                        Edit
+                    </a>
+                    @endcan
+                    <a href="{{ route('admin.products.index') }}" 
+                       class="inline-flex items-center gap-2 px-4 py-2 bg-white bg-opacity-20 backdrop-blur-sm border border-white border-opacity-30 rounded-lg text-white hover:bg-opacity-30 transition-all duration-200 text-sm font-medium">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+                        </svg>
+                        Back to Products
+                    </a>
+                </div>
             </div>
         </div>
     </div>
@@ -40,14 +39,14 @@
         <!-- Left Column - Images & Basic Info -->
         <div class="lg:col-span-2 space-y-6">
             <!-- Product Images -->
-            <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+            <div class="bg-white dark:bg-gray-800 rounded-lg shadow border p-6">
                 <h2 class="text-xl font-semibold text-gray-800 dark:text-white mb-4">Product Images</h2>
                 @if($product->images->count() > 0)
                 <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
                     @foreach($product->images as $image)
                     <img src="{{ asset('storage/products/' . $image->image) }}" 
                          alt="{{ $product->name }}" 
-                         class="w-full h-48 object-cover rounded-lg shadow-sm hover:shadow-md transition duration-150">
+                         class="w-full h-48 object-cover rounded-lg shadow-sm hover:shadow border transition duration-150">
                     @endforeach
                 </div>
                 @else
@@ -61,7 +60,7 @@
             </div>
 
             <!-- Product Description -->
-            <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+            <div class="bg-white dark:bg-gray-800 rounded-lg shadow border p-6">
                 <h2 class="text-xl font-semibold text-gray-800 dark:text-white mb-4">Description</h2>
                 <p class="text-gray-600 dark:text-gray-400 leading-relaxed">
                     {{ $product->description ?? 'No description available.' }}
@@ -69,7 +68,7 @@
             </div>
 
             <!-- Product Variations -->
-            <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+            <div class="bg-white dark:bg-gray-800 rounded-lg shadow border p-6">
                 <div class="flex justify-between items-center mb-4">
                     <h2 class="text-xl font-semibold text-gray-800 dark:text-white">Product Variations</h2>
                     @if($product->variations->count() > 0)
@@ -132,7 +131,7 @@
         <!-- Right Column - Product Details -->
         <div class="space-y-6">
             <!-- Basic Information Card -->
-            <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+            <div class="bg-white dark:bg-gray-800 rounded-lg shadow border p-6">
                 <h2 class="text-xl font-semibold text-gray-800 dark:text-white mb-4">Basic Information</h2>
                 
                 <div class="space-y-4">
@@ -200,7 +199,7 @@
             </div>
 
             <!-- Statistics Card -->
-            <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+            <div class="bg-white dark:bg-gray-800 rounded-lg shadow border p-6">
                 <h2 class="text-xl font-semibold text-gray-800 dark:text-white mb-4">Statistics</h2>
                 
                 <div class="space-y-4">
@@ -249,7 +248,7 @@
             </div>
 
             <!-- Timestamps Card -->
-            <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+            <div class="bg-white dark:bg-gray-800 rounded-lg shadow border p-6">
                 <h2 class="text-xl font-semibold text-gray-800 dark:text-white mb-4">Timestamps</h2>
                 
                 <div class="space-y-3">
