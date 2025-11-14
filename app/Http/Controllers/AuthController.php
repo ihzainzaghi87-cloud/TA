@@ -22,13 +22,23 @@ class AuthController extends Controller
     public function login(Request $request)
     {
         $credentials = $request->validate([
-            'email'    => ['required', 'email'],
+            'email' => ['required', 'email'],
             'password' => ['required', 'string'],
         ]);
 
         // Session-based login (guard web)
         if (Auth::attempt($credentials, $request->boolean('remember'))) {
             $request->session()->regenerate();
+            
+            // Cek role user
+            $user = Auth::user();
+            
+            if ($user->hasRole('user')) {
+                // Redirect ke landing page untuk role user
+                return redirect()->route('home')->with('success', 'Login berhasil.');
+            }
+            
+            // Redirect ke dashboard untuk role lain (admin, dll)
             return redirect()->intended(route('dashboard'))->with('success', 'Login berhasil.');
         }
 
@@ -50,6 +60,7 @@ class AuthController extends Controller
             'password'     => ['required','confirmed', Password::min(6)],
             'username'     => ['nullable','string','max:255','unique:users,username'],
             'phone_number' => ['nullable','string','max:30'],
+            'address'      => ['required','string','max:500'],
         ]);
 
         $user = User::create([
@@ -58,6 +69,7 @@ class AuthController extends Controller
             'password'     => Hash::make($data['password']),
             'username'     => $data['username'] ?? null,
             'phone_number' => $data['phone_number'] ?? null,
+            'address'      => $data['address'],
         ]);
 
         // Assign default role "user" kalau ada

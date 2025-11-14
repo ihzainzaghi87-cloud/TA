@@ -95,7 +95,7 @@
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
                     </svg>
                 </div>
-                <h1 class="text-2xl font-bold text-gray-900 dark:text-white transition-colors duration-300">{{ config('app.name') }}</h1>
+                <h1 class="text-2xl font-bold text-gray-900 dark:text-white transition-colors duration-300">The Paranoia</h1>
                 <p class="text-sm text-gray-600 dark:text-gray-400 mt-1 transition-colors duration-300">Admin Panel System</p>
             </div>
 

@@ -49,6 +49,7 @@ class ProfileController extends Controller implements HasMiddleware
                 Rule::unique('users', 'username')->ignore($user->id),
             ],
             'phone_number' => ['nullable', 'string', 'max:15'],
+            'address'      => ['required', 'string', 'max:500'],
         ]);
 
         // Jika email berubah, reset verifikasi email
@@ -64,6 +65,7 @@ class ProfileController extends Controller implements HasMiddleware
         $user->name         = $data['name'];
         $user->username     = $data['username'] ?? null;
         $user->phone_number = $data['phone_number'] ?? null;
+        $user->address      = $data['address'] ?? '' ;
         $user->save();
 
         return back()->with('success', 'Profil berhasil diperbarui.');

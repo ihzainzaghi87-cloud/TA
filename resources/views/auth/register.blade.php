@@ -87,7 +87,7 @@
         </div>
 
         <div class="group">
-            <label for="phone_number" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 transition-colors duration-300">Phone <span class="text-gray-400 dark:text-gray-500">(optional)</span></label>
+            <label for="phone_number" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 transition-colors duration-300">Phone</label>
             <div class="relative">
                 <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                     <svg class="w-5 h-5 text-gray-400 dark:text-gray-500 group-focus-within:text-blue-500 dark:group-focus-within:text-blue-400 transition-colors duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -97,11 +97,47 @@
                 <input id="phone_number" 
                        name="phone_number" 
                        type="tel" 
+                       required
                        value="{{ old('phone_number') }}"
                        class="block w-full pl-10 pr-3 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:border-transparent transition-all duration-200 text-sm hover:border-gray-400 dark:hover:border-gray-500"
                        placeholder="+62 812 3456 7890">
             </div>
         </div>
+    </div>
+
+    <!-- Address -->
+    <div class="group">
+        <label for="address" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 transition-colors duration-300">
+            Address
+        </label>
+        
+        <div class="relative">
+            <div class="absolute top-3 left-3 flex items-start pointer-events-none">
+                <svg class="w-5 h-5 text-gray-400 dark:text-gray-500 group-focus-within:text-blue-500 dark:group-focus-within:text-blue-400 transition-colors duration-200" 
+                    fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M12 11c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm0 0c-4.418 0-8 3.134-8 7 0 1.105.895 2 2 2h12c1.105 0 2-.895 2-2 0-3.866-3.582-7-8-7z" />
+                </svg>
+            </div>
+
+            <textarea id="address" 
+                    name="address" 
+                    required 
+                    rows="3"
+                    class="block w-full pl-10 pr-3 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:border-transparent transition-all duration-200 text-sm hover:border-gray-400 dark:hover:border-gray-500"
+                    placeholder="enter your address">{{ old('address') }}</textarea>
+        </div>
+
+        @error('address')
+            <p class="mt-2 text-sm text-red-600 dark:text-red-400 flex items-center animate-slide-up">
+                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                        d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16c-.77.833.192 2.5 1.732 2.5z">
+                    </path>
+                </svg>
+                {{ $message }}
+            </p>
+        @enderror
     </div>
 
     <!-- Password Fields -->

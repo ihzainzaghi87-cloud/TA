@@ -10,6 +10,7 @@ use App\Http\Controllers\RoleController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\UserManagementController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\Customer\HomeController;
 
 // ---------- Auth (web session) ----------
 Route::get('/login',    [AuthController::class, 'showLoginForm'])->name('login')->middleware('guest');
@@ -21,7 +22,7 @@ Route::post('/register',[AuthController::class, 'register'])->name('register.att
 Route::post('/logout',  [AuthController::class, 'logout'])->name('logout')->middleware('auth');
 
 // ---------- Dashboard ----------
-Route::get('/', DashboardController::class)->name('dashboard')->middleware('auth');
+Route::get('/admin', DashboardController::class)->name('dashboard')->middleware('auth');
 
 // ---------- Admin Panel (web) ----------
 Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () {
@@ -82,6 +83,8 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     Route::delete('products/images/{image}', [ProductController::class, 'destroyImage'])
         ->name('products.images.destroy');
 });
+
+Route::get('/', [HomeController::class, '__invoke'])->name('home');
 
 // ---------- Password Reset ----------
 Route::middleware('guest')->group(function () {
