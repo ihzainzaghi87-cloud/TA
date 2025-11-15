@@ -10,6 +10,7 @@ use App\Http\Controllers\RoleController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\UserManagementController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\BannerController;
 use App\Http\Controllers\Customer\HomeController;
 
 // ---------- Auth (web session) ----------
@@ -82,6 +83,11 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     // Delete image (jika ada method destroyImage di controller)
     Route::delete('products/images/{image}', [ProductController::class, 'destroyImage'])
         ->name('products.images.destroy');
+
+    // Banner
+    Route::resource('banners', BannerController::class);
+    Route::patch('banners/{banner}/toggle-status', [BannerController::class, 'toggleStatus'])
+        ->name('banners.toggle-status');
 });
 
 Route::get('/', [HomeController::class, '__invoke'])->name('home');
