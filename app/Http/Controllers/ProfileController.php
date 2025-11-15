@@ -81,7 +81,12 @@ class ProfileController extends Controller implements HasMiddleware
 
         $data = $request->validate([
             'current_password'      => ['required', 'current_password'], // cek password aktif
-            'password'              => ['required', 'confirmed', Password::min(6)],
+            'password'              => ['required', 'confirmed', Password::min(8)
+                                        ->mixedCase()
+                                        ->letters()
+                                        ->numbers()
+                                        ->symbols()
+                                        ->uncompromised()],
             'password_confirmation' => ['required'],
         ]);
 
