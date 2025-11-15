@@ -87,6 +87,7 @@ class ProductController extends Controller
             'slug' => 'nullable|string|unique:products,slug',
             'description' => 'nullable|string',
             'price' => 'required|numeric|min:0',
+            'point_price' => 'nullable|integer|min:0|required_if:is_reward,1',
             'is_active' => 'boolean',
             'is_reward' => 'boolean',
             
@@ -135,6 +136,7 @@ class ProductController extends Controller
                 'slug' => $slug,
                 'description' => $validated['description'] ?? null,
                 'price' => $validated['price'],
+                'point_price' => $validated['point_price'] ?? null,
                 'is_active' => $request->boolean('is_active', true),
                 'is_reward' => $request->boolean('is_reward', false),
             ]);
@@ -222,6 +224,7 @@ class ProductController extends Controller
             ],
             'description' => 'nullable|string',
             'price' => 'required|numeric|min:0',
+            'point_price' => 'nullable|integer|min:0|required_if:is_reward,1',
             'is_active' => 'boolean',
             'is_reward' => 'boolean',
             
@@ -277,6 +280,7 @@ class ProductController extends Controller
                 'slug' => $slug,
                 'description' => $validated['description'] ?? null,
                 'price' => $validated['price'],
+                'point_price' => $validated['point_price'] ?? null,
                 'is_active' => $request->boolean('is_active'),
                 'is_reward' => $request->boolean('is_reward'),
             ]);

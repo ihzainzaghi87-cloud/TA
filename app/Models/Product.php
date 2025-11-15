@@ -24,6 +24,7 @@ class Product extends Model
         'name',
         'description',
         'price',
+        'point_price',
         'is_active',
         'is_reward',
     ];

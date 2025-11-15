@@ -166,6 +166,16 @@
                         </p>
                     </div>
 
+                    <!-- Point Price (Only shown if is_reward is true) -->
+                    @if($product->is_reward && $product->point_price)
+                    <div>
+                        <div class="text-sm text-gray-500 mb-1">Point Price</div>
+                        <div class="text-xl font-bold text-blue-600">
+                            {{ number_format($product->point_price, 0, ',', '.') }} Points
+                        </div>
+                    </div>
+                    @endif
+
                     <div>
                         <label class="text-sm font-medium text-gray-500 dark:text-gray-400">Status</label>
                         <p>

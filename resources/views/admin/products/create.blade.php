@@ -90,7 +90,7 @@
                 </div>
 
                 <!-- Price -->
-                <div>
+                <div class="mb-4">
                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                         Price (Rp) <span class="text-red-500">*</span>
                     </label>
@@ -99,6 +99,31 @@
                            placeholder="0">
                     @error('price')
                     <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                    @enderror
+                </div>
+
+                <!-- Is Reward Checkbox -->
+                <div class="mb-4">
+                    <div class="flex items-center">
+                        <input type="checkbox" name="is_reward" id="is_reward" value="1"
+                            {{ old('is_reward') ? 'checked' : '' }}
+                            class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500">
+                        <label for="is_reward" class="ml-2 text-sm font-medium text-gray-700">
+                            Reward Product (Can be purchased with points)
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Point Price Field (Hidden by default, shown when is_reward is checked) -->
+                <div id="point_price_field" class="mb-4" style="display: none;">
+                    <label for="point_price" class="block text-sm font-medium text-gray-700 mb-2">
+                        Point Price <span class="text-red-500">*</span>
+                    </label>
+                    <input type="number" name="point_price" id="point_price" min="0"
+                        value="{{ old('point_price') }}"
+                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 @error('point_price') border-red-500 @enderror">
+                    @error('point_price')
+                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                     @enderror
                 </div>
 
@@ -123,15 +148,6 @@
                                class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500">
                         <label for="is_active" class="ml-2 text-sm font-medium text-gray-700 dark:text-gray-300">
                             Active
-                        </label>
-                    </div>
-
-                    <div class="flex items-center">
-                        <input type="checkbox" name="is_reward" id="is_reward" value="1" 
-                               {{ old('is_reward') ? 'checked' : '' }}
-                               class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500">
-                        <label for="is_reward" class="ml-2 text-sm font-medium text-gray-700 dark:text-gray-300">
-                            Reward Product
                         </label>
                     </div>
                 </div>
@@ -252,5 +268,27 @@ function removeVariation(button) {
     const row = button.closest('.variation-row');
     row.remove();
 }
+</script>
+<script>
+    // Toggle point price field based on is_reward checkbox
+    document.getElementById('is_reward').addEventListener('change', function() {
+        const pointPriceField = document.getElementById('point_price_field');
+        const pointPriceInput = document.getElementById('point_price');
+        
+        if (this.checked) {
+            pointPriceField.style.display = 'block';
+            pointPriceInput.required = true;
+        } else {
+            pointPriceField.style.display = 'none';
+            pointPriceInput.required = false;
+            pointPriceInput.value = '';
+        }
+    });
+
+    // Check on page load (for old input)
+    if (document.getElementById('is_reward').checked) {
+        document.getElementById('point_price_field').style.display = 'block';
+        document.getElementById('point_price').required = true;
+    }
 </script>
 @endsection

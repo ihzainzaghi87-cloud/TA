@@ -18,9 +18,12 @@ return new class extends Migration
             $table->string('name');
             $table->text('description')->nullable();
             $table->decimal('price', 10, 2);
+            $table->integer('point_price')->nullable(); // Harga dalam poin
             $table->boolean('is_active')->default(true);
-            $table->boolean('is_reward')->default(false);
+            $table->boolean('is_reward')->default(false); // Produk Reward
             $table->timestamps();
+
+            $table->index(['is_reward', 'is_active']);
         });
     }
 
