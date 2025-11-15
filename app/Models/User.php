@@ -43,4 +43,20 @@ class User extends Authenticatable implements CanResetPasswordContract
     //         return $url; // atau URL custom kamu
     //     }));
     // }
+
+    /**
+     * Get the user's points.
+     */
+    public function userPoint()
+    {
+        return $this->hasOne(UserPoint::class);
+    }
+
+    /**
+     * Get the user's cart items.
+     */
+    public function carts()
+    {
+        return $this->hasMany(Cart::class);
+    }
 }

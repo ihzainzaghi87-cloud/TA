@@ -27,4 +27,12 @@ class Variation extends Model
     {
         return $this->belongsTo(Product::class);
     }
+
+    /**
+     * Get all cart items for this product variant.
+     */
+    public function carts()
+    {
+        return $this->hasMany(Cart::class);
+    }
 }
