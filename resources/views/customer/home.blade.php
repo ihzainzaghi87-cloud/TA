@@ -1,138 +1,486 @@
-<!doctype html>
-<html lang="en">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Welcome — The Paranoia</title>
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-</head>
-<body class="antialiased bg-gray-50 text-gray-800">
+@extends('customer.layouts.app')
 
-<nav class="bg-white shadow">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6">
-        <div class="flex justify-between items-center h-16">
-            <div class="flex items-center">
-                <a href="{{ url('/') }}" class="text-xl font-semibold text-indigo-600">The Paranoia</a>
-                <div class="hidden md:flex ml-10 space-x-4">
-                    <a href="#features" class="text-gray-600 hover:text-indigo-600">Features</a>
-                    <a href="#pricing" class="text-gray-600 hover:text-indigo-600">Pricing</a>
-                    <a href="#contact" class="text-gray-600 hover:text-indigo-600">Contact</a>
+@section('title', 'Home')
+
+@section('content')
+{{-- Hero Banner Carousel Section --}}
+<section class="relative bg-gradient-to-br from-purple-50 via-white to-pink-50">
+    <div x-data="{
+        currentSlide: 0,
+        autoplay: true,
+        interval: null,
+        slides: {{ $banners->count() > 0 ? $banners->count() : 3 }},
+        init() {
+            this.startAutoplay();
+        },
+        startAutoplay() {
+            if (this.autoplay) {
+                this.interval = setInterval(() => {
+                    this.nextSlide();
+                }, 5000);
+            }
+        },
+        stopAutoplay() {
+            if (this.interval) {
+                clearInterval(this.interval);
+            }
+        },
+        nextSlide() {
+            this.currentSlide = (this.currentSlide + 1) % this.slides;
+        },
+        prevSlide() {
+            this.currentSlide = (this.currentSlide - 1 + this.slides) % this.slides;
+        },
+        goToSlide(index) {
+            this.currentSlide = index;
+        }
+    }" 
+    @mouseenter="stopAutoplay()" 
+    @mouseleave="startAutoplay()"
+    class="relative h-[500px] md:h-[600px] overflow-hidden">
+        
+        {{-- Carousel Slides --}}
+        @if($banners->count() > 0)
+            {{-- Database Banners --}}
+            @foreach($banners as $index => $banner)
+            <div x-show="currentSlide === {{ $index }}"
+                 x-transition:enter="transition ease-out duration-500"
+                 x-transition:enter-start="opacity-0 transform translate-x-full"
+                 x-transition:enter-end="opacity-100 transform translate-x-0"
+                 x-transition:leave="transition ease-in duration-500"
+                 x-transition:leave-start="opacity-100 transform translate-x-0"
+                 x-transition:leave-end="opacity-0 transform -translate-x-full"
+                 class="absolute inset-0"
+                 style="display: none;">
+                <img src="{{ $banner->image_url }}" 
+                     alt="{{ $banner->title }}" 
+                     class="w-full h-full object-cover"
+                     loading="{{ $index === 0 ? 'eager' : 'lazy' }}">
+                <div class="absolute inset-0 bg-gradient-to-r from-black/50 to-transparent flex items-center">
+                    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
+                        <div class="max-w-2xl">
+                            <h2 class="text-4xl md:text-6xl font-bold text-white mb-4 fade-in">
+                                {{ $banner->title }}
+                            </h2>
+                            <a href="#products" 
+                               class="inline-block bg-gradient-to-r from-purple-600 to-pink-600 text-white px-8 py-3 rounded-full font-semibold hover:from-purple-700 hover:to-pink-700 transition duration-300 transform hover:scale-105 shadow-lg">
+                                Shop Now
+                            </a>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div class="flex items-center space-x-4">
-                @if (Route::has('login'))
-                    @auth
-                        <a href="{{ url('/admin') }}" class="px-4 py-2 rounded-md bg-indigo-600 text-white text-sm">Dashboard</a>
-                        <a href="{{ route('logout') }}" class="px-4 py-2 rounded-md bg-indigo-600 text-white text-sm"
-                           onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                            Logout
-                        </a>
-                        <form id="logout-form" action="{{ route('logout') }}" method="POST" class="hidden">
-                            @csrf
-                        </form>
-                    @else
-                        <a href="{{ route('login') }}" class="text-sm text-gray-600 hover:text-indigo-600">Log in</a>
-                        @if (Route::has('register'))
-                            <a href="{{ route('register') }}" class="px-4 py-2 rounded-md border border-indigo-600 text-indigo-600 text-sm">Get started</a>
-                        @endif
-                    @endauth
-                @endif
+            @endforeach
+        @else
+            {{-- Placeholder Banners --}}
+            <div x-show="currentSlide === 0"
+                 x-transition:enter="transition ease-out duration-500"
+                 x-transition:enter-start="opacity-0"
+                 x-transition:enter-end="opacity-100"
+                 class="absolute inset-0 bg-gradient-to-br from-purple-600 via-purple-500 to-pink-600 flex items-center"
+                 style="display: none;">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full text-center">
+                    <h2 class="text-4xl md:text-6xl font-bold text-white mb-4 fade-in">
+                        Welcome to The Paranoia
+                    </h2>
+                    <p class="text-xl md:text-2xl text-white/90 mb-8">
+                        Discover Amazing Products at Great Prices
+                    </p>
+                    <a href="#products" 
+                       class="inline-block bg-white text-purple-600 px-8 py-3 rounded-full font-semibold hover:bg-gray-100 transition duration-300 transform hover:scale-105 shadow-lg">
+                        Explore Now
+                    </a>
+                </div>
+            </div>
+            
+            <div x-show="currentSlide === 1"
+                 x-transition:enter="transition ease-out duration-500"
+                 x-transition:enter-start="opacity-0"
+                 x-transition:enter-end="opacity-100"
+                 class="absolute inset-0 bg-gradient-to-br from-pink-600 via-pink-500 to-purple-600 flex items-center"
+                 style="display: none;">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full text-center">
+                    <h2 class="text-4xl md:text-6xl font-bold text-white mb-4 fade-in">
+                        New Arrivals
+                    </h2>
+                    <p class="text-xl md:text-2xl text-white/90 mb-8">
+                        Fresh Styles Just For You
+                    </p>
+                    <a href="#products" 
+                       class="inline-block bg-white text-pink-600 px-8 py-3 rounded-full font-semibold hover:bg-gray-100 transition duration-300 transform hover:scale-105 shadow-lg">
+                        Shop Collection
+                    </a>
+                </div>
+            </div>
+            
+            <div x-show="currentSlide === 2"
+                 x-transition:enter="transition ease-out duration-500"
+                 x-transition:enter-start="opacity-0"
+                 x-transition:enter-end="opacity-100"
+                 class="absolute inset-0 bg-gradient-to-br from-indigo-600 via-indigo-500 to-purple-600 flex items-center"
+                 style="display: none;">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full text-center">
+                    <h2 class="text-4xl md:text-6xl font-bold text-white mb-4 fade-in">
+                        Special Offers
+                    </h2>
+                    <p class="text-xl md:text-2xl text-white/90 mb-8">
+                        Up to 50% Off Selected Items
+                    </p>
+                    <a href="#products" 
+                       class="inline-block bg-white text-indigo-600 px-8 py-3 rounded-full font-semibold hover:bg-gray-100 transition duration-300 transform hover:scale-105 shadow-lg">
+                        Get Deals
+                    </a>
+                </div>
+            </div>
+        @endif
+        
+        {{-- Navigation Arrows --}}
+        <button @click="prevSlide()" 
+                class="absolute left-4 top-1/2 -translate-y-1/2 bg-white/30 hover:bg-white/50 backdrop-blur-sm text-white p-3 rounded-full transition duration-300 transform hover:scale-110">
+            <i class="fas fa-chevron-left"></i>
+        </button>
+        <button @click="nextSlide()" 
+                class="absolute right-4 top-1/2 -translate-y-1/2 bg-white/30 hover:bg-white/50 backdrop-blur-sm text-white p-3 rounded-full transition duration-300 transform hover:scale-110">
+            <i class="fas fa-chevron-right"></i>
+        </button>
+        
+        {{-- Dot Navigation --}}
+        <div class="absolute bottom-6 left-1/2 -translate-x-1/2 flex space-x-2">
+            <template x-for="(slide, index) in slides" :key="index">
+                <button @click="goToSlide(index)" 
+                        :class="currentSlide === index ? 'bg-white w-8' : 'bg-white/50 w-3'"
+                        class="h-3 rounded-full transition-all duration-300 hover:bg-white"></button>
+            </template>
+        </div>
+    </div>
+</section>
+
+{{-- Trust Badges Section --}}
+<section class="bg-white py-8 shadow-md">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+            <div class="flex flex-col items-center text-center space-y-2">
+                <div class="bg-gradient-to-br from-purple-100 to-pink-100 p-4 rounded-full">
+                    <i class="fas fa-shipping-fast text-3xl text-purple-600"></i>
+                </div>
+                <h3 class="font-semibold text-gray-900">Free Shipping</h3>
+                <p class="text-sm text-gray-600">On orders over $50</p>
+            </div>
+            <div class="flex flex-col items-center text-center space-y-2">
+                <div class="bg-gradient-to-br from-purple-100 to-pink-100 p-4 rounded-full">
+                    <i class="fas fa-lock text-3xl text-purple-600"></i>
+                </div>
+                <h3 class="font-semibold text-gray-900">Secure Payment</h3>
+                <p class="text-sm text-gray-600">100% secure transactions</p>
+            </div>
+            <div class="flex flex-col items-center text-center space-y-2">
+                <div class="bg-gradient-to-br from-purple-100 to-pink-100 p-4 rounded-full">
+                    <i class="fas fa-undo text-3xl text-purple-600"></i>
+                </div>
+                <h3 class="font-semibold text-gray-900">Easy Returns</h3>
+                <p class="text-sm text-gray-600">30-day return policy</p>
+            </div>
+            <div class="flex flex-col items-center text-center space-y-2">
+                <div class="bg-gradient-to-br from-purple-100 to-pink-100 p-4 rounded-full">
+                    <i class="fas fa-headset text-3xl text-purple-600"></i>
+                </div>
+                <h3 class="font-semibold text-gray-900">24/7 Support</h3>
+                <p class="text-sm text-gray-600">Dedicated customer service</p>
             </div>
         </div>
     </div>
-</nav>
+</section>
 
-<header class="bg-white">
-    <div class="max-w-7xl mx-auto px-4 py-16 text-center">
-        <h1 class="text-4xl sm:text-5xl font-extrabold text-gray-900">Build confidence. Reduce risk.</h1>
-        <p class="mt-4 text-lg text-gray-600 max-w-2xl mx-auto">A lightweight platform to manage customers, workflows, and notifications — securely and privately.</p>
-        <div class="mt-8 flex justify-center space-x-4">
-            <a href="{{ route('register') }}" class="px-6 py-3 bg-indigo-600 text-white rounded-md shadow hover:bg-indigo-700">Get started</a>
-            <a href="#features" class="px-6 py-3 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-100">Learn more</a>
+{{-- Categories Section --}}
+<section id="categories" class="py-16 bg-gray-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-12">
+            <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+                Shop by <span class="bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">Category</span>
+            </h2>
+            <p class="text-gray-600 max-w-2xl mx-auto">
+                Discover our wide range of product categories, carefully curated for your needs
+            </p>
+        </div>
+        
+        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            {{-- Category Card 1 --}}
+            <div class="group relative bg-white rounded-xl shadow-md hover:shadow-xl transition duration-300 overflow-hidden cursor-pointer transform hover:-translate-y-2">
+                <div class="aspect-square bg-gradient-to-br from-purple-100 to-pink-100 flex items-center justify-center">
+                    <i class="fas fa-laptop text-6xl text-purple-600 group-hover:scale-110 transition duration-300"></i>
+                </div>
+                <div class="p-4 text-center">
+                    <h3 class="font-semibold text-gray-900 group-hover:text-purple-600 transition duration-300">Electronics</h3>
+                    <p class="text-sm text-gray-600">50+ Products</p>
+                </div>
+            </div>
+            
+            {{-- Category Card 2 --}}
+            <div class="group relative bg-white rounded-xl shadow-md hover:shadow-xl transition duration-300 overflow-hidden cursor-pointer transform hover:-translate-y-2">
+                <div class="aspect-square bg-gradient-to-br from-pink-100 to-purple-100 flex items-center justify-center">
+                    <i class="fas fa-tshirt text-6xl text-pink-600 group-hover:scale-110 transition duration-300"></i>
+                </div>
+                <div class="p-4 text-center">
+                    <h3 class="font-semibold text-gray-900 group-hover:text-pink-600 transition duration-300">Fashion</h3>
+                    <p class="text-sm text-gray-600">100+ Products</p>
+                </div>
+            </div>
+            
+            {{-- Category Card 3 --}}
+            <div class="group relative bg-white rounded-xl shadow-md hover:shadow-xl transition duration-300 overflow-hidden cursor-pointer transform hover:-translate-y-2">
+                <div class="aspect-square bg-gradient-to-br from-blue-100 to-indigo-100 flex items-center justify-center">
+                    <i class="fas fa-home text-6xl text-blue-600 group-hover:scale-110 transition duration-300"></i>
+                </div>
+                <div class="p-4 text-center">
+                    <h3 class="font-semibold text-gray-900 group-hover:text-blue-600 transition duration-300">Home & Living</h3>
+                    <p class="text-sm text-gray-600">75+ Products</p>
+                </div>
+            </div>
+            
+            {{-- Category Card 4 --}}
+            <div class="group relative bg-white rounded-xl shadow-md hover:shadow-xl transition duration-300 overflow-hidden cursor-pointer transform hover:-translate-y-2">
+                <div class="aspect-square bg-gradient-to-br from-green-100 to-teal-100 flex items-center justify-center">
+                    <i class="fas fa-dumbbell text-6xl text-green-600 group-hover:scale-110 transition duration-300"></i>
+                </div>
+                <div class="p-4 text-center">
+                    <h3 class="font-semibold text-gray-900 group-hover:text-green-600 transition duration-300">Sports</h3>
+                    <p class="text-sm text-gray-600">40+ Products</p>
+                </div>
+            </div>
         </div>
     </div>
-</header>
+</section>
 
-<main class="max-w-7xl mx-auto px-4 pb-16">
-    <section id="features" class="mt-12 grid gap-8 md:grid-cols-3">
-        <div class="bg-white p-6 rounded-lg shadow">
-            <div class="flex items-center justify-center h-12 w-12 rounded-md bg-indigo-50 text-indigo-600">
-                <!-- Icon: Secure -->
-                <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 11c0-1.657 1.343-3 3-3h0a3 3 0 013 3v2a5 5 0 01-5 5H9a5 5 0 01-5-5v-2a3 3 0 013-3h0c1.657 0 3 1.343 3 3"></path></svg>
-            </div>
-            <h3 class="mt-4 text-lg font-medium">Privacy-first</h3>
-            <p class="mt-2 text-sm text-gray-600">Designed to store only what you need and keep access tightly controlled.</p>
+{{-- Featured Products Section --}}
+<section id="products" class="py-16 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-12">
+            <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+                Featured <span class="bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">Products</span>
+            </h2>
+            <p class="text-gray-600 max-w-2xl mx-auto">
+                Check out our most popular products handpicked just for you
+            </p>
         </div>
-
-        <div class="bg-white p-6 rounded-lg shadow">
-            <div class="flex items-center justify-center h-12 w-12 rounded-md bg-indigo-50 text-indigo-600">
-                <!-- Icon: Automate -->
-                <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0v6a4 4 0 01-4 4H8a4 4 0 01-4-4V7"></path></svg>
+        
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {{-- Product Card Placeholder 1 --}}
+            <div class="group bg-white rounded-xl shadow-md hover:shadow-xl transition duration-300 overflow-hidden">
+                <div class="relative aspect-square bg-gray-200 overflow-hidden">
+                    <div class="absolute inset-0 flex items-center justify-center">
+                        <i class="fas fa-image text-6xl text-gray-400"></i>
+                    </div>
+                    <div class="absolute top-4 right-4">
+                        <span class="bg-red-500 text-white text-xs font-bold px-3 py-1 rounded-full">-20%</span>
+                    </div>
+                    <button class="absolute top-4 left-4 bg-white p-2 rounded-full shadow-md opacity-0 group-hover:opacity-100 transition duration-300 hover:bg-purple-600 hover:text-white">
+                        <i class="fas fa-heart"></i>
+                    </button>
+                </div>
+                <div class="p-4">
+                    <h3 class="font-semibold text-gray-900 mb-2 line-clamp-2">Premium Product Name</h3>
+                    <div class="flex items-center mb-2">
+                        <div class="flex text-yellow-400 text-sm">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star-half-alt"></i>
+                        </div>
+                        <span class="text-sm text-gray-600 ml-2">(4.5)</span>
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <span class="text-lg font-bold text-purple-600">$80.00</span>
+                            <span class="text-sm text-gray-500 line-through ml-2">$100.00</span>
+                        </div>
+                        <button class="bg-gradient-to-r from-purple-600 to-pink-600 text-white p-2 rounded-lg hover:from-purple-700 hover:to-pink-700 transition duration-300 transform hover:scale-110">
+                            <i class="fas fa-shopping-cart"></i>
+                        </button>
+                    </div>
+                </div>
             </div>
-            <h3 class="mt-4 text-lg font-medium">Automations</h3>
-            <p class="mt-2 text-sm text-gray-600">Trigger emails, reminders, and tasks with a few clicks — save time and reduce errors.</p>
+            
+            {{-- Product Card Placeholder 2 --}}
+            <div class="group bg-white rounded-xl shadow-md hover:shadow-xl transition duration-300 overflow-hidden">
+                <div class="relative aspect-square bg-gray-200 overflow-hidden">
+                    <div class="absolute inset-0 flex items-center justify-center">
+                        <i class="fas fa-image text-6xl text-gray-400"></i>
+                    </div>
+                    <div class="absolute top-4 right-4">
+                        <span class="bg-green-500 text-white text-xs font-bold px-3 py-1 rounded-full">New</span>
+                    </div>
+                    <button class="absolute top-4 left-4 bg-white p-2 rounded-full shadow-md opacity-0 group-hover:opacity-100 transition duration-300 hover:bg-purple-600 hover:text-white">
+                        <i class="fas fa-heart"></i>
+                    </button>
+                </div>
+                <div class="p-4">
+                    <h3 class="font-semibold text-gray-900 mb-2 line-clamp-2">Amazing Product Title</h3>
+                    <div class="flex items-center mb-2">
+                        <div class="flex text-yellow-400 text-sm">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                        </div>
+                        <span class="text-sm text-gray-600 ml-2">(5.0)</span>
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <span class="text-lg font-bold text-purple-600">$120.00</span>
+                        </div>
+                        <button class="bg-gradient-to-r from-purple-600 to-pink-600 text-white p-2 rounded-lg hover:from-purple-700 hover:to-pink-700 transition duration-300 transform hover:scale-110">
+                            <i class="fas fa-shopping-cart"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            {{-- Product Card Placeholder 3 --}}
+            <div class="group bg-white rounded-xl shadow-md hover:shadow-xl transition duration-300 overflow-hidden">
+                <div class="relative aspect-square bg-gray-200 overflow-hidden">
+                    <div class="absolute inset-0 flex items-center justify-center">
+                        <i class="fas fa-image text-6xl text-gray-400"></i>
+                    </div>
+                    <button class="absolute top-4 left-4 bg-white p-2 rounded-full shadow-md opacity-0 group-hover:opacity-100 transition duration-300 hover:bg-purple-600 hover:text-white">
+                        <i class="fas fa-heart"></i>
+                    </button>
+                </div>
+                <div class="p-4">
+                    <h3 class="font-semibold text-gray-900 mb-2 line-clamp-2">Bestseller Product</h3>
+                    <div class="flex items-center mb-2">
+                        <div class="flex text-yellow-400 text-sm">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="far fa-star"></i>
+                        </div>
+                        <span class="text-sm text-gray-600 ml-2">(4.0)</span>
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <span class="text-lg font-bold text-purple-600">$65.00</span>
+                        </div>
+                        <button class="bg-gradient-to-r from-purple-600 to-pink-600 text-white p-2 rounded-lg hover:from-purple-700 hover:to-pink-700 transition duration-300 transform hover:scale-110">
+                            <i class="fas fa-shopping-cart"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            {{-- Product Card Placeholder 4 --}}
+            <div class="group bg-white rounded-xl shadow-md hover:shadow-xl transition duration-300 overflow-hidden">
+                <div class="relative aspect-square bg-gray-200 overflow-hidden">
+                    <div class="absolute inset-0 flex items-center justify-center">
+                        <i class="fas fa-image text-6xl text-gray-400"></i>
+                    </div>
+                    <div class="absolute top-4 right-4">
+                        <span class="bg-purple-500 text-white text-xs font-bold px-3 py-1 rounded-full">Hot</span>
+                    </div>
+                    <button class="absolute top-4 left-4 bg-white p-2 rounded-full shadow-md opacity-0 group-hover:opacity-100 transition duration-300 hover:bg-purple-600 hover:text-white">
+                        <i class="fas fa-heart"></i>
+                    </button>
+                </div>
+                <div class="p-4">
+                    <h3 class="font-semibold text-gray-900 mb-2 line-clamp-2">Trending Product</h3>
+                    <div class="flex items-center mb-2">
+                        <div class="flex text-yellow-400 text-sm">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                        </div>
+                        <span class="text-sm text-gray-600 ml-2">(5.0)</span>
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <span class="text-lg font-bold text-purple-600">$95.00</span>
+                        </div>
+                        <button class="bg-gradient-to-r from-purple-600 to-pink-600 text-white p-2 rounded-lg hover:from-purple-700 hover:to-pink-700 transition duration-300 transform hover:scale-110">
+                            <i class="fas fa-shopping-cart"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
         </div>
-
-        <div class="bg-white p-6 rounded-lg shadow">
-            <div class="flex items-center justify-center h-12 w-12 rounded-md bg-indigo-50 text-indigo-600">
-                <!-- Icon: Insights -->
-                <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 3v2m0 14v2m8-10h2M3 11H1m16.95 6.95l1.41 1.41M4.64 4.64L3.22 3.22m12.02 0l1.41 1.41M4.64 19.36l-1.41 1.41"></path></svg>
-            </div>
-            <h3 class="mt-4 text-lg font-medium">Actionable insights</h3>
-            <p class="mt-2 text-sm text-gray-600">Understand customer health, churn risk, and opportunities with clear dashboards.</p>
-        </div>
-    </section>
-
-    <section id="pricing" class="mt-16">
-        <div class="text-center">
-            <h2 class="text-2xl font-semibold">Simple pricing</h2>
-            <p class="mt-2 text-gray-600">One predictable monthly price. Free trial available.</p>
-        </div>
-
-        <div class="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            <div class="bg-white p-6 rounded-lg shadow">
-                <h3 class="text-lg font-medium">Starter</h3>
-                <p class="mt-2 text-3xl font-extrabold">$0<span class="text-base font-medium">/mo</span></p>
-                <p class="mt-4 text-sm text-gray-600">Up to 3 users, basic features, community support.</p>
-                <a href="{{ route('register') }}" class="mt-6 inline-block px-4 py-2 bg-indigo-600 text-white rounded">Start free</a>
-            </div>
-
-            <div class="bg-white p-6 rounded-lg shadow border-2 border-indigo-50">
-                <h3 class="text-lg font-medium">Pro</h3>
-                <p class="mt-2 text-3xl font-extrabold">$29<span class="text-base font-medium">/mo</span></p>
-                <p class="mt-4 text-sm text-gray-600">Team seats, automations, email support.</p>
-                <a href="{{ route('register') }}" class="mt-6 inline-block px-4 py-2 bg-indigo-600 text-white rounded">Get Pro</a>
-            </div>
-
-            <div class="bg-white p-6 rounded-lg shadow">
-                <h3 class="text-lg font-medium">Enterprise</h3>
-                <p class="mt-2 text-3xl font-extrabold">Custom</p>
-                <p class="mt-4 text-sm text-gray-600">Advanced security, SSO, dedicated support.</p>
-                <a href="#contact" class="mt-6 inline-block px-4 py-2 border border-gray-300 rounded text-gray-700">Contact sales</a>
-            </div>
-        </div>
-    </section>
-
-    <section id="contact" class="mt-16">
-        <div class="bg-gradient-to-r from-indigo-50 to-white p-8 rounded-lg">
-            <div class="max-w-3xl mx-auto text-center">
-                <h3 class="text-xl font-semibold">Questions or custom needs?</h3>
-                <p class="mt-2 text-gray-600">Reach out and we'll get back to you within one business day.</p>
-                <a href="mailto:hello@theparanoia.example" class="mt-4 inline-block px-5 py-3 bg-white border border-indigo-200 rounded shadow">hello@theparanoia.example</a>
-            </div>
-        </div>
-    </section>
-</main>
-
-<footer class="bg-white border-t">
-    <div class="max-w-7xl mx-auto px-4 py-6 flex flex-col md:flex-row justify-between items-center">
-        <p class="text-sm text-gray-600">&copy; {{ date('Y') }} The Paranoia. All rights reserved.</p>
-        <div class="mt-4 md:mt-0 space-x-4">
-            <a href="#" class="text-sm text-gray-600 hover:text-indigo-600">Privacy</a>
-            <a href="#" class="text-sm text-gray-600 hover:text-indigo-600">Terms</a>
+        
+        <div class="text-center mt-12">
+            <a href="#" class="inline-block bg-gradient-to-r from-purple-600 to-pink-600 text-white px-8 py-3 rounded-full font-semibold hover:from-purple-700 hover:to-pink-700 transition duration-300 transform hover:scale-105 shadow-lg">
+                View All Products
+            </a>
         </div>
     </div>
-</footer>
+</section>
 
-</body>
-</html>
+{{-- Special Offers Section --}}
+<section class="py-16 bg-gradient-to-br from-purple-600 via-purple-500 to-pink-600 text-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid md:grid-cols-2 gap-8 items-center">
+            <div>
+                <h2 class="text-3xl md:text-5xl font-bold mb-4">
+                    Special Offer!
+                </h2>
+                <p class="text-xl mb-6 text-white/90">
+                    Get up to 50% OFF on selected items this week only!
+                </p>
+                <div class="flex items-center space-x-4 mb-8">
+                    <div class="bg-white/20 backdrop-blur-sm px-6 py-4 rounded-lg text-center">
+                        <div class="text-3xl font-bold">23</div>
+                        <div class="text-sm">Hours</div>
+                    </div>
+                    <div class="bg-white/20 backdrop-blur-sm px-6 py-4 rounded-lg text-center">
+                        <div class="text-3xl font-bold">45</div>
+                        <div class="text-sm">Minutes</div>
+                    </div>
+                    <div class="bg-white/20 backdrop-blur-sm px-6 py-4 rounded-lg text-center">
+                        <div class="text-3xl font-bold">32</div>
+                        <div class="text-sm">Seconds</div>
+                    </div>
+                </div>
+                <a href="#products" 
+                   class="inline-block bg-white text-purple-600 px-8 py-3 rounded-full font-semibold hover:bg-gray-100 transition duration-300 transform hover:scale-105 shadow-lg">
+                    Shop Now
+                </a>
+            </div>
+            <div class="hidden md:flex items-center justify-center">
+                <div class="relative">
+                    <div class="absolute inset-0 bg-white/20 backdrop-blur-sm rounded-full animate-ping"></div>
+                    <div class="relative bg-white/10 backdrop-blur-sm p-12 rounded-full">
+                        <i class="fas fa-gift text-9xl"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{{-- Newsletter Section --}}
+<section id="newsletter" class="py-16 bg-gray-50">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <div class="bg-white rounded-2xl shadow-xl p-8 md:p-12">
+            <i class="fas fa-envelope text-5xl text-purple-600 mb-6"></i>
+            <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+                Subscribe to Our Newsletter
+            </h2>
+            <p class="text-gray-600 mb-8 max-w-2xl mx-auto">
+                Stay updated with our latest products, exclusive offers, and special promotions. Join thousands of happy subscribers!
+            </p>
+            <form class="flex flex-col sm:flex-row gap-4 max-w-xl mx-auto">
+                <input type="email" 
+                       placeholder="Enter your email address" 
+                       class="flex-1 px-6 py-3 rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent">
+                <button type="submit" 
+                        class="bg-gradient-to-r from-purple-600 to-pink-600 text-white px-8 py-3 rounded-full font-semibold hover:from-purple-700 hover:to-pink-700 transition duration-300 transform hover:scale-105 shadow-lg whitespace-nowrap">
+                    Subscribe Now
+                </button>
+            </form>
+            <p class="text-sm text-gray-500 mt-4">
+                We respect your privacy. Unsubscribe at any time.
+            </p>
+        </div>
+    </div>
+</section>
+@endsection
