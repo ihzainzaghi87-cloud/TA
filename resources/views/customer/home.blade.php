@@ -11,6 +11,25 @@
 @endpush
 
 @section('content')
+{{-- Display Flash Messages --}}
+@if(session('success'))
+    <div class="fixed top-20 right-4 z-50 max-w-md">
+        <x-alert type="success" :message="session('success')" />
+    </div>
+@endif
+
+@if(session('error'))
+    <div class="fixed top-20 right-4 z-50 max-w-md">
+        <x-alert type="error" :message="session('error')" />
+    </div>
+@endif
+
+@if($errors->any())
+    <div class="fixed top-20 right-4 z-50 max-w-md">
+        <x-alert type="error" :message="$errors->first()" />
+    </div>
+@endif
+
 {{-- Hero Banner Carousel Section --}}
 <section class="relative bg-gradient-to-br from-purple-50 via-white to-pink-50">
     <div x-data="{
@@ -280,18 +299,35 @@
                 showModal: false,
                 selectedVariation: null,
                 quantity: 1,
+                errorMessage: '',
                 selectVariation(variation) {
                     this.selectedVariation = variation;
+                    this.errorMessage = '';
                 },
                 addToCart() {
+                    this.errorMessage = '';
+                    
                     if (!this.selectedVariation) {
-                        alert('Please select a variation');
+                        this.errorMessage = 'Please select a product variation (color and size) before adding to cart';
                         return;
                     }
-                    if (this.quantity < 1 || this.quantity > this.selectedVariation.stock) {
-                        alert('Invalid quantity');
+                    
+                    if (this.selectedVariation.stock <= 0) {
+                        this.errorMessage = 'Selected variation is out of stock';
                         return;
                     }
+                    
+                    if (this.quantity < 1) {
+                        this.errorMessage = 'Quantity must be at least 1';
+                        return;
+                    }
+                    
+                    if (this.quantity > this.selectedVariation.stock) {
+                        this.errorMessage = 'Quantity cannot exceed available stock (' + this.selectedVariation.stock + ')';
+                        return;
+                    }
+                    
+                    // Submit the form
                     document.getElementById('addToCartForm_{{ $product->id }}').submit();
                 }
             }" class="group bg-white rounded-xl shadow-md hover:shadow-xl transition duration-300 overflow-hidden">
@@ -442,17 +478,32 @@
                                     <p class="text-gray-600 text-sm mb-6">{{ Str::limit($product->description, 150) }}</p>
                                     @endif
 
+                                    {{-- Error Message Display --}}
+                                    <div x-show="errorMessage" 
+                                         x-cloak
+                                         class="mb-4 p-3 bg-red-50 border border-red-200 text-red-800 rounded-lg text-sm"
+                                         x-transition:enter="transition ease-out duration-200"
+                                         x-transition:enter-start="opacity-0 transform scale-95"
+                                         x-transition:enter-end="opacity-100 transform scale-100">
+                                        <div class="flex items-start">
+                                            <i class="fas fa-exclamation-circle text-red-500 mt-0.5 mr-2"></i>
+                                            <span x-text="errorMessage"></span>
+                                        </div>
+                                    </div>
+
                                     <form id="addToCartForm_{{ $product->id }}" action="{{ route('cart.store') }}" method="POST">
                                         @csrf
                                         
                                         {{-- Variation Selector --}}
                                         <div class="mb-6">
-                                            <label class="block text-sm font-medium text-gray-700 mb-3">Select Variation</label>
+                                            <label class="block text-sm font-medium text-gray-700 mb-3">
+                                                Select Variation <span class="text-red-500">*</span>
+                                            </label>
                                             <div class="space-y-2 max-h-48 overflow-y-auto">
                                                 @foreach($product->variations as $variation)
-                                                <div @click="selectVariation({ id: {{ $variation->id }}, color: '{{ $variation->color }}', size: '{{ $variation->size }}', stock: {{ $variation->stock }} })"
+                                                <div @click="if({{ $variation->stock }} > 0) selectVariation({ id: {{ $variation->id }}, color: '{{ $variation->color }}', size: '{{ $variation->size }}', stock: {{ $variation->stock }} })"
                                                      :class="selectedVariation && selectedVariation.id === {{ $variation->id }} ? 'border-purple-600 bg-purple-50' : 'border-gray-300'"
-                                                     class="border-2 rounded-lg p-3 cursor-pointer hover:border-purple-400 transition duration-200 {{ $variation->stock <= 0 ? 'opacity-50 cursor-not-allowed' : '' }}">
+                                                     class="border-2 rounded-lg p-3 {{ $variation->stock <= 0 ? 'opacity-50 cursor-not-allowed bg-gray-100' : 'cursor-pointer hover:border-purple-400' }} transition duration-200">
                                                     <div class="flex items-center justify-between">
                                                         <div class="flex items-center gap-2">
                                                             <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-purple-100 text-purple-800">
@@ -463,13 +514,17 @@
                                                             </span>
                                                         </div>
                                                         <span class="text-sm {{ $variation->stock > 0 ? 'text-green-600' : 'text-red-600' }} font-medium">
-                                                            Stock: {{ $variation->stock }}
+                                                            @if($variation->stock > 0)
+                                                                Stock: {{ $variation->stock }}
+                                                            @else
+                                                                Out of Stock
+                                                            @endif
                                                         </span>
                                                     </div>
                                                 </div>
                                                 @endforeach
                                             </div>
-                                            <input type="hidden" name="variations_id" :value="selectedVariation ? selectedVariation.id : ''">
+                                            <input type="hidden" name="variations_id" :value="selectedVariation ? selectedVariation.id : ''" required>
                                         </div>
 
                                         {{-- Quantity Selector --}}
@@ -503,7 +558,9 @@
                                         {{-- Submit Button --}}
                                         <button type="button"
                                                 @click="addToCart()"
-                                                class="w-full bg-gradient-to-r from-purple-600 to-pink-600 text-white py-3 rounded-lg hover:from-purple-700 hover:to-pink-700 transition duration-300 font-bold text-lg">
+                                                :disabled="!selectedVariation"
+                                                :class="!selectedVariation ? 'opacity-50 cursor-not-allowed' : 'hover:from-purple-700 hover:to-pink-700'"
+                                                class="w-full bg-gradient-to-r from-purple-600 to-pink-600 text-white py-3 rounded-lg transition duration-300 font-bold text-lg">
                                             <i class="fas fa-shopping-cart mr-2"></i>
                                             Add to Cart
                                         </button>
