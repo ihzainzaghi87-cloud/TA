@@ -53,6 +53,12 @@ class CartController extends Controller
             $validated = $request->validate([
                 'variations_id' => 'required|exists:variations,id',
                 'quantity' => 'required|integer|min:1',
+            ], [
+                'variations_id.required' => 'Please select a product variation',
+                'variations_id.exists' => 'The selected variation is invalid',
+                'quantity.required' => 'Please specify the quantity',
+                'quantity.integer' => 'Quantity must be a number',
+                'quantity.min' => 'Quantity must be at least 1',
             ]);
 
             // Get variation with product
@@ -60,7 +66,7 @@ class CartController extends Controller
 
             // Check stock availability
             if ($variation->stock < $validated['quantity']) {
-                return redirect()->back()->with('error', 'Insufficient stock available');
+                return redirect()->back()->with('error', 'Insufficient stock available. Only '.$variation->stock.' items left.');
             }
 
             // Check if item already exists in cart
@@ -74,7 +80,7 @@ class CartController extends Controller
 
                 // Check if new quantity exceeds stock
                 if ($newQuantity > $variation->stock) {
-                    return redirect()->back()->with('error', 'Cannot add more items. Stock limit reached.');
+                    return redirect()->back()->with('error', 'Cannot add more items. Stock limit reached. Maximum available: '.$variation->stock);
                 }
 
                 $cartItem->quantity = $newQuantity;
@@ -95,12 +101,14 @@ class CartController extends Controller
 
                 return redirect()->back()->with('success', 'Item added to cart successfully!');
             }
-        } catch (\Illuminate\Validation\ValidationException $e) {
-            return redirect()->back()->with('error', 'Invalid input data')->withInput();
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            Log::error('Variation not found: '.$e->getMessage());
+
+            return redirect()->back()->with('error', 'Product variation not found');
         } catch (\Exception $e) {
             Log::error('Error adding to cart: '.$e->getMessage());
 
-            return redirect()->back()->with('error', 'Failed to add item to cart');
+            return redirect()->back()->with('error', 'Failed to add item to cart. Please try again.');
         }
     }
 
