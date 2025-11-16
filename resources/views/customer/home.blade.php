@@ -17,7 +17,7 @@
             if (this.autoplay) {
                 this.interval = setInterval(() => {
                     this.nextSlide();
-                }, 5000);
+                }, 7000);
             }
         },
         stopAutoplay() {
