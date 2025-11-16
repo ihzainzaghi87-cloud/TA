@@ -12,14 +12,6 @@ use Illuminate\Support\Facades\Log;
 class CartController extends Controller
 {
     /**
-     * Constructor to apply auth middleware
-     */
-    public function __construct()
-    {
-        $this->middleware('auth');
-    }
-
-    /**
      * Display cart items
      */
     public function index()
@@ -57,11 +49,6 @@ class CartController extends Controller
     public function store(Request $request)
     {
         try {
-            // Check if user is authenticated
-            if (! Auth::check()) {
-                return redirect()->route('login')->with('error', 'Please login to add items to cart');
-            }
-
             // Validate request
             $validated = $request->validate([
                 'variations_id' => 'required|exists:variations,id',
