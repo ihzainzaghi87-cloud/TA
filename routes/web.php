@@ -11,7 +11,7 @@ use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\UserManagementController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\BannerController;
-use App\Http\Controllers\Customer\HomeController;
+use App\Http\Controllers\Customer\PagesController;
 
 // ---------- Auth (web session) ----------
 Route::get('/login',    [AuthController::class, 'showLoginForm'])->name('login')->middleware('guest');
@@ -25,7 +25,7 @@ Route::post('/logout',  [AuthController::class, 'logout'])->name('logout')->midd
 // ---------- Dashboard ----------
 Route::get('/admin', DashboardController::class)->name('dashboard')->middleware('auth', 'role:superadmin|admin|staff');
 
-// ---------- Admin Panel (web) ----------
+// ---------- Admin Page (web) ----------
 Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () {
     // Profile
     Route::get('/profile', [ProfileController::class, 'show'])->name('profile.show');
@@ -90,7 +90,8 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
         ->name('banners.toggle-status');
 });
 
-Route::get('/', [HomeController::class, '__invoke'])->name('home');
+// ---------- Customer Page ----------
+Route::get('/', [PagesController::class, 'index'])->name('home');
 
 // ---------- Password Reset ----------
 Route::middleware('guest')->group(function () {

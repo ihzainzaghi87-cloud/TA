@@ -204,52 +204,54 @@
         </div>
         
         <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-            {{-- Category Card 1 --}}
+            @forelse($categories as $index => $category)
+            {{-- Dynamic Category Card --}}
             <div class="group relative bg-white rounded-xl shadow-md hover:shadow-xl transition duration-300 overflow-hidden cursor-pointer transform hover:-translate-y-2">
-                <div class="aspect-square bg-gradient-to-br from-purple-100 to-pink-100 flex items-center justify-center">
-                    <i class="fas fa-laptop text-6xl text-purple-600 group-hover:scale-110 transition duration-300"></i>
+                <div class="aspect-square bg-gradient-to-br 
+                    @if($index % 4 == 0) from-purple-100 to-pink-100
+                    @elseif($index % 4 == 1) from-pink-100 to-purple-100
+                    @elseif($index % 4 == 2) from-blue-100 to-indigo-100
+                    @else from-green-100 to-teal-100
+                    @endif
+                    flex items-center justify-center">
+                    @if($category->image)
+                        <img src="{{ asset('storage/' . $category->image) }}" 
+                             alt="{{ $category->name }}" 
+                             class="w-20 h-20 object-cover group-hover:scale-110 transition duration-300">
+                    @else
+                        <i class="fas fa-{{ $category->icon ?? 'box' }} text-6xl 
+                            @if($index % 4 == 0) text-purple-600
+                            @elseif($index % 4 == 1) text-pink-600
+                            @elseif($index % 4 == 2) text-blue-600
+                            @else text-green-600
+                            @endif
+                            group-hover:scale-110 transition duration-300"></i>
+                    @endif
                 </div>
                 <div class="p-4 text-center">
-                    <h3 class="font-semibold text-gray-900 group-hover:text-purple-600 transition duration-300">Electronics</h3>
-                    <p class="text-sm text-gray-600">50+ Products</p>
+                    <h3 class="font-semibold text-gray-900 
+                        @if($index % 4 == 0) group-hover:text-purple-600
+                        @elseif($index % 4 == 1) group-hover:text-pink-600
+                        @elseif($index % 4 == 2) group-hover:text-blue-600
+                        @else group-hover:text-green-600
+                        @endif
+                        transition duration-300">
+                        {{ $category->name }}
+                    </h3>
+                    <p class="text-sm text-gray-600">{{ $category->products_count }}+ Products</p>
                 </div>
             </div>
-            
-            {{-- Category Card 2 --}}
-            <div class="group relative bg-white rounded-xl shadow-md hover:shadow-xl transition duration-300 overflow-hidden cursor-pointer transform hover:-translate-y-2">
-                <div class="aspect-square bg-gradient-to-br from-pink-100 to-purple-100 flex items-center justify-center">
-                    <i class="fas fa-tshirt text-6xl text-pink-600 group-hover:scale-110 transition duration-300"></i>
-                </div>
-                <div class="p-4 text-center">
-                    <h3 class="font-semibold text-gray-900 group-hover:text-pink-600 transition duration-300">Fashion</h3>
-                    <p class="text-sm text-gray-600">100+ Products</p>
-                </div>
+            @empty
+            {{-- Empty State --}}
+            <div class="col-span-2 md:col-span-3 lg:col-span-4 text-center py-12">
+                <i class="fas fa-box-open text-6xl text-gray-300 mb-4"></i>
+                <p class="text-gray-500 text-lg">No categories available at the moment</p>
             </div>
-            
-            {{-- Category Card 3 --}}
-            <div class="group relative bg-white rounded-xl shadow-md hover:shadow-xl transition duration-300 overflow-hidden cursor-pointer transform hover:-translate-y-2">
-                <div class="aspect-square bg-gradient-to-br from-blue-100 to-indigo-100 flex items-center justify-center">
-                    <i class="fas fa-home text-6xl text-blue-600 group-hover:scale-110 transition duration-300"></i>
-                </div>
-                <div class="p-4 text-center">
-                    <h3 class="font-semibold text-gray-900 group-hover:text-blue-600 transition duration-300">Home & Living</h3>
-                    <p class="text-sm text-gray-600">75+ Products</p>
-                </div>
-            </div>
-            
-            {{-- Category Card 4 --}}
-            <div class="group relative bg-white rounded-xl shadow-md hover:shadow-xl transition duration-300 overflow-hidden cursor-pointer transform hover:-translate-y-2">
-                <div class="aspect-square bg-gradient-to-br from-green-100 to-teal-100 flex items-center justify-center">
-                    <i class="fas fa-dumbbell text-6xl text-green-600 group-hover:scale-110 transition duration-300"></i>
-                </div>
-                <div class="p-4 text-center">
-                    <h3 class="font-semibold text-gray-900 group-hover:text-green-600 transition duration-300">Sports</h3>
-                    <p class="text-sm text-gray-600">40+ Products</p>
-                </div>
-            </div>
+            @endforelse
         </div>
     </div>
 </section>
+
 
 {{-- Featured Products Section --}}
 <section id="products" class="py-16 bg-white">
@@ -264,35 +266,32 @@
         </div>
         
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {{-- Product Card Placeholder 1 --}}
+            @forelse($popularProducts as $product)
+            {{-- Dynamic Product Card --}}
             <div class="group bg-white rounded-xl shadow-md hover:shadow-xl transition duration-300 overflow-hidden">
                 <div class="relative aspect-square bg-gray-200 overflow-hidden">
-                    <div class="absolute inset-0 flex items-center justify-center">
-                        <i class="fas fa-image text-6xl text-gray-400"></i>
-                    </div>
-                    <div class="absolute top-4 right-4">
-                        <span class="bg-red-500 text-white text-xs font-bold px-3 py-1 rounded-full">-20%</span>
-                    </div>
-                    <button class="absolute top-4 left-4 bg-white p-2 rounded-full shadow-md opacity-0 group-hover:opacity-100 transition duration-300 hover:bg-purple-600 hover:text-white">
-                        <i class="fas fa-heart"></i>
-                    </button>
-                </div>
-                <div class="p-4">
-                    <h3 class="font-semibold text-gray-900 mb-2 line-clamp-2">Premium Product Name</h3>
-                    <div class="flex items-center mb-2">
-                        <div class="flex text-yellow-400 text-sm">
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star-half-alt"></i>
+                    @if($product->images && $product->images->count() > 0)
+                        <img src="{{ asset('storage/products/' . $product->images->first()->image) }}" 
+                             alt="{{ $product->name }}" 
+                             class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
+                    @else
+                        <div class="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-gray-100 to-gray-200">
+                            <i class="fas fa-image text-6xl text-gray-400"></i>
                         </div>
-                        <span class="text-sm text-gray-600 ml-2">(4.5)</span>
-                    </div>
+                    @endif
+                </div>
+                
+                <div class="p-4">
+                    <h3 class="font-semibold text-gray-900 line-clamp-2 min-h-[3rem]">
+                        {{ $product->name }}
+                    </h3>
+                    
+                    {{-- Price --}}
                     <div class="flex items-center justify-between">
                         <div>
-                            <span class="text-lg font-bold text-purple-600">$80.00</span>
-                            <span class="text-sm text-gray-500 line-through ml-2">$100.00</span>
+                            <span class="text-lg font-bold text-purple-600">
+                                Rp {{ number_format($product->price, 0, ',', '.') }}
+                            </span>
                         </div>
                         <button class="bg-gradient-to-r from-purple-600 to-pink-600 text-white p-2 rounded-lg hover:from-purple-700 hover:to-pink-700 transition duration-300 transform hover:scale-110">
                             <i class="fas fa-shopping-cart"></i>
@@ -300,120 +299,27 @@
                     </div>
                 </div>
             </div>
-            
-            {{-- Product Card Placeholder 2 --}}
-            <div class="group bg-white rounded-xl shadow-md hover:shadow-xl transition duration-300 overflow-hidden">
-                <div class="relative aspect-square bg-gray-200 overflow-hidden">
-                    <div class="absolute inset-0 flex items-center justify-center">
-                        <i class="fas fa-image text-6xl text-gray-400"></i>
-                    </div>
-                    <div class="absolute top-4 right-4">
-                        <span class="bg-green-500 text-white text-xs font-bold px-3 py-1 rounded-full">New</span>
-                    </div>
-                    <button class="absolute top-4 left-4 bg-white p-2 rounded-full shadow-md opacity-0 group-hover:opacity-100 transition duration-300 hover:bg-purple-600 hover:text-white">
-                        <i class="fas fa-heart"></i>
-                    </button>
-                </div>
-                <div class="p-4">
-                    <h3 class="font-semibold text-gray-900 mb-2 line-clamp-2">Amazing Product Title</h3>
-                    <div class="flex items-center mb-2">
-                        <div class="flex text-yellow-400 text-sm">
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                        </div>
-                        <span class="text-sm text-gray-600 ml-2">(5.0)</span>
-                    </div>
-                    <div class="flex items-center justify-between">
-                        <div>
-                            <span class="text-lg font-bold text-purple-600">$120.00</span>
-                        </div>
-                        <button class="bg-gradient-to-r from-purple-600 to-pink-600 text-white p-2 rounded-lg hover:from-purple-700 hover:to-pink-700 transition duration-300 transform hover:scale-110">
-                            <i class="fas fa-shopping-cart"></i>
-                        </button>
-                    </div>
-                </div>
+            @empty
+            {{-- Empty State --}}
+            <div class="col-span-1 sm:col-span-2 lg:col-span-4 text-center py-12">
+                <i class="fas fa-shopping-bag text-6xl text-gray-300 mb-4"></i>
+                <p class="text-gray-500 text-lg">No products available at the moment</p>
+                <p class="text-gray-400 text-sm mt-2">Check back soon for exciting new products!</p>
             </div>
-            
-            {{-- Product Card Placeholder 3 --}}
-            <div class="group bg-white rounded-xl shadow-md hover:shadow-xl transition duration-300 overflow-hidden">
-                <div class="relative aspect-square bg-gray-200 overflow-hidden">
-                    <div class="absolute inset-0 flex items-center justify-center">
-                        <i class="fas fa-image text-6xl text-gray-400"></i>
-                    </div>
-                    <button class="absolute top-4 left-4 bg-white p-2 rounded-full shadow-md opacity-0 group-hover:opacity-100 transition duration-300 hover:bg-purple-600 hover:text-white">
-                        <i class="fas fa-heart"></i>
-                    </button>
-                </div>
-                <div class="p-4">
-                    <h3 class="font-semibold text-gray-900 mb-2 line-clamp-2">Bestseller Product</h3>
-                    <div class="flex items-center mb-2">
-                        <div class="flex text-yellow-400 text-sm">
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="far fa-star"></i>
-                        </div>
-                        <span class="text-sm text-gray-600 ml-2">(4.0)</span>
-                    </div>
-                    <div class="flex items-center justify-between">
-                        <div>
-                            <span class="text-lg font-bold text-purple-600">$65.00</span>
-                        </div>
-                        <button class="bg-gradient-to-r from-purple-600 to-pink-600 text-white p-2 rounded-lg hover:from-purple-700 hover:to-pink-700 transition duration-300 transform hover:scale-110">
-                            <i class="fas fa-shopping-cart"></i>
-                        </button>
-                    </div>
-                </div>
-            </div>
-            
-            {{-- Product Card Placeholder 4 --}}
-            <div class="group bg-white rounded-xl shadow-md hover:shadow-xl transition duration-300 overflow-hidden">
-                <div class="relative aspect-square bg-gray-200 overflow-hidden">
-                    <div class="absolute inset-0 flex items-center justify-center">
-                        <i class="fas fa-image text-6xl text-gray-400"></i>
-                    </div>
-                    <div class="absolute top-4 right-4">
-                        <span class="bg-purple-500 text-white text-xs font-bold px-3 py-1 rounded-full">Hot</span>
-                    </div>
-                    <button class="absolute top-4 left-4 bg-white p-2 rounded-full shadow-md opacity-0 group-hover:opacity-100 transition duration-300 hover:bg-purple-600 hover:text-white">
-                        <i class="fas fa-heart"></i>
-                    </button>
-                </div>
-                <div class="p-4">
-                    <h3 class="font-semibold text-gray-900 mb-2 line-clamp-2">Trending Product</h3>
-                    <div class="flex items-center mb-2">
-                        <div class="flex text-yellow-400 text-sm">
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                        </div>
-                        <span class="text-sm text-gray-600 ml-2">(5.0)</span>
-                    </div>
-                    <div class="flex items-center justify-between">
-                        <div>
-                            <span class="text-lg font-bold text-purple-600">$95.00</span>
-                        </div>
-                        <button class="bg-gradient-to-r from-purple-600 to-pink-600 text-white p-2 rounded-lg hover:from-purple-700 hover:to-pink-700 transition duration-300 transform hover:scale-110">
-                            <i class="fas fa-shopping-cart"></i>
-                        </button>
-                    </div>
-                </div>
-            </div>
+            @endforelse
         </div>
         
+        @if($popularProducts->count() > 0)
         <div class="text-center mt-12">
-            <a href="#" class="inline-block bg-gradient-to-r from-purple-600 to-pink-600 text-white px-8 py-3 rounded-full font-semibold hover:from-purple-700 hover:to-pink-700 transition duration-300 transform hover:scale-105 shadow-lg">
+            <a href="#" 
+               class="inline-block bg-gradient-to-r from-purple-600 to-pink-600 text-white px-8 py-3 rounded-full font-semibold hover:from-purple-700 hover:to-pink-700 transition duration-300 transform hover:scale-105 shadow-lg">
                 View All Products
             </a>
         </div>
+        @endif
     </div>
 </section>
+
 
 {{-- Special Offers Section --}}
 <section class="py-16 bg-gradient-to-br from-purple-600 via-purple-500 to-pink-600 text-white">
