@@ -12,6 +12,7 @@ use App\Http\Controllers\UserManagementController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\BannerController;
 use App\Http\Controllers\Customer\PagesController;
+use App\Http\Controllers\Customer\CartController;
 
 // ---------- Auth (web session) ----------
 Route::get('/login',    [AuthController::class, 'showLoginForm'])->name('login')->middleware('guest');
@@ -92,6 +93,16 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
 
 // ---------- Customer Page ----------
 Route::get('/', [PagesController::class, 'index'])->name('home');
+
+// ---------- Cart Routes ----------
+Route::middleware(['auth'])->group(function () {
+    Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
+    Route::post('/cart', [CartController::class, 'store'])->name('cart.store');
+    Route::put('/cart/{id}', [CartController::class, 'update'])->name('cart.update');
+    Route::delete('/cart/{id}', [CartController::class, 'destroy'])->name('cart.destroy');
+    Route::delete('/cart', [CartController::class, 'clear'])->name('cart.clear');
+    Route::get('/cart/summary', [CartController::class, 'getSummary'])->name('cart.summary');
+});
 
 // ---------- Password Reset ----------
 Route::middleware('guest')->group(function () {

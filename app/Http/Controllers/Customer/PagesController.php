@@ -21,7 +21,7 @@ class PagesController extends Controller
 
         // Ambil produk populer (misal: 8 produk terbaru yang aktif)
         $popularProducts = Product::where('is_active', true)
-            ->with('category')
+            ->with(['category', 'images', 'variations'])
             ->orderBy('created_at', 'desc')
             ->take(8)
             ->get();

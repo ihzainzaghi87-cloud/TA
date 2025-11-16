@@ -23,7 +23,7 @@ class Cart extends Model
      */
     protected $fillable = [
         'user_id',
-        'product_variant_id',
+        'variations_id',
         'quantity',
     ];
 
@@ -45,24 +45,12 @@ class Cart extends Model
     }
 
     /**
-     * Get the product variant for the cart item.
+     * Get the product variation for the cart item.
      */
-    public function variations()
+    public function variation()
     {
-        return $this->belongsTo(Variation::class);
+        return $this->belongsTo(Variation::class, 'variations_id');
     }
 
-    /**
-     * Get the total price for this cart item.
-     * 
-     * @return float
-     */
-    public function getTotalPriceAttribute()
-    {
-        if ($this->payment_type === 'cash') {
-            return $this->quantity * $this->productVariant->price;
-        } else {
-            return $this->quantity * $this->productVariant->points_price;
-        }
-    }
+
 }
