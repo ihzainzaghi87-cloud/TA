@@ -2,22 +2,21 @@
 
 namespace App\Http\Controllers\Customer;
 
-use App\Http\Controllers\Controller; 
-use Illuminate\Http\Request;
-use App\Models\Product;
-use App\Models\Category;
+use App\Http\Controllers\Controller;
 use App\Models\Banner;
+use App\Models\Category;
+use App\Models\Product;
 
 class PagesController extends Controller
 {
     public function index()
     {
         // Ambil categories dengan jumlah produk aktif
-        $categories = Category::withCount(['products' => function($query) {
+        $categories = Category::withCount(['products' => function ($query) {
             $query->where('is_active', true);
         }])
-        ->orderBy('name')
-        ->get();
+            ->orderBy('name')
+            ->get();
 
         // Ambil produk populer (misal: 8 produk terbaru yang aktif)
         $popularProducts = Product::where('is_active', true)

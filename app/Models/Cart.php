@@ -51,6 +51,4 @@ class Cart extends Model
     {
         return $this->belongsTo(Variation::class, 'variations_id');
     }
-
-
 }

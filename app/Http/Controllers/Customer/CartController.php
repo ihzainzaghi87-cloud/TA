@@ -8,7 +8,6 @@ use App\Models\Variation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\DB;
 
 class CartController extends Controller
 {
@@ -29,7 +28,7 @@ class CartController extends Controller
             $cartItems = Cart::where('user_id', Auth::id())
                 ->with([
                     'variation.product.images',
-                    'variation.product.category'
+                    'variation.product.category',
                 ])
                 ->get();
 
@@ -46,7 +45,8 @@ class CartController extends Controller
 
             return view('customer.cart.index', compact('cartItems', 'totalPrice', 'totalPointPrice'));
         } catch (\Exception $e) {
-            Log::error('Error loading cart: ' . $e->getMessage());
+            Log::error('Error loading cart: '.$e->getMessage());
+
             return redirect()->back()->with('error', 'Failed to load cart');
         }
     }
@@ -58,7 +58,7 @@ class CartController extends Controller
     {
         try {
             // Check if user is authenticated
-            if (!Auth::check()) {
+            if (! Auth::check()) {
                 return redirect()->route('login')->with('error', 'Please login to add items to cart');
             }
 
@@ -84,7 +84,7 @@ class CartController extends Controller
             if ($cartItem) {
                 // Update quantity if item exists
                 $newQuantity = $cartItem->quantity + $validated['quantity'];
-                
+
                 // Check if new quantity exceeds stock
                 if ($newQuantity > $variation->stock) {
                     return redirect()->back()->with('error', 'Cannot add more items. Stock limit reached.');
@@ -93,7 +93,8 @@ class CartController extends Controller
                 $cartItem->quantity = $newQuantity;
                 $cartItem->save();
 
-                Log::info('Cart updated for user: ' . Auth::id() . ', variation: ' . $validated['variations_id']);
+                Log::info('Cart updated for user: '.Auth::id().', variation: '.$validated['variations_id']);
+
                 return redirect()->back()->with('success', 'Cart updated successfully!');
             } else {
                 // Create new cart item
@@ -103,13 +104,15 @@ class CartController extends Controller
                     'quantity' => $validated['quantity'],
                 ]);
 
-                Log::info('Item added to cart for user: ' . Auth::id() . ', variation: ' . $validated['variations_id']);
+                Log::info('Item added to cart for user: '.Auth::id().', variation: '.$validated['variations_id']);
+
                 return redirect()->back()->with('success', 'Item added to cart successfully!');
             }
         } catch (\Illuminate\Validation\ValidationException $e) {
             return redirect()->back()->with('error', 'Invalid input data')->withInput();
         } catch (\Exception $e) {
-            Log::error('Error adding to cart: ' . $e->getMessage());
+            Log::error('Error adding to cart: '.$e->getMessage());
+
             return redirect()->back()->with('error', 'Failed to add item to cart');
         }
     }
@@ -133,24 +136,25 @@ class CartController extends Controller
             if ($cartItem->variation->stock < $validated['quantity']) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'Insufficient stock available'
+                    'message' => 'Insufficient stock available',
                 ], 400);
             }
 
             $cartItem->quantity = $validated['quantity'];
             $cartItem->save();
 
-            Log::info('Cart item updated: ' . $id . ' for user: ' . Auth::id());
+            Log::info('Cart item updated: '.$id.' for user: '.Auth::id());
 
             return response()->json([
                 'success' => true,
-                'message' => 'Cart updated successfully'
+                'message' => 'Cart updated successfully',
             ]);
         } catch (\Exception $e) {
-            Log::error('Error updating cart: ' . $e->getMessage());
+            Log::error('Error updating cart: '.$e->getMessage());
+
             return response()->json([
                 'success' => false,
-                'message' => 'Failed to update cart'
+                'message' => 'Failed to update cart',
             ], 500);
         }
     }
@@ -167,11 +171,12 @@ class CartController extends Controller
 
             $cartItem->delete();
 
-            Log::info('Cart item deleted: ' . $id . ' for user: ' . Auth::id());
+            Log::info('Cart item deleted: '.$id.' for user: '.Auth::id());
 
             return redirect()->back()->with('success', 'Item removed from cart');
         } catch (\Exception $e) {
-            Log::error('Error deleting cart item: ' . $e->getMessage());
+            Log::error('Error deleting cart item: '.$e->getMessage());
+
             return redirect()->back()->with('error', 'Failed to remove item');
         }
     }
@@ -184,11 +189,12 @@ class CartController extends Controller
         try {
             Cart::where('user_id', Auth::id())->delete();
 
-            Log::info('Cart cleared for user: ' . Auth::id());
+            Log::info('Cart cleared for user: '.Auth::id());
 
             return redirect()->back()->with('success', 'Cart cleared successfully');
         } catch (\Exception $e) {
-            Log::error('Error clearing cart: ' . $e->getMessage());
+            Log::error('Error clearing cart: '.$e->getMessage());
+
             return redirect()->back()->with('error', 'Failed to clear cart');
         }
     }
@@ -221,10 +227,11 @@ class CartController extends Controller
                 'totalPointPrice' => $totalPointPrice,
             ]);
         } catch (\Exception $e) {
-            Log::error('Error getting cart summary: ' . $e->getMessage());
+            Log::error('Error getting cart summary: '.$e->getMessage());
+
             return response()->json([
                 'success' => false,
-                'message' => 'Failed to get cart summary'
+                'message' => 'Failed to get cart summary',
             ], 500);
         }
     }
