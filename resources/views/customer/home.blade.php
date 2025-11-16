@@ -524,7 +524,7 @@
                                                 </div>
                                                 @endforeach
                                             </div>
-                                            <input type="hidden" name="variations_id" :value="selectedVariation ? selectedVariation.id : ''" required>
+                                            <input type="hidden" name="variation_id" :value="selectedVariation ? selectedVariation.id : ''" required>
                                         </div>
 
                                         {{-- Quantity Selector --}}

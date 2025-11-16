@@ -51,18 +51,18 @@ class CartController extends Controller
         try {
             // Validate request
             $validated = $request->validate([
-                'variations_id' => 'required|exists:variations,id',
+                'variation_id' => 'required|exists:variations,id',
                 'quantity' => 'required|integer|min:1',
             ], [
-                'variations_id.required' => 'Please select a product variation',
-                'variations_id.exists' => 'The selected variation is invalid',
+                'variation_id.required' => 'Please select a product variation',
+                'variation_id.exists' => 'The selected variation is invalid',
                 'quantity.required' => 'Please specify the quantity',
                 'quantity.integer' => 'Quantity must be a number',
                 'quantity.min' => 'Quantity must be at least 1',
             ]);
 
             // Get variation with product
-            $variation = Variation::with('product')->findOrFail($validated['variations_id']);
+            $variation = Variation::with('product')->findOrFail($validated['variation_id']);
 
             // Check stock availability
             if ($variation->stock < $validated['quantity']) {
@@ -71,7 +71,7 @@ class CartController extends Controller
 
             // Check if item already exists in cart
             $cartItem = Cart::where('user_id', Auth::id())
-                ->where('variations_id', $validated['variations_id'])
+                ->where('variation_id', $validated['variation_id'])
                 ->first();
 
             if ($cartItem) {
@@ -93,12 +93,11 @@ class CartController extends Controller
                 // Create new cart item
                 Cart::create([
                     'user_id' => Auth::id(),
-                    'variations_id' => $validated['variations_id'],
+                    'variation_id' => $validated['variation_id'],
                     'quantity' => $validated['quantity'],
                 ]);
 
-                Log::info('Item added to cart for user: '.Auth::id().', variation: '.$validated['variations_id']);
-
+                Log::info('Item added to cart for user: '.Auth::id().', variation: '.$validated['variation_id']);
                 return redirect()->back()->with('success', 'Item added to cart successfully!');
             }
         } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
@@ -107,6 +106,7 @@ class CartController extends Controller
             return redirect()->back()->with('error', 'Product variation not found');
         } catch (\Exception $e) {
             Log::error('Error adding to cart: '.$e->getMessage());
+            dd($e);
 
             return redirect()->back()->with('error', 'Failed to add item to cart. Please try again.');
         }
