@@ -2,7 +2,34 @@
 
 @section('title', 'Home')
 
+@push('styles')
+<style>
+    [x-cloak] {
+        display: none !important;
+    }
+</style>
+@endpush
+
 @section('content')
+{{-- Display Flash Messages --}}
+@if(session('success'))
+    <div class="fixed top-20 right-4 z-50 max-w-md">
+        <x-alert type="success" :message="session('success')" />
+    </div>
+@endif
+
+@if(session('error'))
+    <div class="fixed top-20 right-4 z-50 max-w-md">
+        <x-alert type="error" :message="session('error')" />
+    </div>
+@endif
+
+@if($errors->any())
+    <div class="fixed top-20 right-4 z-50 max-w-md">
+        <x-alert type="error" :message="$errors->first()" />
+    </div>
+@endif
+
 {{-- Hero Banner Carousel Section --}}
 <section class="relative bg-gradient-to-br from-purple-50 via-white to-pink-50">
     <div x-data="{
@@ -268,8 +295,40 @@
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             @forelse($popularProducts as $product)
             {{-- Dynamic Product Card --}}
-            <div class="group bg-white rounded-xl shadow-md hover:shadow-xl transition duration-300 overflow-hidden">
-                <div class="relative aspect-square bg-gray-200 overflow-hidden">
+            <div x-data="{
+                showModal: false,
+                selectedVariation: null,
+                quantity: 1,
+                errorMessage: '',
+                selectVariation(variation) {
+                    this.selectedVariation = variation;
+                    this.quantity = 1;
+                    this.errorMessage = '';
+                },
+                addToCart() {
+                    this.errorMessage = '';
+                    
+                    if (!this.selectedVariation) {
+                        this.errorMessage = 'Please select a product variation (color and size)';
+                        return;
+                    }
+                    
+                    if (this.selectedVariation.stock <= 0) {
+                        this.errorMessage = 'Selected variation is out of stock';
+                        return;
+                    }
+                    
+                    if (this.quantity < 1 || this.quantity > this.selectedVariation.stock) {
+                        this.errorMessage = 'Invalid quantity';
+                        return;
+                    }
+                    
+                    document.getElementById('addToCartForm_{{ $product->id }}').submit();
+                }
+            }" class="group bg-white rounded-xl shadow-md hover:shadow-xl transition duration-300 overflow-hidden">
+                
+                {{-- Product Image --}}
+                <div class="relative aspect-square bg-gray-200 overflow-hidden cursor-pointer" @click="showModal = true">
                     @if($product->images && $product->images->count() > 0)
                         <img src="{{ asset('storage/products/' . $product->images->first()->image) }}" 
                              alt="{{ $product->name }}" 
@@ -279,25 +338,86 @@
                             <i class="fas fa-image text-6xl text-gray-400"></i>
                         </div>
                     @endif
+                    
+                    {{-- Quick View Badge --}}
+                    <div class="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition duration-300 flex items-center justify-center">
+                        <span class="bg-white text-purple-600 px-4 py-2 rounded-full font-semibold opacity-0 group-hover:opacity-100 transform translate-y-4 group-hover:translate-y-0 transition duration-300">
+                            <i class="fas fa-eye mr-2"></i>Quick View
+                        </span>
+                    </div>
+
+                    {{-- Stock Badge --}}
+                    @php $totalStock = $product->variations->sum('stock'); @endphp
+                    @if($totalStock > 0)
+                        <span class="absolute top-3 right-3 bg-green-500 text-white text-xs font-semibold px-3 py-1 rounded-full">
+                            In Stock
+                        </span>
+                    @else
+                        <span class="absolute top-3 right-3 bg-red-500 text-white text-xs font-semibold px-3 py-1 rounded-full">
+                            Out of Stock
+                        </span>
+                    @endif
                 </div>
                 
+                {{-- Product Info --}}
                 <div class="p-4">
-                    <h3 class="font-semibold text-gray-900 line-clamp-2 min-h-[3rem]">
+                    <h3 class="font-semibold text-gray-900 line-clamp-2 min-h-[3rem] mb-2">
                         {{ $product->name }}
                     </h3>
                     
+                    <p class="text-xs text-gray-500 mb-2">
+                        <i class="fas fa-tag mr-1"></i>{{ $product->category->name ?? 'Uncategorized' }}
+                    </p>
+                    
                     {{-- Price --}}
-                    <div class="flex items-center justify-between">
+                    <div class="flex items-center justify-between mt-3">
                         <div>
-                            <span class="text-lg font-bold text-purple-600">
-                                Rp {{ number_format($product->price, 0, ',', '.') }}
-                            </span>
+                            @if($product->price > 0)
+                                <span class="text-lg font-bold text-purple-600">
+                                    Rp {{ number_format($product->price, 0, ',', '.') }}
+                                </span>
+                            @else
+                                <!-- <span class="text-xs font-medium text-purple-600">
+                                    Rp {{ number_format($product->price, 0, ',', '.') }}
+                                </span> -->
+                            @endif
+                            @if($product->point_price > 0)
+                                <p class="text-lg text-amber-600 font-bold">
+                                    <i class="fas fa-coins mr-1"></i>{{ number_format($product->point_price, 0, ',', '.') }} Points
+                                </p>
+                            @else
+                                <!-- <p class="text-xs text-amber-600 font-medium">
+                                    <i class="fas fa-coins mr-1"></i>{{ number_format($product->point_price, 0, ',', '.') }} Points
+                                </p> -->
+                            @endif
                         </div>
-                        <button class="bg-gradient-to-r from-purple-600 to-pink-600 text-white p-2 rounded-lg hover:from-purple-700 hover:to-pink-700 transition duration-300 transform hover:scale-110">
-                            <i class="fas fa-shopping-cart"></i>
-                        </button>
+                        
+                        {{-- Add to Cart Button --}}
+                        @auth
+                            @if($totalStock > 0)
+                                <button @click="showModal = true"
+                                        class="bg-gradient-to-r from-purple-600 to-pink-600 text-white p-2.5 rounded-lg hover:from-purple-700 hover:to-pink-700 transition duration-300 transform hover:scale-110 shadow-md">
+                                    <i class="fas fa-shopping-cart"></i>
+                                </button>
+                            @else
+                                <button disabled
+                                        class="bg-gray-300 text-gray-500 p-2.5 rounded-lg cursor-not-allowed">
+                                    <i class="fas fa-shopping-cart"></i>
+                                </button>
+                            @endif
+                        @else
+                            <a href="{{ route('login') }}"
+                               class="bg-gradient-to-r from-purple-600 to-pink-600 text-white p-2.5 rounded-lg hover:from-purple-700 hover:to-pink-700 transition duration-300 transform hover:scale-110 shadow-md">
+                                <i class="fas fa-shopping-cart"></i>
+                            </a>
+                        @endauth
                     </div>
                 </div>
+
+                {{-- Add to Cart Modal Component --}}
+                @auth
+                    <x-customer.product-modal :product="$product" />
+                @endauth
             </div>
             @empty
             {{-- Empty State --}}

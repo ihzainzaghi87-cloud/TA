@@ -34,7 +34,7 @@
                    class="text-gray-700 hover:text-purple-600 px-3 py-2 text-sm font-medium transition duration-300 ease-in-out">
                     Blog
                 </a>
-                <a href="#cart" 
+                <a href="{{ route('cart.index') }}" 
                    class="text-gray-700 hover:text-purple-600 px-3 py-2 text-sm font-medium transition duration-300 ease-in-out relative">
                     <i class="fas fa-shopping-cart"></i>
                     <span class="absolute -top-1 -right-1 bg-purple-600 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">0</span>
