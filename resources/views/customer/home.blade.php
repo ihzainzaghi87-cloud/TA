@@ -376,19 +376,11 @@
                                 <span class="text-lg font-bold text-purple-600">
                                     Rp {{ number_format($product->price, 0, ',', '.') }}
                                 </span>
-                            @else
-                                <!-- <span class="text-xs font-medium text-purple-600">
-                                    Rp {{ number_format($product->price, 0, ',', '.') }}
-                                </span> -->
                             @endif
                             @if($product->point_price > 0)
                                 <p class="text-lg text-amber-600 font-bold">
                                     <i class="fas fa-coins mr-1"></i>{{ number_format($product->point_price, 0, ',', '.') }} Points
                                 </p>
-                            @else
-                                <!-- <p class="text-xs text-amber-600 font-medium">
-                                    <i class="fas fa-coins mr-1"></i>{{ number_format($product->point_price, 0, ',', '.') }} Points
-                                </p> -->
                             @endif
                         </div>
                         
