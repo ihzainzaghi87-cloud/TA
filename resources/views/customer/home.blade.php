@@ -302,13 +302,14 @@
                 errorMessage: '',
                 selectVariation(variation) {
                     this.selectedVariation = variation;
+                    this.quantity = 1;
                     this.errorMessage = '';
                 },
                 addToCart() {
                     this.errorMessage = '';
                     
                     if (!this.selectedVariation) {
-                        this.errorMessage = 'Please select a product variation (color and size) before adding to cart';
+                        this.errorMessage = 'Please select a product variation (color and size)';
                         return;
                     }
                     
@@ -317,21 +318,17 @@
                         return;
                     }
                     
-                    if (this.quantity < 1) {
-                        this.errorMessage = 'Quantity must be at least 1';
+                    if (this.quantity < 1 || this.quantity > this.selectedVariation.stock) {
+                        this.errorMessage = 'Invalid quantity';
                         return;
                     }
                     
-                    if (this.quantity > this.selectedVariation.stock) {
-                        this.errorMessage = 'Quantity cannot exceed available stock (' + this.selectedVariation.stock + ')';
-                        return;
-                    }
-                    
-                    // Submit the form
                     document.getElementById('addToCartForm_{{ $product->id }}').submit();
                 }
             }" class="group bg-white rounded-xl shadow-md hover:shadow-xl transition duration-300 overflow-hidden">
-                <div class="relative aspect-square bg-gray-200 overflow-hidden">
+                
+                {{-- Product Image --}}
+                <div class="relative aspect-square bg-gray-200 overflow-hidden cursor-pointer" @click="showModal = true">
                     @if($product->images && $product->images->count() > 0)
                         <img src="{{ asset('storage/products/' . $product->images->first()->image) }}" 
                              alt="{{ $product->name }}" 
@@ -342,234 +339,84 @@
                         </div>
                     @endif
                     
-                    {{-- Quick View Overlay --}}
-                    <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-40 transition duration-300 flex items-center justify-center opacity-0 group-hover:opacity-100">
-                        <span class="text-white font-semibold">Quick View</span>
+                    {{-- Quick View Badge --}}
+                    <div class="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition duration-300 flex items-center justify-center">
+                        <span class="bg-white text-purple-600 px-4 py-2 rounded-full font-semibold opacity-0 group-hover:opacity-100 transform translate-y-4 group-hover:translate-y-0 transition duration-300">
+                            <i class="fas fa-eye mr-2"></i>Quick View
+                        </span>
                     </div>
 
                     {{-- Stock Badge --}}
-                    @php
-                        $totalStock = $product->variations->sum('stock');
-                    @endphp
-                    <div class="absolute top-2 right-2">
-                        @if($totalStock > 0)
-                            <span class="bg-green-500 text-white text-xs font-bold px-2 py-1 rounded-full">In Stock</span>
-                        @else
-                            <span class="bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-full">Out of Stock</span>
-                        @endif
-                    </div>
+                    @php $totalStock = $product->variations->sum('stock'); @endphp
+                    @if($totalStock > 0)
+                        <span class="absolute top-3 right-3 bg-green-500 text-white text-xs font-semibold px-3 py-1 rounded-full">
+                            In Stock
+                        </span>
+                    @else
+                        <span class="absolute top-3 right-3 bg-red-500 text-white text-xs font-semibold px-3 py-1 rounded-full">
+                            Out of Stock
+                        </span>
+                    @endif
                 </div>
                 
+                {{-- Product Info --}}
                 <div class="p-4">
                     <h3 class="font-semibold text-gray-900 line-clamp-2 min-h-[3rem] mb-2">
                         {{ $product->name }}
                     </h3>
                     
-                    <p class="text-sm text-gray-600 mb-2">
-                        <i class="fas fa-tag mr-1"></i>
-                        {{ $product->category->name ?? 'Uncategorized' }}
+                    <p class="text-xs text-gray-500 mb-2">
+                        <i class="fas fa-tag mr-1"></i>{{ $product->category->name ?? 'Uncategorized' }}
                     </p>
                     
                     {{-- Price --}}
-                    <div class="flex items-center justify-between mb-3">
+                    <div class="flex items-center justify-between mt-3">
                         <div>
-                            <span class="text-lg font-bold text-purple-600">
-                                Rp {{ number_format($product->price, 0, ',', '.') }}
-                            </span>
-                            @if($product->point_price)
-                            <p class="text-xs text-amber-600">
-                                <i class="fas fa-star"></i>
-                                {{ number_format($product->point_price, 0, ',', '.') }} Points
-                            </p>
+                            @if($product->price > 0)
+                                <span class="text-lg font-bold text-purple-600">
+                                    Rp {{ number_format($product->price, 0, ',', '.') }}
+                                </span>
+                            @else
+                                <!-- <span class="text-xs font-medium text-purple-600">
+                                    Rp {{ number_format($product->price, 0, ',', '.') }}
+                                </span> -->
+                            @endif
+                            @if($product->point_price > 0)
+                                <p class="text-lg text-amber-600 font-bold">
+                                    <i class="fas fa-coins mr-1"></i>{{ number_format($product->point_price, 0, ',', '.') }} Points
+                                </p>
+                            @else
+                                <!-- <p class="text-xs text-amber-600 font-medium">
+                                    <i class="fas fa-coins mr-1"></i>{{ number_format($product->point_price, 0, ',', '.') }} Points
+                                </p> -->
                             @endif
                         </div>
-                    </div>
-
-                    {{-- Add to Cart Button --}}
-                    @auth
-                        @if($totalStock > 0)
-                            <button @click="showModal = true" 
-                                    class="w-full bg-gradient-to-r from-purple-600 to-pink-600 text-white py-2 rounded-lg hover:from-purple-700 hover:to-pink-700 transition duration-300 transform hover:scale-105 font-medium">
-                                <i class="fas fa-shopping-cart mr-2"></i>
-                                Add to Cart
-                            </button>
-                        @else
-                            <button disabled 
-                                    class="w-full bg-gray-400 text-white py-2 rounded-lg cursor-not-allowed opacity-50 font-medium">
-                                <i class="fas fa-ban mr-2"></i>
-                                Out of Stock
-                            </button>
-                        @endif
-                    @else
-                        <a href="{{ route('login') }}" 
-                           class="block w-full bg-gradient-to-r from-purple-600 to-pink-600 text-white py-2 rounded-lg hover:from-purple-700 hover:to-pink-700 transition duration-300 text-center font-medium">
-                            <i class="fas fa-sign-in-alt mr-2"></i>
-                            Login to Buy
-                        </a>
-                    @endauth
-                </div>
-
-                {{-- Add to Cart Modal --}}
-                @auth
-                <div x-show="showModal" 
-                     x-cloak
-                     @click.self="showModal = false"
-                     class="fixed inset-0 z-50 overflow-y-auto bg-black bg-opacity-50 backdrop-blur-sm flex items-center justify-center p-4"
-                     x-transition:enter="transition ease-out duration-300"
-                     x-transition:enter-start="opacity-0"
-                     x-transition:enter-end="opacity-100"
-                     x-transition:leave="transition ease-in duration-200"
-                     x-transition:leave-start="opacity-100"
-                     x-transition:leave-end="opacity-0">
-                    <div class="bg-white rounded-xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto"
-                         @click.stop
-                         x-transition:enter="transition ease-out duration-300"
-                         x-transition:enter-start="opacity-0 transform scale-95"
-                         x-transition:enter-end="opacity-100 transform scale-100"
-                         x-transition:leave="transition ease-in duration-200"
-                         x-transition:leave-start="opacity-100 transform scale-100"
-                         x-transition:leave-end="opacity-0 transform scale-95">
                         
-                        {{-- Modal Header --}}
-                        <div class="flex items-center justify-between p-6 border-b border-gray-200">
-                            <h3 class="text-2xl font-bold text-gray-900">Add to Cart</h3>
-                            <button @click="showModal = false" class="text-gray-400 hover:text-gray-600">
-                                <i class="fas fa-times text-2xl"></i>
-                            </button>
-                        </div>
-
-                        {{-- Modal Content --}}
-                        <div class="p-6">
-                            <div class="grid md:grid-cols-2 gap-6">
-                                {{-- Product Image --}}
-                                <div class="aspect-square bg-gray-200 rounded-lg overflow-hidden">
-                                    @if($product->images && $product->images->count() > 0)
-                                        <img src="{{ asset('storage/products/' . $product->images->first()->image) }}" 
-                                             alt="{{ $product->name }}"
-                                             class="w-full h-full object-cover">
-                                    @else
-                                        <div class="w-full h-full flex items-center justify-center">
-                                            <i class="fas fa-image text-6xl text-gray-400"></i>
-                                        </div>
-                                    @endif
-                                </div>
-
-                                {{-- Product Details & Form --}}
-                                <div>
-                                    <h4 class="text-xl font-bold text-gray-900 mb-2">{{ $product->name }}</h4>
-                                    <p class="text-sm text-gray-600 mb-4">
-                                        <i class="fas fa-tag mr-1"></i>
-                                        {{ $product->category->name ?? 'Uncategorized' }}
-                                    </p>
-                                    
-                                    <div class="mb-4">
-                                        <p class="text-2xl font-bold text-purple-600">
-                                            Rp {{ number_format($product->price, 0, ',', '.') }}
-                                        </p>
-                                        @if($product->point_price)
-                                        <p class="text-amber-600">
-                                            <i class="fas fa-star mr-1"></i>
-                                            {{ number_format($product->point_price, 0, ',', '.') }} Points
-                                        </p>
-                                        @endif
-                                    </div>
-
-                                    @if($product->description)
-                                    <p class="text-gray-600 text-sm mb-6">{{ Str::limit($product->description, 150) }}</p>
-                                    @endif
-
-                                    {{-- Error Message Display --}}
-                                    <div x-show="errorMessage" 
-                                         x-cloak
-                                         class="mb-4 p-3 bg-red-50 border border-red-200 text-red-800 rounded-lg text-sm"
-                                         x-transition:enter="transition ease-out duration-200"
-                                         x-transition:enter-start="opacity-0 transform scale-95"
-                                         x-transition:enter-end="opacity-100 transform scale-100">
-                                        <div class="flex items-start">
-                                            <i class="fas fa-exclamation-circle text-red-500 mt-0.5 mr-2"></i>
-                                            <span x-text="errorMessage"></span>
-                                        </div>
-                                    </div>
-
-                                    <form id="addToCartForm_{{ $product->id }}" action="{{ route('cart.store') }}" method="POST">
-                                        @csrf
-                                        
-                                        {{-- Variation Selector --}}
-                                        <div class="mb-6">
-                                            <label class="block text-sm font-medium text-gray-700 mb-3">
-                                                Select Variation <span class="text-red-500">*</span>
-                                            </label>
-                                            <div class="space-y-2 max-h-48 overflow-y-auto">
-                                                @foreach($product->variations as $variation)
-                                                <div @click="if({{ $variation->stock }} > 0) selectVariation({ id: {{ $variation->id }}, color: '{{ $variation->color }}', size: '{{ $variation->size }}', stock: {{ $variation->stock }} })"
-                                                     :class="selectedVariation && selectedVariation.id === {{ $variation->id }} ? 'border-purple-600 bg-purple-50' : 'border-gray-300'"
-                                                     class="border-2 rounded-lg p-3 {{ $variation->stock <= 0 ? 'opacity-50 cursor-not-allowed bg-gray-100' : 'cursor-pointer hover:border-purple-400' }} transition duration-200">
-                                                    <div class="flex items-center justify-between">
-                                                        <div class="flex items-center gap-2">
-                                                            <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-purple-100 text-purple-800">
-                                                                {{ $variation->color }}
-                                                            </span>
-                                                            <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-pink-100 text-pink-800">
-                                                                {{ $variation->size }}
-                                                            </span>
-                                                        </div>
-                                                        <span class="text-sm {{ $variation->stock > 0 ? 'text-green-600' : 'text-red-600' }} font-medium">
-                                                            @if($variation->stock > 0)
-                                                                Stock: {{ $variation->stock }}
-                                                            @else
-                                                                Out of Stock
-                                                            @endif
-                                                        </span>
-                                                    </div>
-                                                </div>
-                                                @endforeach
-                                            </div>
-                                            <input type="hidden" name="variation_id" :value="selectedVariation ? selectedVariation.id : ''" required>
-                                        </div>
-
-                                        {{-- Quantity Selector --}}
-                                        <div class="mb-6">
-                                            <label class="block text-sm font-medium text-gray-700 mb-3">Quantity</label>
-                                            <div class="flex items-center gap-4">
-                                                <div class="flex items-center border border-gray-300 rounded-lg">
-                                                    <button type="button" 
-                                                            @click="if(quantity > 1) quantity--" 
-                                                            class="px-4 py-2 text-gray-600 hover:bg-gray-100 transition duration-200">
-                                                        <i class="fas fa-minus"></i>
-                                                    </button>
-                                                    <input type="number" 
-                                                           name="quantity"
-                                                           x-model="quantity"
-                                                           min="1"
-                                                           :max="selectedVariation ? selectedVariation.stock : 1"
-                                                           class="w-20 text-center border-0 focus:ring-0 py-2">
-                                                    <button type="button" 
-                                                            @click="if(selectedVariation && quantity < selectedVariation.stock) quantity++" 
-                                                            class="px-4 py-2 text-gray-600 hover:bg-gray-100 transition duration-200">
-                                                        <i class="fas fa-plus"></i>
-                                                    </button>
-                                                </div>
-                                                <span class="text-sm text-gray-600" x-show="selectedVariation">
-                                                    Max: <span x-text="selectedVariation ? selectedVariation.stock : 0"></span>
-                                                </span>
-                                            </div>
-                                        </div>
-
-                                        {{-- Submit Button --}}
-                                        <button type="button"
-                                                @click="addToCart()"
-                                                :disabled="!selectedVariation"
-                                                :class="!selectedVariation ? 'opacity-50 cursor-not-allowed' : 'hover:from-purple-700 hover:to-pink-700'"
-                                                class="w-full bg-gradient-to-r from-purple-600 to-pink-600 text-white py-3 rounded-lg transition duration-300 font-bold text-lg">
-                                            <i class="fas fa-shopping-cart mr-2"></i>
-                                            Add to Cart
-                                        </button>
-                                    </form>
-                                </div>
-                            </div>
-                        </div>
+                        {{-- Add to Cart Button --}}
+                        @auth
+                            @if($totalStock > 0)
+                                <button @click="showModal = true"
+                                        class="bg-gradient-to-r from-purple-600 to-pink-600 text-white p-2.5 rounded-lg hover:from-purple-700 hover:to-pink-700 transition duration-300 transform hover:scale-110 shadow-md">
+                                    <i class="fas fa-shopping-cart"></i>
+                                </button>
+                            @else
+                                <button disabled
+                                        class="bg-gray-300 text-gray-500 p-2.5 rounded-lg cursor-not-allowed">
+                                    <i class="fas fa-shopping-cart"></i>
+                                </button>
+                            @endif
+                        @else
+                            <a href="{{ route('login') }}"
+                               class="bg-gradient-to-r from-purple-600 to-pink-600 text-white p-2.5 rounded-lg hover:from-purple-700 hover:to-pink-700 transition duration-300 transform hover:scale-110 shadow-md">
+                                <i class="fas fa-shopping-cart"></i>
+                            </a>
+                        @endauth
                     </div>
                 </div>
+
+                {{-- Add to Cart Modal Component --}}
+                @auth
+                    <x-customer.product-modal :product="$product" />
                 @endauth
             </div>
             @empty

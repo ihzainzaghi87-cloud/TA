@@ -86,7 +86,7 @@ class CartController extends Controller
                 $cartItem->quantity = $newQuantity;
                 $cartItem->save();
 
-                Log::info('Cart updated for user: '.Auth::id().', variation: '.$validated['variations_id']);
+                Log::info('Cart updated for user: '.Auth::id().', variation: '.$validated['variation_id']);
 
                 return redirect()->back()->with('success', 'Cart updated successfully!');
             } else {
@@ -129,28 +129,23 @@ class CartController extends Controller
 
             // Check stock availability
             if ($cartItem->variation->stock < $validated['quantity']) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Insufficient stock available',
-                ], 400);
+                return redirect()->back()->with('error', 'Stok tidak mencukupi. Stok tersedia: ' . $cartItem->variation->stock);
             }
 
             $cartItem->quantity = $validated['quantity'];
             $cartItem->save();
 
-            Log::info('Cart item updated: '.$id.' for user: '.Auth::id());
+            Log::info('Cart item updated: ' . $id . ' for user: ' . Auth::id());
 
-            return response()->json([
-                'success' => true,
-                'message' => 'Cart updated successfully',
-            ]);
+            return redirect()->back()->with('success', 'Keranjang berhasil diperbarui');
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return redirect()->back()->with('error', 'Data yang dimasukkan tidak valid');
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            return redirect()->back()->with('error', 'Item keranjang tidak ditemukan');
         } catch (\Exception $e) {
-            Log::error('Error updating cart: '.$e->getMessage());
-
-            return response()->json([
-                'success' => false,
-                'message' => 'Failed to update cart',
-            ], 500);
+            Log::error('Error updating cart: ' . $e->getMessage());
+            
+            return redirect()->back()->with('error', 'Gagal memperbarui keranjang');
         }
     }
 
