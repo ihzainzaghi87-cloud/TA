@@ -34,11 +34,24 @@
                    class="text-gray-700 hover:text-purple-600 px-3 py-2 text-sm font-medium transition duration-300 ease-in-out">
                     Blog
                 </a>
+                
+                {{-- Cart Icon with Badge --}}
+                @auth
                 <a href="{{ route('cart.index') }}" 
                    class="text-gray-700 hover:text-purple-600 px-3 py-2 text-sm font-medium transition duration-300 ease-in-out relative">
-                    <i class="fas fa-shopping-cart"></i>
-                    <span class="absolute -top-1 -right-1 bg-purple-600 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">0</span>
+                    <i class="fas fa-shopping-cart text-lg"></i>
+                    @if($cartCount > 0)
+                    <span class="absolute -top-1 -right-1 bg-gradient-to-r from-purple-600 to-pink-600 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center shadow-md animate-pulse">
+                        {{ $cartCount > 99 ? '99+' : $cartCount }}
+                    </span>
+                    @endif
                 </a>
+                @else
+                <a href="{{ route('login') }}" 
+                   class="text-gray-700 hover:text-purple-600 px-3 py-2 text-sm font-medium transition duration-300 ease-in-out relative">
+                    <i class="fas fa-shopping-cart text-lg"></i>
+                </a>
+                @endauth
             </div>
 
             {{-- Desktop Auth Buttons --}}
@@ -57,7 +70,7 @@
                                 {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
                             </div>
                             <span class="text-sm font-medium">{{ Auth::user()->name }}</span>
-                            <i class="fas fa-chevron-down text-xs" :class="{ 'rotate-180': userMenuOpen }"></i>
+                            <i class="fas fa-chevron-down text-xs transition-transform duration-200" :class="{ 'rotate-180': userMenuOpen }"></i>
                         </button>
 
                         {{-- Dropdown Menu --}}
@@ -73,6 +86,13 @@
                             <a href="{{ url('/admin') }}" 
                                class="block px-4 py-2 text-sm text-gray-700 hover:bg-purple-50 hover:text-purple-600 transition duration-150">
                                 <i class="fas fa-user mr-2"></i> Profile
+                            </a>
+                            <a href="{{ route('cart.index') }}" 
+                               class="block px-4 py-2 text-sm text-gray-700 hover:bg-purple-50 hover:text-purple-600 transition duration-150">
+                                <i class="fas fa-shopping-cart mr-2"></i> My Cart
+                                @if($cartCount > 0)
+                                <span class="ml-1 text-xs bg-purple-100 text-purple-600 px-2 py-0.5 rounded-full">{{ $cartCount }}</span>
+                                @endif
                             </a>
                             <div class="border-t border-gray-100 my-1"></div>
                             <form method="POST" action="{{ route('logout') }}">
@@ -130,10 +150,26 @@
                class="block px-3 py-2 text-gray-700 hover:bg-purple-50 hover:text-purple-600 rounded-md transition duration-150">
                 Blog
             </a>
-            <a href="#cart" 
+            
+            {{-- Mobile Cart Link --}}
+            @auth
+            <a href="{{ route('cart.index') }}" 
                class="block px-3 py-2 text-gray-700 hover:bg-purple-50 hover:text-purple-600 rounded-md transition duration-150">
-                <i class="fas fa-shopping-cart mr-2"></i> Cart (0)
+                <i class="fas fa-shopping-cart mr-2"></i> Cart 
+                @if($cartCount > 0)
+                <span class="bg-gradient-to-r from-purple-600 to-pink-600 text-white text-xs font-bold px-2 py-0.5 rounded-full">
+                    {{ $cartCount }}
+                </span>
+                @else
+                <span class="text-gray-400">(0)</span>
+                @endif
             </a>
+            @else
+            <a href="{{ route('login') }}" 
+               class="block px-3 py-2 text-gray-700 hover:bg-purple-50 hover:text-purple-600 rounded-md transition duration-150">
+                <i class="fas fa-shopping-cart mr-2"></i> Cart
+            </a>
+            @endauth
 
             {{-- Mobile Auth Section --}}
             <div class="border-t border-gray-200 mt-4 pt-4">
