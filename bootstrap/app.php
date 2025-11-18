@@ -3,6 +3,7 @@
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
+use App\Http\Middleware\ShareCartCount;
 
 // ✅ perhatikan: Middleware (singular)
 use Spatie\Permission\Middleware\RoleMiddleware;
@@ -21,6 +22,11 @@ return Application::configure(basePath: dirname(__DIR__))
             'role' => RoleMiddleware::class,
             'permission' => PermissionMiddleware::class,
             'role_or_permission' => RoleOrPermissionMiddleware::class,
+        ]);
+
+        // Register ShareCartCount to Web Middleware Group
+        $middleware->web(append: [
+            ShareCartCount::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
