@@ -37,10 +37,19 @@ class OrderController extends Controller
 
             // Calculate totals
             $subtotal = 0;
+            $totalPointsNeeded = 0; // Total poin yang dibutuhkan untuk produk dengan point_price
 
             foreach ($cartItems as $item) {
                 if ($item->variation && $item->variation->product) {
-                    $subtotal += $item->quantity * $item->variation->product->price;
+                    $product = $item->variation->product;
+                    
+                    // Hitung subtotal uang
+                    $subtotal += $item->quantity * $product->price;
+                    
+                    // Hitung total poin yang dibutuhkan (jika produk punya point_price)
+                    if ($product->point_price > 0) {
+                        $totalPointsNeeded += $item->quantity * $product->point_price;
+                    }
                 }
             }
 
@@ -53,7 +62,10 @@ class OrderController extends Controller
 
             // Get user points
             $userPoint = UserPoint::where('user_id', Auth::id())->first();
-            $availablePoints = $userPoint ? $userPoint->points : 0;
+            $availablePoints = $userPoint ? $userPoint->total_points : 0;
+
+            // Check if user has enough points for products that require points
+            $hasEnoughPoints = $availablePoints >= $totalPointsNeeded;
 
             return view('customer.checkout.index', compact(
                 'cartItems',
@@ -61,7 +73,9 @@ class OrderController extends Controller
                 'shippingCost',
                 'total',
                 'availablePoints',
-                'pointsWillEarn'
+                'pointsWillEarn',
+                'totalPointsNeeded',
+                'hasEnoughPoints'
             ));
         } catch (\Exception $e) {
             Log::error('Error loading checkout: ' . $e->getMessage());
@@ -80,8 +94,6 @@ class OrderController extends Controller
                 'shipping_address' => 'required|string|max:500',
                 'phone' => 'required|string|max:20',
                 'notes' => 'nullable|string|max:1000',
-                'use_points' => 'nullable|boolean',
-                'points_to_use' => 'nullable|integer|min:0',
             ], [
                 'shipping_address.required' => 'Alamat pengiriman harus diisi',
                 'phone.required' => 'Nomor telepon harus diisi',
@@ -95,44 +107,58 @@ class OrderController extends Controller
                 ->get();
 
             if ($cartItems->isEmpty()) {
+                DB::rollBack();
                 return redirect()->route('carts.index')
                     ->with('error', 'Keranjang Anda kosong');
             }
 
-            // Calculate totals
+            // Calculate totals and points needed
             $subtotal = 0;
+            $totalPointsNeeded = 0; // Poin untuk product yang punya point_price
 
             foreach ($cartItems as $item) {
+                $product = $item->variation->product;
+                
                 // Check stock
                 if ($item->variation->stock < $item->quantity) {
                     DB::rollBack();
                     return redirect()->back()
-                        ->with('error', "Stok tidak mencukupi untuk {$item->variation->product->name}");
+                        ->with('error', "Stok tidak mencukupi untuk {$product->name}");
                 }
 
-                $subtotal += $item->quantity * $item->variation->product->price;
+                $subtotal += $item->quantity * $product->price;
+                
+                // Calculate points needed for products with point_price
+                if ($product->point_price > 0) {
+                    $totalPointsNeeded += $item->quantity * $product->point_price;
+                }
             }
 
-            // Shipping cost (static)
+            // Get user points
+            $userPoint = UserPoint::where('user_id', Auth::id())->first();
+            if (!$userPoint) {
+                $userPoint = UserPoint::create([
+                    'user_id' => Auth::id(),
+                    'total_points' => 0
+                ]);
+            }
+            $currentPoints = $userPoint->total_points;
+
+            // Check if user has enough points for products that require points
+            if ($totalPointsNeeded > 0 && $currentPoints < $totalPointsNeeded) {
+                DB::rollBack();
+                return redirect()->back()
+                    ->with('error', "Poin Anda tidak mencukupi. Dibutuhkan {$totalPointsNeeded} poin, Anda memiliki {$currentPoints} poin");
+            }
+
+            // Shipping cost
             $shippingCost = 15000;
             $total = $subtotal + $shippingCost;
 
-            // Handle points usage
-            $pointsUsed = 0;
-            if ($request->use_points && $request->points_to_use > 0) {
-                $userPoint = UserPoint::where('user_id', Auth::id())->first();
-                
-                if ($userPoint && $userPoint->points >= $request->points_to_use) {
-                    $pointsUsed = $request->points_to_use;
-                    
-                    // Deduct points (1 point = Rp 1.000 discount)
-                    $pointDiscount = $pointsUsed * 1000;
-                    $total = max(0, $total - $pointDiscount);
-                    
-                    // Update user points - DEDUCT
-                    $userPoint->points -= $pointsUsed;
-                    $userPoint->save();
-                }
+            // Deduct points from user (ONLY for products that require points)
+            if ($totalPointsNeeded > 0) {
+                $userPoint->total_points -= $totalPointsNeeded;
+                $userPoint->save();
             }
 
             // Calculate points earned (Rp 10.000 = 1 poin)
@@ -145,7 +171,7 @@ class OrderController extends Controller
                 'subtotal' => $subtotal,
                 'shipping_cost' => $shippingCost,
                 'total' => $total,
-                'total_points_used' => $pointsUsed,
+                'total_points_used' => $totalPointsNeeded, // Only product points
                 'points_earned' => $pointsEarned,
                 'status' => 'Pending',
                 'shipping_address' => $validated['shipping_address'],
@@ -184,36 +210,36 @@ class OrderController extends Controller
                 $variation->save();
             }
 
-            // Create point transaction for points USED (if any)
-            if ($pointsUsed > 0) {
+            // Get current balance after deduction
+            $balanceAfterDeduction = $userPoint->total_points;
+
+            // Create point transaction for PRODUCT POINTS (if any)
+            if ($totalPointsNeeded > 0) {
                 PointTransaction::create([
                     'user_id' => Auth::id(),
                     'transactionable_type' => Order::class,
                     'transactionable_id' => $order->id,
-                    'type' => 'deduct',
-                    'points' => $pointsUsed,
-                    'description' => "Penggunaan {$pointsUsed} poin untuk order #{$order->order_number}",
+                    'type' => 'redeemed',
+                    'points' => $totalPointsNeeded,
+                    'balance_after' => $balanceAfterDeduction,
+                    'description' => "Pembayaran {$totalPointsNeeded} poin untuk produk di order #{$order->order_number}",
                 ]);
             }
 
-            // Create point transaction for points EARNED
+            // Add earned points
             if ($pointsEarned > 0) {
+                $userPoint->total_points += $pointsEarned;
+                $userPoint->save();
+                
                 PointTransaction::create([
                     'user_id' => Auth::id(),
                     'transactionable_type' => Order::class,
                     'transactionable_id' => $order->id,
-                    'type' => 'earn',
+                    'type' => 'earned',
                     'points' => $pointsEarned,
+                    'balance_after' => $userPoint->total_points,
                     'description' => "Mendapatkan {$pointsEarned} poin dari order #{$order->order_number}",
                 ]);
-
-                // Update user points - ADD EARNED POINTS
-                $userPoint = UserPoint::firstOrCreate(
-                    ['user_id' => Auth::id()],
-                    ['points' => 0]
-                );
-                $userPoint->points += $pointsEarned;
-                $userPoint->save();
             }
 
             // Clear cart
@@ -221,7 +247,7 @@ class OrderController extends Controller
 
             DB::commit();
 
-            Log::info('Order created successfully: ' . $order->order_number);
+            Log::info("Order created successfully: {$order->order_number}. Points used: {$totalPointsNeeded}, Points earned: {$pointsEarned}, Final balance: {$userPoint->total_points}");
 
             return redirect()->route('orders.success', $order->id)
                 ->with('success', 'Pesanan berhasil dibuat!');
@@ -249,7 +275,25 @@ class OrderController extends Controller
     {
         $date = date('Ymd');
         $random = str_pad(rand(0, 9999), 4, '0', STR_PAD_LEFT);
+        
         return "ORD-{$date}-{$random}";
+
+        // ambil order terakhir di hari ini
+        // $lastOrder = Order::whereDate('created_at', date('Y-m-d'))
+        //     ->orderBy('order_number', 'desc')
+        //     ->first();
+
+        // Ambil 4 digit terakhir lalu increment
+        // if ($lastOrder) {
+        //     $lastSequence = intval(substr($lastOrder->order_number, -4));
+        //     $newSequence = str_pad($lastSequence + 1, 4, '0', STR_PAD_LEFT);
+        // }
+        // kalau belum ada order hari ini → mulai dari 0001
+        // else {
+        //     $newSequence = '0001';
+        // }
+
+        // return "ORD-{$date}-{$newSequence}";
     }
 
     /**

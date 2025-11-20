@@ -228,10 +228,10 @@
                             Lanjut Belanja
                         </a>
 
-                        <button type="button" class="w-full cart-primary-gradient text-white font-semibold py-3 rounded-full shadow-lg hover:shadow-2xl transform hover:-translate-y-0.5 transition">
+                        <a href="{{ route('checkout') }}" class="w-full cart-primary-gradient text-white font-semibold py-3 rounded-full shadow-lg hover:shadow-2xl transform hover:-translate-y-0.5 transition">
                             <i class="fas fa-credit-card mr-2"></i>
                             Lanjutkan Pembayaran
-                        </button>
+                        </a>
                         <p class="text-xs text-gray-500 text-center">Checkout belum aktif &mdash; hubungi admin untuk menyelesaikan pesanan.</p>
                     </div>
                 </div>
