@@ -303,6 +303,22 @@ function removePreview() {
                 @enderror
             </div>
 
+            <!-- Subtitle -->
+            <div>
+                <label for="title" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    Subtitle <span class="text-gray-400 text-xs">(Optional)</span>
+                </label>
+                <input type="text" 
+                       name="subtitle" 
+                       id="subtitle" 
+                       value="{{ old('subtitle', $banner->subtitle) }}"
+                       class="block w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-amber-500 dark:bg-gray-700 dark:text-white transition-colors duration-200 @error('subtitle') border-red-300 @enderror"
+                       placeholder="Enter banner subtitle">
+                @error('subtitle')
+                <p class="mt-2 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
+                @enderror
+            </div>
+
             <!-- Status -->
             <div>
                 <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">

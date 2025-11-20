@@ -82,6 +82,13 @@
                                 {{ $banner->title ?? 'Untitled Banner' }}
                             </dd>
                         </div>
+
+                        <div class="p-4 bg-gray-50 dark:bg-gray-900/40 rounded-lg">
+                            <dt class="text-sm font-medium text-gray-500 dark:text-gray-400 mb-2">Subtitle</dt>
+                            <dd class="text-base font-medium text-gray-900 dark:text-white">
+                                {{ $banner->subtitle ?? 'No Subtitle' }}
+                            </dd>
+                        </div>
                         
                         <div class="p-4 bg-gray-50 dark:bg-gray-900/40 rounded-lg">
                             <dt class="text-sm font-medium text-gray-500 dark:text-gray-400 mb-2">Image Path</dt>

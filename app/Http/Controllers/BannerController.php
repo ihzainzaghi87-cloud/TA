@@ -55,6 +55,7 @@ class BannerController extends Controller implements HasMiddleware
         $request->validate([
             'image' => 'required|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
             'title' => 'nullable|string|max:255',
+            'subtittle' => 'nullable|string|max:255',
             'is_active' => 'nullable|boolean'
         ]);
 
@@ -64,6 +65,7 @@ class BannerController extends Controller implements HasMiddleware
         Banner::create([
             'image' => $imagePath,
             'title' => $request->title,
+            'subtittle' => $request->subtittle,
             'is_active' => $request->has('is_active') ? true : false
         ]);
 
@@ -95,6 +97,7 @@ class BannerController extends Controller implements HasMiddleware
         $request->validate([
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
             'title' => 'nullable|string|max:255',
+            'subtittle' => 'nullable|string|max:255',
             'is_active' => 'nullable|boolean'
         ]);
 
@@ -110,6 +113,7 @@ class BannerController extends Controller implements HasMiddleware
         }
 
         $banner->title = $request->title;
+        $banner->subtittle = $request->subtittle;
         $banner->is_active = $request->has('is_active') ? true : false;
         $banner->save();
 
