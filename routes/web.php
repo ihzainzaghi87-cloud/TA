@@ -114,6 +114,8 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/orders/{order}', [OrderController::class, 'show'])->name('orders.show');
 });
 
+// Route::post('/midtrans/notification', [OrderController::class, 'callback'])->name('midtrans.callback');
+
 // ---------- Password Reset ----------
 Route::middleware('guest')->group(function () {
     // form minta link reset

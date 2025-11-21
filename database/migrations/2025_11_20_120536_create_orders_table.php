@@ -21,6 +21,8 @@ return new class extends Migration
             $table->integer('total_points_used')->default(0); // Total poin digunakan
             $table->integer('points_earned')->default(0); // Poin yang didapat
             $table->string('status')->default('Pending');
+            $table->string('snap_token')->nullable();
+            $table->string('payment_status')->default('Pending');
             $table->text('shipping_address');
             $table->string('phone');
             $table->text('notes')->nullable();

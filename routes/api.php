@@ -65,3 +65,5 @@ Route::middleware(['auth:sanctum'])->prefix('admin')->group(function () {
         Route::delete('/{permission}',  [PermissionsApi::class, 'destroy']); // permissions.delete
     });
 });
+
+Route::post('/midtrans/notification', [\App\Http\Controllers\Customer\OrderController::class, 'callback']);

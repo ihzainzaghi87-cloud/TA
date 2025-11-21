@@ -30,6 +30,8 @@ class Order extends Model
         'total_points_used',
         'points_earned',
         'status',
+        'snap_token',
+        'payment_status',
         'shipping_address',
         'phone',
         'notes',
