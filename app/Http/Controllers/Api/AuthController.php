@@ -28,6 +28,7 @@ class AuthController extends Controller
             'password'     => ['required','confirmed', Password::min(6)],
             'username'     => ['nullable','string','max:255','unique:users,username'],
             'phone_number' => ['nullable','string','max:30'],
+            'address'      => ['nullable','string','max:500'],
         ]);
 
         if ($v->fails()) {
@@ -44,6 +45,7 @@ class AuthController extends Controller
                     'password'     => Hash::make($request->password),
                     'username'     => $request->username,
                     'phone_number' => $request->phone_number,
+                    'address'      => $request->address,
                 ]);
 
                 // assign default role "user" jika ada
@@ -57,7 +59,7 @@ class AuthController extends Controller
             return ResponseFormatter::success([
                 'access_token' => $token,
                 'token_type'   => 'Bearer',
-                'user'         => $user->only(['id','name','email','username','phone_number','created_at']),
+                'user'         => $user->only(['id','name','email','username','phone_number', 'address','created_at']),
                 'roles'        => $user->getRoleNames(),
                 'permissions'  => $user->getAllPermissions()->pluck('name'),
             ], 'Registration successful.');

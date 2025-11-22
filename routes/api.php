@@ -9,6 +9,10 @@ use App\Http\Controllers\Api\ProfileController;
 use App\Http\Controllers\Api\UserManagementController as UsersApi;
 use App\Http\Controllers\Api\RoleController as RolesApi;
 use App\Http\Controllers\Api\PermissionController as PermissionsApi;
+// use App\Http\Controllers\Api\UserProfileController;
+use App\Http\Controllers\Api\Customer\PagesController;
+use App\Http\Controllers\Api\Customer\CartController;
+use App\Http\Controllers\Api\Customer\OrderController;
 
 // AUTH
 Route::prefix('auth')->group(function () {
@@ -64,6 +68,43 @@ Route::middleware(['auth:sanctum'])->prefix('admin')->group(function () {
         Route::put('/{permission}',     [PermissionsApi::class, 'update']); // permissions.update
         Route::delete('/{permission}',  [PermissionsApi::class, 'destroy']); // permissions.delete
     });
+
+    // Profile
+    Route::prefix('profile')->group(function () {
+        Route::get('/',         [ProfileController::class, 'show']);
+        Route::put('/',         [ProfileController::class, 'update']);
+        Route::put('/password', [ProfileController::class, 'updatePassword']);
+    });
+});
+
+// -------- CUSTOMER PAGES -----------
+Route::get('/', [PagesController::class, 'index']);
+
+Route::middleware('auth:sanctum')->group(function () {
+    // Cart
+    Route::prefix('cart')->group(function () {
+        Route::get('/',         [CartController::class, 'index']);
+        Route::post('/',         [CartController::class, 'store']);
+        Route::put('/{id}', [CartController::class, 'update']);
+        Route::delete('/{id}', [CartController::class, 'destroy']);
+        Route::delete('/', [CartController::class, 'clear']);
+        Route::get('/summary', [CartController::class, 'getSummary']);
+    });
+
+    // Orders
+    Route::prefix('orders')->group(function () {
+        Route::get('/', [OrderController::class, 'index']);
+        Route::post('/', [OrderController::class, 'store']);
+        Route::get('/{orderId}', [OrderController::class, 'show']);
+        // Route::post('/callback', [OrderController::class, 'callback'])->withoutMiddleware('auth:sanctum');
+    });
+});
+
+// PROFILE (protected)
+Route::middleware('auth:sanctum')->prefix('profile')->group(function () {
+    Route::get('/',         [UserProfileController::class, 'show']);
+    Route::put('/',         [UserProfileController::class, 'update']);
+    Route::put('/password', [UserProfileController::class, 'updatePassword']);
 });
 
 Route::post('/midtrans/notification', [\App\Http\Controllers\Customer\OrderController::class, 'callback']);
