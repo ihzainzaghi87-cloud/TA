@@ -59,4 +59,12 @@ class User extends Authenticatable implements CanResetPasswordContract
     {
         return $this->hasMany(Cart::class);
     }
+
+    /**
+     * Get the user's orders.
+     */
+    public function orders()
+    {
+        return $this->hasMany(Order::class);
+    }
 }

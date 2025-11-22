@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BannerController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\Customer\OrderController;
 use App\Http\Controllers\Customer\CartController;
 use App\Http\Controllers\Customer\PagesController;
 use App\Http\Controllers\DashboardController;
@@ -102,7 +103,18 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('/cart/{id}', [CartController::class, 'destroy'])->name('cart.destroy');
     Route::delete('/cart', [CartController::class, 'clear'])->name('cart.clear');
     Route::get('/cart/summary', [CartController::class, 'getSummary'])->name('cart.summary');
+
+    // Checkout
+    Route::get('/checkout', [OrderController::class, 'checkout'])->name('checkout');
+    Route::post('/orders', [OrderController::class, 'store'])->name('orders.store');
+    Route::get('/orders/success/{order}', [OrderController::class, 'success'])->name('orders.success');
+    
+    // My Orders
+    Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
+    Route::get('/orders/{order}', [OrderController::class, 'show'])->name('orders.show');
 });
+
+// Route::post('/midtrans/notification', [OrderController::class, 'callback'])->name('midtrans.callback');
 
 // ---------- Password Reset ----------
 Route::middleware('guest')->group(function () {
