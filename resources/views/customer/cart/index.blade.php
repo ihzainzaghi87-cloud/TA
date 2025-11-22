@@ -64,8 +64,8 @@
                 <p class="text-gray-600 max-w-md">
                     Jelajahi katalog kami lalu tambahkan produk favorit Anda. Semua barang yang dimasukkan akan tampil di sini.
                 </p>
-                     <a href="{{ route('home') }}"
-                         class="inline-flex items-center gap-2 cart-primary-gradient text-white px-6 py-3 rounded-full font-semibold shadow-lg hover:shadow-2xl transform hover:-translate-y-0.5 transition">
+                <a href="{{ route('home') }}"
+                   class="inline-flex items-center gap-2 cart-primary-gradient text-white px-6 py-3 rounded-full font-semibold shadow-lg hover:shadow-2xl transform hover:-translate-y-0.5 transition">
                     <i class="fas fa-store"></i>
                     Mulai Belanja
                 </a>
@@ -74,16 +74,28 @@
     @else
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
             <div class="lg:col-span-2 space-y-6">
+                {{-- Select All --}}
+                <div class="bg-white rounded-2xl shadow-lg border border-gray-100 p-4 flex items-center justify-between">
+                    <label class="inline-flex items-center gap-3">
+                        <input type="checkbox" id="select-all"
+                               class="w-5 h-5 rounded border-gray-300 text-purple-600 focus:ring-purple-500">
+                        <span class="text-sm font-semibold text-gray-700">Pilih Semua Produk</span>
+                    </label>
+                    <span class="text-xs text-gray-500">
+                        Centang produk yang ingin dihitung dan di-checkout
+                    </span>
+                </div>
+
                 @foreach($cartItems as $item)
                     @php
-                        $variation = $item->variation;
-                        $product = $variation->product ?? null;
-                        $productName = $product->name ?? 'Produk tidak tersedia';
-                        $unitPrice = $product->price ?? 0;
+                        $variation      = $item->variation;
+                        $product        = $variation->product ?? null;
+                        $productName    = $product->name ?? 'Produk tidak tersedia';
+                        $unitPrice      = $product->price ?? 0;
                         $unitPointPrice = $product->point_price ?? 0;
-                        $linePrice = $unitPrice * $item->quantity;
+                        $linePrice      = $unitPrice * $item->quantity;
                         $linePointPrice = $unitPointPrice ? $unitPointPrice * $item->quantity : 0;
-                        $productImage = null;
+                        $productImage   = null;
 
                         if ($product && $product->images && $product->images->count() > 0) {
                             $productImage = asset('storage/products/' . $product->images->first()->image);
@@ -92,16 +104,23 @@
 
                     <article class="bg-white rounded-2xl shadow-lg border border-gray-100 p-6 flex flex-col gap-4" aria-label="Cart item">
                         <div class="flex flex-col md:flex-row gap-6">
-                            <div class="md:w-32 w-full">
-                                @if($productImage)
-                                    <img src="{{ $productImage }}"
-                                         alt="{{ $productName }}"
-                                         class="w-full h-32 object-cover rounded-xl">
-                                @else
-                                    <div class="w-full h-32 cart-placeholder-img rounded-xl flex items-center justify-center text-gray-400">
-                                        <i class="fas fa-image text-3xl"></i>
-                                    </div>
-                                @endif
+                            {{-- Checkbox + Image --}}
+                            <div class="flex md:flex-col items-start gap-3 md:w-32 w-full">
+                                <input type="checkbox"
+                                       class="mt-1 md:mt-0 w-5 h-5 rounded border-gray-300 text-purple-600 focus:ring-purple-500 item-checkbox"
+                                       data-line-price="{{ $linePrice }}"
+                                       data-line-point="{{ $linePointPrice }}">
+                                <div class="flex-1 md:w-full">
+                                    @if($productImage)
+                                        <img src="{{ $productImage }}"
+                                             alt="{{ $productName }}"
+                                             class="w-full h-32 object-cover rounded-xl">
+                                    @else
+                                        <div class="w-full h-32 cart-placeholder-img rounded-xl flex items-center justify-center text-gray-400">
+                                            <i class="fas fa-image text-3xl"></i>
+                                        </div>
+                                    @endif
+                                </div>
                             </div>
 
                             <div class="flex-1 space-y-3">
@@ -145,7 +164,9 @@
                                 <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
                                     <div>
                                         <p class="text-sm text-gray-500">Harga satuan</p>
-                                        <p class="text-lg font-semibold text-purple-600">Rp {{ number_format($unitPrice, 0, ',', '.') }}</p>
+                                        <p class="text-lg font-semibold text-purple-600">
+                                            Rp {{ number_format($unitPrice, 0, ',', '.') }}
+                                        </p>
                                         @if($unitPointPrice)
                                             <p class="text-sm text-amber-600">
                                                 <i class="fas fa-star text-xs"></i>
@@ -178,7 +199,9 @@
 
                                     <div class="text-right">
                                         <p class="text-sm text-gray-500">Subtotal</p>
-                                        <p class="text-xl font-bold text-gray-900">Rp {{ number_format($linePrice, 0, ',', '.') }}</p>
+                                        <p class="text-xl font-bold text-gray-900">
+                                            Rp {{ number_format($linePrice, 0, ',', '.') }}
+                                        </p>
                                         @if($linePointPrice)
                                             <p class="text-sm text-amber-600">
                                                 <i class="fas fa-star text-xs"></i>
@@ -197,18 +220,25 @@
                 <div class="bg-white rounded-3xl shadow-xl border border-gray-100 p-8 space-y-6">
                     <div>
                         <h2 class="text-2xl font-semibold text-gray-900">Ringkasan</h2>
-                        <p class="text-sm text-gray-500">{{ $cartItems->sum('quantity') }} barang dari {{ $cartItems->count() }} produk</p>
+                        <p class="text-sm text-gray-500">
+                            {{ $cartItems->sum('quantity') }} barang dari {{ $cartItems->count() }} produk
+                        </p>
+                        <p class="text-xs text-gray-400 mt-1">
+                            Total di bawah mengikuti produk yang Anda centang.
+                        </p>
                     </div>
 
                     <div class="space-y-4">
                         <div class="flex items-center justify-between text-gray-600">
                             <span>Total Harga</span>
-                            <span class="font-semibold text-gray-900">Rp {{ number_format($totalPrice, 0, ',', '.') }}</span>
+                            <span class="font-semibold text-gray-900" id="selected-total-price">
+                                Rp 0
+                            </span>
                         </div>
                         <div class="flex items-center justify-between text-amber-600">
                             <span>Total Poin</span>
-                            <span class="font-semibold">
-                                {{ number_format($totalPointPrice, 0, ',', '.') }} poin
+                            <span class="font-semibold" id="selected-total-point">
+                                0 poin
                             </span>
                         </div>
                     </div>
@@ -228,11 +258,14 @@
                             Lanjut Belanja
                         </a>
 
-                        <a href="{{ route('checkout') }}" class="w-full cart-primary-gradient text-white font-semibold py-3 rounded-full shadow-lg hover:shadow-2xl transform hover:-translate-y-0.5 transition">
-                            <i class="fas fa-credit-card mr-2"></i>
-                            Lanjutkan Pembayaran
+                        <a href="{{ route('checkout') }}"
+                        class="w-full flex items-center justify-center gap-2 cart-primary-gradient text-white font-semibold py-3 rounded-full shadow-lg hover:shadow-2xl transform hover:-translate-y-0.5 transition">
+                            <i class="fas fa-credit-card"></i>
+                            <span>Lanjutkan Pembayaran</span>
                         </a>
-                        <p class="text-xs text-gray-500 text-center">Checkout belum aktif &mdash; hubungi admin untuk menyelesaikan pesanan.</p>
+                        <p class="text-xs text-gray-500 text-center">
+                            Hanya produk yang Anda centang yang akan dihitung di ringkasan ini, namun saat ini checkout masih global untuk semua item.
+                        </p>
                     </div>
                 </div>
             </aside>
@@ -244,6 +277,7 @@
 @push('scripts')
 <script>
     document.addEventListener('DOMContentLoaded', function () {
+        // Quantity update (sudah ada)
         const carts = document.querySelectorAll('[data-quantity-input]');
         carts.forEach(function (input) {
             const form = input.closest('form');
@@ -274,6 +308,69 @@
 
             input.addEventListener('change', submitUpdate);
         });
+
+        // Checkbox + select all + total selected
+        const selectAllCheckbox = document.getElementById('select-all');
+        const itemCheckboxes   = document.querySelectorAll('.item-checkbox');
+        const totalPriceEl     = document.getElementById('selected-total-price');
+        const totalPointEl     = document.getElementById('selected-total-point');
+
+        function formatRupiah(number) {
+            return new Intl.NumberFormat('id-ID').format(number);
+        }
+
+        function recalcSelectedTotals() {
+            let totalPrice = 0;
+            let totalPoint = 0;
+
+            itemCheckboxes.forEach(cb => {
+                if (cb.checked) {
+                    const linePrice = parseInt(cb.getAttribute('data-line-price')) || 0;
+                    const linePoint = parseInt(cb.getAttribute('data-line-point')) || 0;
+                    totalPrice += linePrice;
+                    totalPoint += linePoint;
+                }
+            });
+
+            totalPriceEl.textContent = 'Rp ' + formatRupiah(totalPrice);
+            totalPointEl.textContent = formatRupiah(totalPoint) + ' poin';
+        }
+
+        if (selectAllCheckbox) {
+            selectAllCheckbox.addEventListener('change', function () {
+                const checked = this.checked;
+                itemCheckboxes.forEach(cb => {
+                    cb.checked = checked;
+                });
+                recalcSelectedTotals();
+            });
+        }
+
+        itemCheckboxes.forEach(cb => {
+            cb.addEventListener('change', function () {
+                // Sync select-all state
+                const allChecked = Array.from(itemCheckboxes).every(c => c.checked);
+                const noneChecked = Array.from(itemCheckboxes).every(c => !c.checked);
+                if (allChecked) {
+                    selectAllCheckbox.checked = true;
+                    selectAllCheckbox.indeterminate = false;
+                } else if (noneChecked) {
+                    selectAllCheckbox.checked = false;
+                    selectAllCheckbox.indeterminate = false;
+                } else {
+                    selectAllCheckbox.indeterminate = true;
+                }
+
+                recalcSelectedTotals();
+            });
+        });
+
+        // Optional: default tidak pilih semua saat load
+        if (itemCheckboxes.length > 0) {
+            selectAllCheckbox.checked = false;
+            itemCheckboxes.forEach(cb => cb.checked = false);
+            recalcSelectedTotals();
+        }
     });
 </script>
 @endpush
