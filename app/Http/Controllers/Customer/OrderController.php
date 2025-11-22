@@ -30,6 +30,33 @@ class OrderController extends Controller
         Config::$is3ds = config('midtrans.is_3ds');
     }
 
+    // Terima produk yang dipilih dari cart, simpan ke session, lalu redirect ke halaman checkout
+    public function selectProducts(Request $request)
+    {
+        $request->validate(['selected_variations' => 'required']);
+
+        $rawSelection = $request->input('selected_variations');
+
+        if (is_string($rawSelection)) {
+            $selectedVariations = json_decode($rawSelection, true);
+        } elseif (is_array($rawSelection)) {
+            $selectedVariations = $rawSelection;
+        } else {
+            $selectedVariations = [];
+        }
+
+        if (empty($selectedVariations) || !is_array($selectedVariations)) {
+            return redirect()->back()->with('error', 'Pilih minimal satu produk.');
+        }
+
+        $selectedVariations = array_values(array_unique(array_map('intval', $selectedVariations)));
+
+        session(['selected_variations' => $selectedVariations]);
+        Log::info('Session selected_variations set:', $selectedVariations);
+
+        return redirect()->route('checkout');
+    }
+
     /**
      * Display checkout page
      */
@@ -37,17 +64,19 @@ class OrderController extends Controller
     {
         try {
             // Get cart items
+            $selectedVariations = session('selected_variations', []);
+
+            if (empty($selectedVariations)) {
+                return redirect()->route('cart.index')->with('error', 'Pilih minimal satu produk terlebih dahulu.');
+            }
+
             $cartItems = Cart::where('user_id', Auth::id())
-                ->with([
-                    'variation.product.images',
-                    'variation.product.category',
-                ])
+                ->whereIn('variation_id', $selectedVariations)
+                ->with(['variation.product.images'])
                 ->get();
 
-            // Check if cart is empty
             if ($cartItems->isEmpty()) {
-                return redirect()->route('carts.index')
-                    ->with('error', 'Keranjang Anda kosong');
+                return redirect()->route('cart.index')->with('error', 'Produk yang dipilih tidak ditemukan.');
             }
 
             // Calculate totals
@@ -107,22 +136,27 @@ class OrderController extends Controller
                 'shipping_address' => 'required|string|max:500',
                 'phone' => 'required|string|max:20',
                 'notes' => 'nullable|string|max:1000',
+                'selected_variations' => 'required|string',
             ], [
-                'shipping_address.required' => 'Alamat pengiriman harus diisi',
-                'phone.required' => 'Nomor telepon harus diisi',
+                'selected_variations.required' => 'Pilih minimal satu produk',
             ]);
 
             DB::beginTransaction();
 
-            // Get cart items
+            $selectedVariations = session('selected_variations', []);
+
+            if (empty($selectedVariations)) {
+                return redirect()->route('cart.index')->with('error', 'Pilih minimal satu produk terlebih dahulu.');
+            }
+
             $cartItems = Cart::where('user_id', Auth::id())
+                ->whereIn('variation_id', $selectedVariations)
                 ->with('variation.product')
                 ->get();
 
             if ($cartItems->isEmpty()) {
                 DB::rollBack();
-                return redirect()->route('carts.index')
-                    ->with('error', 'Keranjang Anda kosong');
+                return redirect()->route('cart.index')->with('error', 'Produk yang dipilih tidak ditemukan di keranjang.');
             }
 
             // Calculate totals and points needed
