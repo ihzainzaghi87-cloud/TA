@@ -105,6 +105,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/cart/summary', [CartController::class, 'getSummary'])->name('cart.summary');
 
     // Checkout
+    Route::post('/checkout/select-products', [OrderController::class, 'selectProducts'])->name('checkout.select-products');
     Route::get('/checkout', [OrderController::class, 'checkout'])->name('checkout');
     Route::post('/orders', [OrderController::class, 'store'])->name('orders.store');
     Route::get('/orders/success/{order}', [OrderController::class, 'success'])->name('orders.success');

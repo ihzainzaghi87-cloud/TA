@@ -65,7 +65,7 @@ class AuthController extends Controller
                                 ->uncompromised()],
             'username'     => ['nullable','string','max:255','unique:users,username'],
             'phone_number' => ['nullable','string','max:30'],
-            'address'      => ['required','string','max:500'],
+            'address'      => ['nullable','string','max:500'],
         ]);
 
         $user = User::create([

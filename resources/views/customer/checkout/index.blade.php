@@ -52,6 +52,7 @@
 
     <form action="{{ route('orders.store') }}" method="POST">
         @csrf
+        <input type="hidden" name="selected_variations" value="{{ e(old('selected_variations', json_encode(session('selected_variations', [])))) }}">
         
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
             {{-- Left Column - Shipping Info & Items --}}
@@ -146,13 +147,13 @@
                             
                             <article class="flex gap-4 pb-5 border-b border-gray-100 last:border-0 last:pb-0">
                                 {{-- Product Image --}}
-                                <div class="w-20 h-20 flex-shrink-0">
+                                <div class="w-20 h-20 shrink-0">
                                     @if($product->images && $product->images->count() > 0)
                                         <img src="{{ asset('storage/products/' . $product->images->first()->image) }}" 
                                              alt="{{ $product->name }}"
                                              class="w-full h-full object-cover rounded-xl shadow-sm">
                                     @else
-                                        <div class="w-full h-full bg-gradient-to-br from-gray-200 to-gray-300 rounded-xl flex items-center justify-center">
+                                        <div class="w-full h-full bg-linear-to-br from-gray-200 to-gray-300 rounded-xl flex items-center justify-center">
                                             <i class="fas fa-image text-gray-400 text-2xl"></i>
                                         </div>
                                     @endif
@@ -224,7 +225,7 @@
                         {{-- PRODUCT POINTS REQUIRED --}}
                         @if($totalPointsNeeded > 0)
                             <div class="pt-4 border-t border-gray-200">
-                                <div class="bg-gradient-to-r from-red-50 to-pink-50 rounded-2xl p-4 border-2 border-red-200">
+                                <div class="bg-linear-to-r from-red-50 to-pink-50 rounded-2xl p-4 border-2 border-red-200">
                                     <div class="flex items-center justify-between mb-2">
                                         <div>
                                             <p class="text-sm font-bold text-red-700 flex items-center gap-2">
@@ -277,7 +278,7 @@
                         </div>
 
                         {{-- Points Reward Info --}}
-                        <div class="bg-gradient-to-r from-purple-50 to-pink-50 rounded-2xl p-4 border border-purple-200">
+                        <div class="bg-linear-to-r from-purple-50 to-pink-50 rounded-2xl p-4 border border-purple-200">
                             <p class="flex items-center text-sm font-semibold text-purple-700 gap-2">
                                 <i class="fas fa-gift text-pink-500"></i>
                                 Reward Poin dari Pesanan Ini:
@@ -293,17 +294,19 @@
                         </div>
                     </div>
 
+                    @php
+                        $disableCheckout = !$hasEnoughPoints && $totalPointsNeeded > 0;
+                    @endphp
                     {{-- Submit Button --}}
-                    <button type="submit" 
-                            @if(!$hasEnoughPoints && $totalPointsNeeded > 0) disabled @endif
-                            class="w-full py-4 rounded-full font-bold text-lg shadow-xl transform transition duration-300
-                                   @if(!$hasEnoughPoints && $totalPointsNeeded > 0)
-                                       bg-gray-400 text-gray-700 cursor-not-allowed
-                                   @else
-                                       checkout-primary-gradient text-white hover:shadow-2xl hover:-translate-y-0.5
-                                   @endif">
+                        <button type="submit"
+                            @if($disableCheckout) disabled @endif
+                            @class([
+                                'w-full py-4 rounded-full font-bold text-lg shadow-xl transform transition duration-300',
+                                'bg-gray-400 text-gray-700 cursor-not-allowed' => $disableCheckout,
+                                'checkout-primary-gradient text-white hover:shadow-2xl hover:-translate-y-0.5' => ! $disableCheckout,
+                            ])>
                         <i class="fas fa-lock mr-2"></i>
-                        @if(!$hasEnoughPoints && $totalPointsNeeded > 0)
+                        @if($disableCheckout)
                             Poin Tidak Mencukupi
                         @else
                             Buat Pesanan Sekarang
