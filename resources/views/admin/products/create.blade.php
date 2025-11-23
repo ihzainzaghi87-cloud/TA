@@ -127,6 +127,23 @@
                     @enderror
                 </div>
 
+                <!-- Weight -->
+                <div class="md:col-span-2">
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                        Weight (grams) <span class="text-red-500">*</span>
+                    </label>
+                    <input type="number" 
+                        name="weight" 
+                        step="0.01"
+                        min="0"
+                        value="{{ old('weight') }}"
+                        class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                        placeholder="Enter product weight in grams">
+                    @error('weight')
+                    <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                    @enderror
+                </div>
+
                 <!-- Description -->
                 <div class="md:col-span-2">
                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
