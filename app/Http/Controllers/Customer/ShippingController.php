@@ -86,7 +86,7 @@ class ShippingController extends Controller
     {
         try {
             $validated = $request->validate([
-                'destination_city_id' => 'required|integer|exists:cities,city_id',
+                'destination_city_id' => 'required|integer',
                 'weight' => 'required|integer|min:1',
                 'courier' => 'required|string|in:jne,pos,tiki,rpx,esl,pcp,pandu,wahana,sicepat,jnt,pahala,sap,jet,indah,dse,slis,first,ncs,star,ninja,lion,idl,rex,ide,sentral,anteraja'
             ], [
@@ -199,7 +199,7 @@ class ShippingController extends Controller
             }
             
             $validated = $request->validate([
-                'destination_city_id' => 'required|integer|exists:cities,city_id',
+                'destination_city_id' => 'required|integer',
                 'courier' => 'required|string|in:jne,pos,tiki,rpx,esl,pcp,pandu,wahana,sicepat,jnt,pahala,sap,jet,indah,dse,slis,first,ncs,star,ninja,lion,idl,rex,ide,sentral,anteraja'
             ]);
             
@@ -265,12 +265,29 @@ class ShippingController extends Controller
             // ✅ PERBAIKAN: Match dengan struktur dari RajaOngkirService
             $costs = [];
             foreach ($result['rajaongkir']['results'][0]['costs'] as $cost) {
+                // Handle different cost structures (RajaOngkir vs Komerce wrapper)
+                $costValue = 0;
+                $etd = '';
+                $note = '';
+                
+                if (isset($cost['cost']) && is_array($cost['cost'])) {
+                    // RajaOngkir standard format: cost is array of objects
+                    $costValue = $cost['cost'][0]['value'] ?? 0;
+                    $etd = $cost['cost'][0]['etd'] ?? '';
+                    $note = $cost['cost'][0]['note'] ?? '';
+                } elseif (isset($cost['cost']) && is_numeric($cost['cost'])) {
+                    // Komerce/Simplified format: cost is direct value
+                    $costValue = $cost['cost'];
+                    $etd = $cost['etd'] ?? '';
+                    $note = $cost['note'] ?? '';
+                }
+                
                 $costs[] = [
                     'service' => $cost['service'],
                     'description' => $cost['description'],
-                    'cost' => $cost['cost'],  // ← Langsung ambil cost (bukan cost[0][value])
-                    'etd' => $cost['etd'],
-                    'note' => $cost['note'] ?? ''
+                    'cost' => $costValue,
+                    'etd' => $etd,
+                    'note' => $note
                 ];
             }
             
@@ -290,11 +307,11 @@ class ShippingController extends Controller
             
         } catch (\Exception $e) {
             Log::error('Calculate Cart Shipping Error: ' . $e->getMessage());
-            Log::error('Stack trace: ' . $e->getTraceAsString());  // ✅ Tambah detail error
+            Log::error('Stack trace: ' . $e->getTraceAsString());
             
             return response()->json([
                 'success' => false,
-                'message' => 'Gagal menghitung ongkos kirim'
+                'message' => 'Gagal menghitung ongkos kirim: ' . $e->getMessage() . ' in line ' . $e->getLine()
             ], 500);
         }
     }
@@ -441,34 +458,29 @@ class ShippingController extends Controller
     public function syncCities()
     {
         try {
-            $result = $this->rajaOngkir->getCities();
+            // Fetch all provinces first to iterate
+            $provinces = Province::all();
+            $totalCount = 0;
             
-            if (isset($result['error'])) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Gagal sync: ' . $result['error']
-                ], 500);
-            }
-            
-            if ($result['rajaongkir']['status']['code'] != 200) {
-                return response()->json([
-                    'success' => false,
-                    'message' => $result['rajaongkir']['status']['description']
-                ], 400);
-            }
-            
-            $count = 0;
-            foreach ($result['rajaongkir']['results'] as $city) {
-                City::updateOrCreate(
-                    ['city_id' => $city['city_id']],
-                    [
-                        'province_id' => $city['province_id'],
-                        'name' => $city['city_name'],
-                        'type' => $city['type'],
-                        'postal_code' => $city['postal_code']
-                    ]
-                );
-                $count++;
+            foreach ($provinces as $province) {
+                $result = $this->rajaOngkir->getCitiesByProvince($province->province_id);
+                
+                if (empty($result)) {
+                    continue;
+                }
+                
+                foreach ($result as $city) {
+                    City::updateOrCreate(
+                        ['city_id' => $city['city_id']],
+                        [
+                            'province_id' => $city['province_id'],
+                            'name' => $city['city_name'],
+                            'type' => $city['type'],
+                            'postal_code' => $city['postal_code']
+                        ]
+                    );
+                    $totalCount++;
+                }
             }
             
             // Clear all city caches
@@ -476,7 +488,7 @@ class ShippingController extends Controller
             
             return response()->json([
                 'success' => true,
-                'message' => "Berhasil sync {$count} kota"
+                'message' => "Berhasil sync {$totalCount} kota"
             ]);
             
         } catch (\Exception $e) {
