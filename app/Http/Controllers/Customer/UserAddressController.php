@@ -33,8 +33,12 @@ class UserAddressController extends Controller
         // Fetch provinces from API
         $provinces = $this->rajaOngkir->getProvinces();
         
-        // Debug log
-        \Log::info('Provinces loaded:', ['count' => count($provinces)]);
+        // ✅ DEBUG: Log structure
+        \Log::info('Provinces structure:', [
+            'count' => count($provinces),
+            'first_item' => $provinces[0] ?? 'empty',
+            'all_keys' => isset($provinces[0]) ? array_keys($provinces[0]) : []
+        ]);
         
         return view('customer.addresses.create', compact('provinces'));
     }
@@ -167,7 +171,15 @@ class UserAddressController extends Controller
      */
     public function getCities($provinceId)
     {
+        \Log::info("Getting cities for province: {$provinceId}");
+        
         $cities = $this->rajaOngkir->getCitiesByProvince($provinceId);
+        
+        \Log::info('Cities result:', [
+            'count' => count($cities),
+            'first_item' => $cities[0] ?? 'empty',
+            'all_keys' => isset($cities[0]) ? array_keys($cities[0]) : []
+        ]);
         
         return response()->json([
             'success' => true,

@@ -150,11 +150,9 @@ Route::middleware(['auth'])->group(function () {
 
     // API Routes for AJAX
     Route::middleware(['auth'])->prefix('api')->group(function () {
-        Route::get('/provinces/{provinceId}/cities', [UserAddressController::class, 'getCitiesByProvince']);
+        Route::get('/provinces/{provinceId}/cities', [UserAddressController::class, 'getCities']);
         Route::get('/user/addresses', [UserAddressController::class, 'getForCheckout']);
         Route::get('/user/addresses/{id}', [UserAddressController::class, 'getAddressDetail']);
-        Route::get('/api/provinces/{provinceId}/cities', [UserAddressController::class, 'getCities'])
-        ->name('api.cities');
     });
 });
 

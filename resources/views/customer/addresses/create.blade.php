@@ -49,17 +49,47 @@
 
                 {{-- Provinsi --}}
                 <div>
-                    <label for="province_id" class="block text-sm font-medium text-gray-700 mb-2">Provinsi <span class="text-red-500">*</span></label>
+                    <label for="province_id" class="block text-sm font-medium text-gray-700 mb-2">
+                        Provinsi <span class="text-red-500">*</span>
+                    </label>
                     <select name="province_id" id="province_id" required
                             class="w-full rounded-xl border-gray-300 focus:border-purple-500 focus:ring-purple-500">
                         <option value="">Pilih Provinsi</option>
-                        @forelse($provinces as $province)
-                            <option value="{{ $province['province_id'] ?? '' }}">
-                                {{ $province['province'] ?? 'Unknown' }}
-                            </option>
-                        @empty
-                            <option value="">Tidak ada data provinsi</option>
-                        @endforelse
+                        @if(!empty($provinces) && is_array($provinces))
+                            @foreach($provinces as $province)
+                                @php
+                                    // ✅ PERBAIKAN: Handle different possible structures
+                                    // Check if it's an array
+                                    if (is_array($province)) {
+                                        // Try different possible key names from API
+                                        $provinceId = $province['province_id'] ?? 
+                                                    $province['id'] ?? 
+                                                    ($province['provinceId'] ?? '');
+                                        
+                                        $provinceName = $province['province'] ?? 
+                                                    $province['name'] ?? 
+                                                    ($province['province_name'] ?? 'Unknown Province');
+                                    } else {
+                                        // If it's an object
+                                        $provinceId = $province->province_id ?? 
+                                                    $province->id ?? 
+                                                    ($province->provinceId ?? '');
+                                        
+                                        $provinceName = $province->province ?? 
+                                                    $province->name ?? 
+                                                    ($province->province_name ?? 'Unknown Province');
+                                    }
+                                @endphp
+                                
+                                @if($provinceId && $provinceName !== 'Unknown Province')
+                                    <option value="{{ $provinceId }}" {{ old('province_id') == $provinceId ? 'selected' : '' }}>
+                                        {{ $provinceName }}
+                                    </option>
+                                @endif
+                            @endforeach
+                        @else
+                            <option value="">Gagal memuat provinsi - Coba refresh halaman</option>
+                        @endif
                     </select>
                     @error('province_id')
                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
@@ -149,38 +179,69 @@ document.addEventListener('DOMContentLoaded', function() {
         citySelect.innerHTML = '<option value="">Memuat...</option>';
         citySelect.disabled = true;
 
+        console.log('Fetching cities for province:', provinceId);  // Debug log
+
         fetch(`/api/provinces/${provinceId}/cities`)
-            .then(response => response.json())
             .then(response => {
-                if (!response.success || !Array.isArray(response.data)) {
-                    citySelect.innerHTML = '<option value="">Gagal memuat kota</option>';
+                console.log('Response status:', response.status);  // Debug log
+                return response.json();
+            })
+            .then(response => {
+                console.log('API Response:', response);  // ✅ Debug log
+                
+                // ✅ PERBAIKAN: Check multiple possible response structures
+                let cities = [];
+                
+                if (response.success && response.data) {
+                    cities = Array.isArray(response.data) ? response.data : [];
+                } else if (Array.isArray(response)) {
+                    // If response is direct array
+                    cities = response;
+                } else if (response.data && Array.isArray(response.data)) {
+                    // Fallback check
+                    cities = response.data;
+                }
+                
+                console.log('Cities count:', cities.length);  // Debug log
+                
+                if (cities.length === 0) {
+                    citySelect.innerHTML = '<option value="">Tidak ada kota ditemukan untuk provinsi ini</option>';
                     return;
                 }
                 
-                const cities = response.data;
                 citySelect.innerHTML = '<option value="">Pilih Kota/Kabupaten</option>';
                 
-                cities.forEach(city => {
-                    // city_id dari API RajaOngkir
-                    const cityId = city.city_id || city.id;
+                cities.forEach((city, index) => {
+                    // ✅ PERBAIKAN: Handle different key names
+                    const cityId = city.city_id || city.id || city.cityId || '';
                     const cityType = city.type || '';
-                    const cityName = city.city_name || city.name;
+                    const cityName = city.city_name || city.name || city.cityName || 'Unknown City';
                     
-                    const isSelected = selectedCityId == cityId ? 'selected' : '';
-                    citySelect.innerHTML += `<option value="${cityId}" ${isSelected}>${cityType} ${cityName}</option>`;
+                    if (cityId) {
+                        const isSelected = selectedCityId == cityId ? 'selected' : '';
+                        const displayName = cityType ? `${cityType} ${cityName}` : cityName;
+                        
+                        citySelect.innerHTML += `<option value="${cityId}" ${isSelected}>${displayName}</option>`;
+                    }
+                    
+                    // Debug first few items
+                    if (index < 3) {
+                        console.log(`City ${index}:`, {cityId, cityType, cityName});
+                    }
                 });
                 
                 citySelect.disabled = false;
                 citySelect.classList.remove('bg-gray-50');
             })
             .catch(error => {
-                console.error('Error:', error);
-                citySelect.innerHTML = '<option value="">Gagal memuat kota</option>';
+                console.error('Fetch Error:', error);  // Debug log
+                citySelect.innerHTML = '<option value="">Gagal memuat kota - Silakan coba lagi</option>';
             });
     }
 
     // Event listener for province change
     provinceSelect.addEventListener('change', function() {
+        console.log('Province changed to:', this.value);  // Debug log
         loadCities(this.value);
     });
 
