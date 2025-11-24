@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
+            $table->foreignId('user_address_id')->nullable()->constrained('user_addresses')->onDelete('set null');
             $table->string('order_number')->unique();
             $table->decimal('subtotal', 15, 2)->default(0); // Total uang
             $table->decimal('shipping_cost', 15, 2)->default(0);
@@ -23,9 +24,15 @@ return new class extends Migration
             $table->string('status')->default('Pending');
             $table->string('snap_token')->nullable();
             $table->string('payment_status')->default('Pending');
-            $table->text('shipping_address');
-            $table->string('phone');
             $table->text('notes')->nullable();
+            // Simpan snapshot alamat saat order dibuat (untuk history)
+            $table->string('shipping_recipient_name')->nullable();
+            $table->string('shipping_phone')->nullable();
+            $table->string('courier')->nullable(); // jne, pos, tiki, etc
+            $table->string('service')->nullable(); // REG, YES, OKE, etc
+            $table->integer('weight')->default(0); // dalam gram
+            $table->unsignedInteger('origin_city_id')->nullable(); // ID kota asal
+            $table->unsignedInteger('destination_city_id')->nullable(); // ID kota tujuan
             $table->timestamps();
 
             $table->index(['user_id', 'status']);
