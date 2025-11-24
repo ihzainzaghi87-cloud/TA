@@ -50,7 +50,9 @@ class UserAddressController extends Controller
             'recipient_name' => 'required|string|max:255',
             'phone' => 'required|string|max:20',
             'province_id' => 'required|string',
+            'province_name' => 'required|string',
             'city_id' => 'required|string',
+            'city_name' => 'required|string',
             'postal_code' => 'nullable|string|max:10',
             'address' => 'required|string',
             'note' => 'nullable|string|max:255',
@@ -70,7 +72,9 @@ class UserAddressController extends Controller
             'recipient_name' => $validated['recipient_name'],
             'phone' => $validated['phone'],
             'province_id' => $validated['province_id'],
+            'province_name' => $validated['province_name'],
             'city_id' => $validated['city_id'],
+            'city_name' => $validated['city_name'],
             'postal_code' => $validated['postal_code'],
             'address' => $validated['address'],
             'note' => $validated['note'] ?? null,
@@ -88,10 +92,16 @@ class UserAddressController extends Controller
             ->firstOrFail();
             
         // Fetch provinces from API
-        $provinces = $this->rajaOngkir->getProvinces();
-
+        $provincesData = $this->rajaOngkir->getProvinces();
+        $provinces = is_array($provincesData) ? $provincesData : [];
+        
         // Fetch cities for the current province
-        $cities = $this->rajaOngkir->getCitiesByProvince($address->province_id);
+        $citiesData = $this->rajaOngkir->getCitiesByProvince($address->province_id);
+        $cities = is_array($citiesData) ? $citiesData : [];
+        
+        // Debug log
+        \Log::info('Edit Address - Provinces:', ['count' => count($provinces)]);
+        \Log::info('Edit Address - Cities:', ['count' => count($cities)]);
         
         return view('customer.addresses.edit', compact('address', 'provinces', 'cities'));
     }
@@ -107,7 +117,9 @@ class UserAddressController extends Controller
             'recipient_name' => 'required|string|max:255',
             'phone' => 'required|string|max:20',
             'province_id' => 'required|string',
+            'province_name' => 'required|string',
             'city_id' => 'required|string',
+            'city_name' => 'required|string',
             'postal_code' => 'nullable|string|max:10',
             'address' => 'required|string',
             'note' => 'nullable|string|max:255',
@@ -126,7 +138,9 @@ class UserAddressController extends Controller
             'recipient_name' => $validated['recipient_name'],
             'phone' => $validated['phone'],
             'province_id' => $validated['province_id'],
+            'province_name' => $validated['province_name'],
             'city_id' => $validated['city_id'],
+            'city_name' => $validated['city_name'],
             'postal_code' => $validated['postal_code'],
             'address' => $validated['address'],
             'note' => $validated['note'] ?? null,

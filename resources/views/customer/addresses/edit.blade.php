@@ -50,16 +50,47 @@
 
                 {{-- Provinsi --}}
                 <div>
-                    <label for="province_id" class="block text-sm font-medium text-gray-700 mb-2">Provinsi <span class="text-red-500">*</span></label>
+                    <label for="province_id" class="block text-sm font-medium text-gray-700 mb-2">
+                        Provinsi <span class="text-red-500">*</span>
+                    </label>
                     <select name="province_id" id="province_id" required
                             class="w-full rounded-xl border-gray-300 focus:border-purple-500 focus:ring-purple-500">
                         <option value="">Pilih Provinsi</option>
-                        @foreach($provinces as $province)
-                            <option value="{{ $province['province_id'] }}" {{ old('province_id', $address->province_id) == $province['province_id'] ? 'selected' : '' }}>
-                                {{ $province['province'] }}
-                            </option>
-                        @endforeach
+                        @if(!empty($provinces) && is_array($provinces))
+                            @foreach($provinces as $province)
+                                @php
+                                    // Check if it's an array
+                                    if (is_array($province)) {
+                                        $provinceId = $province['province_id'] ?? 
+                                                    $province['id'] ?? 
+                                                    ($province['provinceId'] ?? '');
+                                        
+                                        $provinceName = $province['province'] ?? 
+                                                    $province['name'] ?? 
+                                                    ($province['province_name'] ?? 'Unknown Province');
+                                    } else {
+                                        // If it's an object
+                                        $provinceId = $province->province_id ?? 
+                                                    $province->id ?? 
+                                                    ($province->provinceId ?? '');
+                                        
+                                        $provinceName = $province->province ?? 
+                                                    $province->name ?? 
+                                                    ($province->province_name ?? 'Unknown Province');
+                                    }
+                                @endphp
+                                
+                                @if($provinceId && $provinceName !== 'Unknown Province')
+                                    <option value="{{ $provinceId }}" {{ old('province_id', $address->province_id) == $provinceId ? 'selected' : '' }}>
+                                        {{ $provinceName }}
+                                    </option>
+                                @endif
+                            @endforeach
+                        @else
+                            <option value="">Gagal memuat provinsi - Coba refresh halaman</option>
+                        @endif
                     </select>
+                    <input type="hidden" name="province_name" id="province_name" value="{{ old('province_name', $address->province_name) }}">
                     @error('province_id')
                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                     @enderror
@@ -71,16 +102,38 @@
                     <select name="city_id" id="city_id" required
                             class="w-full rounded-xl border-gray-300 focus:border-purple-500 focus:ring-purple-500">
                         <option value="">Pilih Kota/Kabupaten</option>
-                        @foreach($cities as $city)
-                            <option value="{{ $city['city_id'] }}" {{ old('city_id', $address->city_id) == $city['city_id'] ? 'selected' : '' }}>
-                                {{ $city['type'] }} {{ $city['city_name'] }}
-                            </option>
-                        @endforeach
+                        @if(!empty($cities) && is_array($cities))
+                            @foreach($cities as $city)
+                                @php
+                                    // ✅ COMPLETE HANDLING with type
+                                    if (is_array($city)) {
+                                        $cityId = $city['city_id'] ?? $city['id'] ?? '';
+                                        $cityType = $city['type'] ?? '';  // ✅ ADD THIS
+                                        $cityName = $city['city_name'] ?? $city['name'] ?? 'Unknown City';
+                                    } else {
+                                        $cityId = $city->city_id ?? $city->id ?? '';
+                                        $cityType = $city->type ?? '';  // ✅ ADD THIS
+                                        $cityName = $city->city_name ?? $city->name ?? 'Unknown City';
+                                    }
+                                    
+                                    // Format display name
+                                    $displayName = trim(($cityType ? $cityType . ' ' : '') . $cityName);
+                                @endphp
+                                
+                                @if($cityId)
+                                    <option value="{{ $cityId }}" {{ old('city_id', $address->city_id) == $cityId ? 'selected' : '' }}>
+                                        {{ $displayName }}
+                                    </option>
+                                @endif
+                            @endforeach
+                        @endif
                     </select>
+                    <input type="hidden" name="city_name" id="city_name" value="{{ old('city_name', $address->city_name) }}">
                     @error('city_id')
                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                     @enderror
                 </div>
+
 
                 {{-- Kode Pos --}}
                 <div>
@@ -139,8 +192,20 @@
 document.addEventListener('DOMContentLoaded', function() {
     const provinceSelect = document.getElementById('province_id');
     const citySelect = document.getElementById('city_id');
-    const oldCityId = "{{ old('city_id', $address->city_id) }}";
-    
+    const provinceNameInput = document.getElementById('province_name');
+    const cityNameInput = document.getElementById('city_name');
+    const oldCityId = "{{ old('city_id') }}";
+
+    // Function to update hidden names
+    function updateHiddenNames() {
+        if (provinceSelect.selectedIndex >= 0) {
+            provinceNameInput.value = provinceSelect.options[provinceSelect.selectedIndex].text.trim();
+        }
+        if (citySelect.selectedIndex >= 0) {
+            cityNameInput.value = citySelect.options[citySelect.selectedIndex].text.trim();
+        }
+    }
+
     // Function to load cities
     function loadCities(provinceId, selectedCityId = null) {
         if (!provinceId) {
@@ -168,6 +233,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 
                 citySelect.disabled = false;
                 citySelect.classList.remove('bg-gray-50');
+                
+                // Update hidden name for city
+                updateHiddenNames();
             })
             .catch(error => {
                 console.error('Error:', error);
@@ -177,7 +245,13 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Event listener for province change
     provinceSelect.addEventListener('change', function() {
+        updateHiddenNames();
         loadCities(this.value);
+    });
+    
+    // Event listener for city change
+    citySelect.addEventListener('change', function() {
+        updateHiddenNames();
     });
 
     // Check if we need to reload cities (e.g. validation error with different province)
@@ -189,6 +263,9 @@ document.addEventListener('DOMContentLoaded', function() {
     if (provinceSelect.value != originalProvinceId) {
         loadCities(provinceSelect.value, oldCityId);
     }
+
+    // Initial population of hidden inputs
+    updateHiddenNames();
 });
 </script>
 @endpush

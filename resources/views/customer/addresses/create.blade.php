@@ -91,6 +91,7 @@
                             <option value="">Gagal memuat provinsi - Coba refresh halaman</option>
                         @endif
                     </select>
+                    <input type="hidden" name="province_name" id="province_name">
                     @error('province_id')
                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                     @enderror
@@ -103,6 +104,7 @@
                             class="w-full rounded-xl border-gray-300 focus:border-purple-500 focus:ring-purple-500 bg-gray-50">
                         <option value="">Pilih Provinsi Terlebih Dahulu</option>
                     </select>
+                    <input type="hidden" name="city_name" id="city_name">
                     @error('city_id')
                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                     @enderror
@@ -165,7 +167,19 @@
 document.addEventListener('DOMContentLoaded', function() {
     const provinceSelect = document.getElementById('province_id');
     const citySelect = document.getElementById('city_id');
+    const provinceNameInput = document.getElementById('province_name');
+    const cityNameInput = document.getElementById('city_name');
     const oldCityId = "{{ old('city_id') }}";
+
+    // Function to update hidden names
+    function updateHiddenNames() {
+        if (provinceSelect.selectedIndex >= 0) {
+            provinceNameInput.value = provinceSelect.options[provinceSelect.selectedIndex].text.trim();
+        }
+        if (citySelect.selectedIndex >= 0) {
+            cityNameInput.value = citySelect.options[citySelect.selectedIndex].text.trim();
+        }
+    }
 
     // Function to load cities
     function loadCities(provinceId, selectedCityId = null) {
@@ -232,6 +246,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 
                 citySelect.disabled = false;
                 citySelect.classList.remove('bg-gray-50');
+                
+                // Update hidden name for city
+                updateHiddenNames();
             })
             .catch(error => {
                 console.error('Fetch Error:', error);  // Debug log
@@ -242,11 +259,18 @@ document.addEventListener('DOMContentLoaded', function() {
     // Event listener for province change
     provinceSelect.addEventListener('change', function() {
         console.log('Province changed to:', this.value);  // Debug log
+        updateHiddenNames();
         loadCities(this.value);
+    });
+    
+    // Event listener for city change
+    citySelect.addEventListener('change', function() {
+        updateHiddenNames();
     });
 
     // Load cities if province is already selected
     if (provinceSelect.value) {
+        updateHiddenNames();
         loadCities(provinceSelect.value, oldCityId);
     }
 });
