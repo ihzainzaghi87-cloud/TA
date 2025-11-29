@@ -8,29 +8,29 @@ use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\UserPoint;
 use App\Models\PointTransaction;
+use App\Models\UserAddress;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use Midtrans\Snap;
 use Midtrans\Config;
+use Midtrans\Snap;
 use Midtrans\Notification;
 
 class OrderController extends Controller
 {
-    /**
-     * Constructor - Set Midtrans configuration once
-     */
     public function __construct()
     {
-        // ✅ FIX 1: Pindahkan Midtrans config ke constructor (DRY principle)
-        Config::$serverKey = config('midtrans.server_key');
-        Config::$isProduction = config('midtrans.is_production');
-        Config::$isSanitized = config('midtrans.is_sanitized');
-        Config::$is3ds = config('midtrans.is_3ds');
+        // Set Midtrans Configuration
+        Config::$serverKey = config('services.midtrans.server_key');
+        Config::$isProduction = config('services.midtrans.is_production', false);
+        Config::$isSanitized = true;
+        Config::$is3ds = true;
     }
 
-    // Terima produk yang dipilih dari cart, simpan ke session, lalu redirect ke halaman checkout
+    /**
+     * Store selected products to session for checkout
+     */
     public function selectProducts(Request $request)
     {
         $request->validate(['selected_variations' => 'required']);
@@ -50,54 +50,58 @@ class OrderController extends Controller
         }
 
         $selectedVariations = array_values(array_unique(array_map('intval', $selectedVariations)));
-
         session(['selected_variations' => $selectedVariations]);
+        
         Log::info('Session selected_variations set:', $selectedVariations);
 
         return redirect()->route('checkout');
     }
 
     /**
-     * Display checkout page
+     * Display checkout page with shipping calculation
      */
     public function checkout()
     {
         try {
             // Get cart items
             $selectedVariations = session('selected_variations', []);
-
+            
             if (empty($selectedVariations)) {
-                return redirect()->route('cart.index')->with('error', 'Pilih minimal satu produk terlebih dahulu.');
+                return redirect()->route('cart.index')
+                               ->with('error', 'Pilih minimal satu produk terlebih dahulu.');
             }
 
             $cartItems = Cart::where('user_id', Auth::id())
-                ->whereIn('variation_id', $selectedVariations)
-                ->with(['variation.product.images'])
-                ->get();
+                            ->whereIn('variation_id', $selectedVariations)
+                            ->with(['variation.product.images'])
+                            ->get();
 
             if ($cartItems->isEmpty()) {
-                return redirect()->route('cart.index')->with('error', 'Produk yang dipilih tidak ditemukan.');
+                return redirect()->route('cart.index')
+                               ->with('error', 'Produk yang dipilih tidak ditemukan.');
             }
 
-            // Calculate totals
+            // Calculate totals & weight
             $subtotal = 0;
             $totalPointsNeeded = 0;
+            $totalWeight = 0; // ✅ NEW: Calculate weight
 
             foreach ($cartItems as $item) {
                 if ($item->variation && $item->variation->product) {
                     $product = $item->variation->product;
-                    
                     $subtotal += $item->quantity * $product->price;
                     
                     if ($product->point_price > 0) {
                         $totalPointsNeeded += $item->quantity * $product->point_price;
                     }
+
+                    // ✅ NEW: Sum total weight
+                    $totalWeight += ($product->weight * $item->quantity);
                 }
             }
 
-            // Shipping cost
-            $shippingCost = 15000;
-            $total = $subtotal + $shippingCost;
+            // ✅ NEW: Minimum weight 1000 gram (1 kg)
+            $totalWeight = max($totalWeight, 1000);
 
             // Calculate points earned (Rp 10.000 = 1 poin)
             $pointsWillEarn = floor($subtotal / 10000);
@@ -109,16 +113,31 @@ class OrderController extends Controller
             // Check if user has enough points
             $hasEnoughPoints = $availablePoints >= $totalPointsNeeded;
 
+            // ✅ NEW: Get user addresses
+            $addresses = Auth::user()->activeAddresses()
+                              ->orderByDesc('is_primary')
+                              ->orderBy('created_at', 'desc')
+                              ->get();
+
+            // ✅ NEW: Get primary address
+            $primaryAddress = Auth::user()->primaryAddress()->first();
+
+            // ✅ NEW: Get origin city for shipping info
+            $originCityId = config('rajaongkir.origin_city');
+
             return view('customer.checkout.index', compact(
                 'cartItems',
                 'subtotal',
-                'shippingCost',
-                'total',
+                'totalWeight',          // ✅ NEW
                 'availablePoints',
                 'pointsWillEarn',
                 'totalPointsNeeded',
-                'hasEnoughPoints'
+                'hasEnoughPoints',
+                'addresses',            // ✅ NEW
+                'primaryAddress',       // ✅ NEW
+                'originCityId'          // ✅ NEW
             ));
+
         } catch (\Exception $e) {
             Log::error('Error loading checkout: ' . $e->getMessage());
             return redirect()->back()->with('error', 'Gagal memuat halaman checkout');
@@ -127,42 +146,58 @@ class OrderController extends Controller
 
     /**
      * Process order and create Midtrans payment
+     * ✅ UPDATED: Save shipping data
      */
     public function store(Request $request)
     {
         try {
-            // Validate request
+            // ✅ UPDATED: Validate dengan shipping data
             $validated = $request->validate([
-                'shipping_address' => 'required|string|max:500',
-                'phone' => 'required|string|max:20',
+                'user_address_id' => 'required|exists:user_addresses,id',  // ✅ NEW
+                'courier' => 'required|string',                              // ✅ NEW
+                'service' => 'required|string',                              // ✅ NEW
+                'shipping_cost' => 'required|numeric|min:0',                 // ✅ NEW
+                'weight' => 'required|integer|min:1',                        // ✅ NEW
                 'notes' => 'nullable|string|max:1000',
                 'selected_variations' => 'required|string',
             ], [
+                'user_address_id.required' => 'Pilih alamat pengiriman',
+                'user_address_id.exists' => 'Alamat pengiriman tidak valid',
+                'courier.required' => 'Pilih kurir pengiriman',
+                'service.required' => 'Pilih layanan pengiriman',
+                'shipping_cost.required' => 'Biaya pengiriman tidak ditemukan',
+                'weight.required' => 'Berat paket tidak ditemukan',
                 'selected_variations.required' => 'Pilih minimal satu produk',
             ]);
 
             DB::beginTransaction();
 
             $selectedVariations = session('selected_variations', []);
-
             if (empty($selectedVariations)) {
-                return redirect()->route('cart.index')->with('error', 'Pilih minimal satu produk terlebih dahulu.');
+                return redirect()->route('cart.index')
+                               ->with('error', 'Pilih minimal satu produk terlebih dahulu.');
             }
 
             $cartItems = Cart::where('user_id', Auth::id())
-                ->whereIn('variation_id', $selectedVariations)
-                ->with('variation.product')
-                ->get();
+                            ->whereIn('variation_id', $selectedVariations)
+                            ->with('variation.product')
+                            ->get();
 
             if ($cartItems->isEmpty()) {
                 DB::rollBack();
-                return redirect()->route('cart.index')->with('error', 'Produk yang dipilih tidak ditemukan di keranjang.');
+                return redirect()->route('cart.index')
+                               ->with('error', 'Produk yang dipilih tidak ditemukan di keranjang.');
             }
+
+            // ✅ NEW: Get user address data
+            $userAddress = UserAddress::where('id', $validated['user_address_id'])
+                                      ->where('user_id', Auth::id())
+                                      ->firstOrFail();
 
             // Calculate totals and points needed
             $subtotal = 0;
             $totalPointsNeeded = 0;
-
+            
             foreach ($cartItems as $item) {
                 $product = $item->variation->product;
                 
@@ -170,7 +205,7 @@ class OrderController extends Controller
                 if ($item->variation->stock < $item->quantity) {
                     DB::rollBack();
                     return redirect()->back()
-                        ->with('error', "Stok tidak mencukupi untuk {$product->name}");
+                                   ->with('error', "Stok tidak mencukupi untuk {$product->name}");
                 }
 
                 $subtotal += $item->quantity * $product->price;
@@ -185,18 +220,18 @@ class OrderController extends Controller
                 ['user_id' => Auth::id()],
                 ['total_points' => 0]
             );
-            
+
             $currentPoints = $userPoint->total_points;
 
             // Check if user has enough points
             if ($totalPointsNeeded > 0 && $currentPoints < $totalPointsNeeded) {
                 DB::rollBack();
                 return redirect()->back()
-                    ->with('error', "Poin Anda tidak mencukupi. Dibutuhkan {$totalPointsNeeded} poin, Anda memiliki {$currentPoints} poin");
+                               ->with('error', "Poin Anda tidak mencukupi. Dibutuhkan {$totalPointsNeeded} poin, Anda memiliki {$currentPoints} poin");
             }
 
-            // Shipping cost
-            $shippingCost = 15000;
+            // ✅ UPDATED: Use shipping cost from form (RajaOngkir)
+            $shippingCost = $validated['shipping_cost'];
             $total = $subtotal + $shippingCost;
 
             // Deduct points from user
@@ -208,19 +243,35 @@ class OrderController extends Controller
             // Calculate points earned
             $pointsEarned = floor($subtotal / 10000);
 
-            // Create order
+            // ✅ UPDATED: Create order dengan data shipping lengkap
             $order = Order::create([
                 'user_id' => Auth::id(),
                 'order_number' => $this->generateOrderNumber(),
+                'user_address_id' => $userAddress->id,                      // ✅ NEW
+                
+                // Financial data
                 'subtotal' => $subtotal,
                 'shipping_cost' => $shippingCost,
                 'total' => $total,
                 'total_points_used' => $totalPointsNeeded,
                 'points_earned' => $pointsEarned,
+                
+                // Status
                 'status' => 'Pending',
-                'payment_status' => 'Pending', // ✅ FIX 2: Tambah payment_status
-                'shipping_address' => $validated['shipping_address'],
-                'phone' => $validated['phone'],
+                'payment_status' => 'Pending',
+                
+                // ✅ NEW: Shipping snapshot (untuk history)
+                'shipping_recipient_name' => $userAddress->recipient_name,
+                'shipping_phone' => $userAddress->phone,
+                
+                // ✅ NEW: RajaOngkir data
+                'courier' => strtoupper($validated['courier']),             // ✅ NEW
+                'service' => $validated['service'],                          // ✅ NEW
+                'weight' => $validated['weight'],                            // ✅ NEW
+                'origin_city_id' => config('rajaongkir.origin_city'),       // ✅ NEW
+                'destination_city_id' => $userAddress->city_id,              // ✅ NEW
+                
+                // Notes
                 'notes' => $validated['notes'] ?? null,
             ]);
 
@@ -228,7 +279,7 @@ class OrderController extends Controller
             foreach ($cartItems as $item) {
                 $variation = $item->variation;
                 $product = $variation->product;
-
+                
                 $variantDetails = collect([
                     $variation->color ? "Warna: {$variation->color}" : null,
                     $variation->size ? "Ukuran: {$variation->size}" : null,
@@ -281,8 +332,6 @@ class OrderController extends Controller
                 ]);
             }
 
-            // ✅ FIX 3: Midtrans configuration sudah ada di constructor, tidak perlu diulang
-            
             // Prepare Midtrans transaction
             $user = Auth::user();
             
@@ -294,10 +343,16 @@ class OrderController extends Controller
             $customerDetails = [
                 'first_name' => $user->name,
                 'email' => $user->email,
-                'phone' => $validated['phone'], // ✅ FIX 4: Gunakan phone dari form, bukan user
+                'phone' => $userAddress->phone,                              // ✅ UPDATED: Use address phone
+                'shipping_address' => [                                      // ✅ NEW
+                    'first_name' => $userAddress->recipient_name,
+                    'phone' => $userAddress->phone,
+                    'address' => $userAddress->address,
+                    'city' => $userAddress->city_name,
+                    'postal_code' => $userAddress->postal_code,
+                ],
             ];
 
-            // ✅ FIX 5: Tambah item_details untuk detail di Midtrans
             $itemDetails = [];
             foreach ($cartItems as $item) {
                 $product = $item->variation->product;
@@ -308,13 +363,13 @@ class OrderController extends Controller
                     'name' => $product->name,
                 ];
             }
-            
-            // Tambah shipping sebagai item
+
+            // ✅ UPDATED: Tambah shipping detail
             $itemDetails[] = [
                 'id' => 'SHIPPING',
                 'price' => (int) $shippingCost,
                 'quantity' => 1,
-                'name' => 'Ongkos Kirim',
+                'name' => "Ongkir {$validated['courier']} - {$validated['service']}",
             ];
 
             $params = [
@@ -326,34 +381,35 @@ class OrderController extends Controller
             // Get Snap Payment Page URL
             $snapToken = Snap::getSnapToken($params);
             
-            // ✅ FIX 6: Simpan snap_token ke order
+            // Save snap_token to order
             $order->update(['snap_token' => $snapToken]);
 
             // Clear cart
             Cart::where('user_id', Auth::id())->delete();
+            
+            // Clear session
+            session()->forget('selected_variations');
 
             DB::commit();
 
-            Log::info("Order created: {$order->order_number}. Points used: {$totalPointsNeeded}, Points earned: {$pointsEarned}");
+            Log::info("Order created: {$order->order_number}. Courier: {$validated['courier']}, Service: {$validated['service']}, Shipping: {$shippingCost}");
 
-            // ✅ FIX 7: Redirect ke payment page dengan snap_token
             return view('customer.checkout.payment', compact('order', 'snapToken'));
 
         } catch (\Illuminate\Validation\ValidationException $e) {
             DB::rollBack();
             return redirect()->back()
-                ->withErrors($e->errors())
-                ->withInput();
+                           ->withErrors($e->errors())
+                           ->withInput();
+
         } catch (\Exception $e) {
             DB::rollBack();
             Log::error('Error creating order: ' . $e->getMessage());
             Log::error('Stack trace: ' . $e->getTraceAsString());
-
-            dd($e);
-
+            
             return redirect()->back()
-                ->with('error', 'Gagal membuat pesanan. Silakan coba lagi.')
-                ->withInput();
+                           ->with('error', 'Gagal membuat pesanan. Silakan coba lagi.')
+                           ->withInput();
         }
     }
 
@@ -363,8 +419,6 @@ class OrderController extends Controller
     public function callback(Request $request)
     {
         try {
-            // ✅ FIX 8: Midtrans config sudah ada di constructor
-            
             $notification = new Notification();
 
             $status = $notification->transaction_status;
@@ -372,12 +426,11 @@ class OrderController extends Controller
             $fraud = $notification->fraud_status;
             $orderId = $notification->order_id;
 
-            // ✅ FIX 9: Cari order, bukan transaction
             $order = Order::where('order_number', $orderId)->firstOrFail();
 
-            // ✅ FIX 10: Handle notification status dengan benar
+            // Handle notification status
             if ($status == 'capture') {
-                if ($type == 'credit_card') { // ✅ FIX: Typo 'credit_cart' → 'credit_card'
+                if ($type == 'credit_card') {
                     if ($fraud == 'challenge') {
                         $order->payment_status = 'Pending';
                     } else {
@@ -394,10 +447,10 @@ class OrderController extends Controller
                 $order->payment_status = 'Failed';
                 $order->status = 'Cancelled';
                 
-                // ✅ FIX 11: Rollback points jika payment gagal
+                // Rollback points if payment failed
                 $this->rollbackPoints($order);
                 
-                // ✅ FIX 12: Restore stock jika payment gagal
+                // Restore stock if payment failed
                 $this->restoreStock($order);
             }
 
@@ -420,6 +473,7 @@ class OrderController extends Controller
     {
         if ($order->total_points_used > 0) {
             $userPoint = UserPoint::where('user_id', $order->user_id)->first();
+            
             if ($userPoint) {
                 // Kembalikan poin yang digunakan
                 $userPoint->increment('total_points', $order->total_points_used);
@@ -428,7 +482,7 @@ class OrderController extends Controller
                 if ($order->points_earned > 0) {
                     $userPoint->decrement('total_points', $order->points_earned);
                 }
-                
+
                 // Create rollback transaction
                 PointTransaction::create([
                     'user_id' => $order->user_id,
@@ -460,7 +514,6 @@ class OrderController extends Controller
     {
         $date = date('Ymd');
         
-        // ✅ FIX 13: Gunakan loop untuk ensure unique order number
         do {
             $random = str_pad(rand(0, 9999), 4, '0', STR_PAD_LEFT);
             $orderNumber = "ORD-{$date}-{$random}";
@@ -475,15 +528,16 @@ class OrderController extends Controller
     public function success($orderId)
     {
         try {
-            $order = Order::with(['orderItems.variation.product.images'])
-                ->where('user_id', Auth::id())
-                ->findOrFail($orderId);
+            $order = Order::with(['orderItems.variation.product.images', 'shippingAddress'])
+                          ->where('user_id', Auth::id())
+                          ->findOrFail($orderId);
 
             return view('customer.checkout.success', compact('order'));
+
         } catch (\Exception $e) {
             Log::error('Error loading order success: ' . $e->getMessage());
             return redirect()->route('home')
-                ->with('error', 'Pesanan tidak ditemukan');
+                           ->with('error', 'Pesanan tidak ditemukan');
         }
     }
 
@@ -493,16 +547,17 @@ class OrderController extends Controller
     public function index()
     {
         try {
-            $orders = Order::with(['orderItems.variation.product'])
-                ->where('user_id', Auth::id())
-                ->orderBy('created_at', 'desc')
-                ->paginate(10);
+            $orders = Order::with(['orderItems.variation.product', 'shippingAddress'])
+                          ->where('user_id', Auth::id())
+                          ->orderBy('created_at', 'desc')
+                          ->paginate(10);
 
             return view('customer.orders.index', compact('orders'));
+
         } catch (\Exception $e) {
             Log::error('Error loading orders: ' . $e->getMessage());
             return redirect()->back()
-                ->with('error', 'Gagal memuat daftar pesanan');
+                           ->with('error', 'Gagal memuat daftar pesanan');
         }
     }
 
@@ -512,15 +567,16 @@ class OrderController extends Controller
     public function show($orderId)
     {
         try {
-            $order = Order::with(['orderItems.variation.product.images'])
-                ->where('user_id', Auth::id())
-                ->findOrFail($orderId);
+            $order = Order::with(['orderItems.variation.product.images', 'shippingAddress'])
+                          ->where('user_id', Auth::id())
+                          ->findOrFail($orderId);
 
             return view('customer.orders.show', compact('order'));
+
         } catch (\Exception $e) {
             Log::error('Error loading order detail: ' . $e->getMessage());
             return redirect()->route('orders.index')
-                ->with('error', 'Pesanan tidak ditemukan');
+                           ->with('error', 'Pesanan tidak ditemukan');
         }
     }
 }

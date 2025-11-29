@@ -23,6 +23,7 @@ class Product extends Model
         'slug',
         'name',
         'description',
+        'weight',
         'price',
         'point_price',
         'is_active',

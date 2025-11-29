@@ -6,6 +6,8 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\Customer\OrderController;
 use App\Http\Controllers\Customer\CartController;
 use App\Http\Controllers\Customer\PagesController;
+use App\Http\Controllers\Customer\ShippingController;
+use App\Http\Controllers\Customer\UserAddressController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\PasswordResetController;
 use App\Http\Controllers\PermissionController;
@@ -90,13 +92,42 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     Route::resource('banners', BannerController::class);
     Route::patch('banners/{banner}/toggle-status', [BannerController::class, 'toggleStatus'])
         ->name('banners.toggle-status');
+
+    // Shipping
+    Route::post('shipping/sync-provinces', [ShippingController::class, 'syncProvinces']);
+    Route::post('shipping/sync-cities', [ShippingController::class, 'syncCities']);        
 });
 
 // ---------- Customer Page ----------
 Route::get('/', [PagesController::class, 'index'])->name('home');
 
+Route::prefix('shipping')->name('shipping.')->group(function () {
+    // Get provinces & cities
+    Route::get('/provinces', [ShippingController::class, 'getProvinces']);
+    Route::get('/provinces/{provinceId}/cities', [ShippingController::class, 'getCitiesByProvince']);
+    // Get available couriers
+    Route::get('/couriers', [ShippingController::class, 'getCouriers']);
+    // Get origin city info
+    Route::get('/origin', [ShippingController::class, 'getOriginCity']);
+    // Calculate shipping cost (general)
+    Route::post('/calculate', [ShippingController::class, 'calculateShippingCost']);
+});
+
 // ---------- Cart Routes ----------
 Route::middleware(['auth'])->group(function () {
+    // User Addresses
+    Route::prefix('addresses')->name('addresses.')->group(function () {
+        Route::get('/', [UserAddressController::class, 'index'])->name('index');
+        Route::get('/create', [UserAddressController::class, 'create'])->name('create');
+        Route::post('/', [UserAddressController::class, 'store'])->name('store');
+        Route::get('/{id}', [UserAddressController::class, 'show'])->name('show');
+        Route::get('/{id}/edit', [UserAddressController::class, 'edit'])->name('edit');
+        Route::put('/{id}', [UserAddressController::class, 'update'])->name('update');
+        Route::delete('/{id}', [UserAddressController::class, 'destroy'])->name('destroy');
+        Route::post('/{id}/set-primary', [UserAddressController::class, 'setPrimary'])->name('setPrimary');
+    });
+
+    // Cart
     Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
     Route::post('/cart', [CartController::class, 'store'])->name('cart.store');
     Route::put('/cart/{id}', [CartController::class, 'update'])->name('cart.update');
@@ -113,6 +144,16 @@ Route::middleware(['auth'])->group(function () {
     // My Orders
     Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
     Route::get('/orders/{order}', [OrderController::class, 'show'])->name('orders.show');
+
+    // Calculate shipping for user's cart
+    Route::post('/calculate-cart', [ShippingController::class, 'calculateCartShipping']);
+
+    // API Routes for AJAX
+    Route::middleware(['auth'])->prefix('api')->group(function () {
+        Route::get('/provinces/{provinceId}/cities', [UserAddressController::class, 'getCities']);
+        Route::get('/user/addresses', [UserAddressController::class, 'getForCheckout']);
+        Route::get('/user/addresses/{id}', [UserAddressController::class, 'getAddressDetail']);
+    });
 });
 
 // Route::post('/midtrans/notification', [OrderController::class, 'callback'])->name('midtrans.callback');

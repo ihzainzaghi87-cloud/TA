@@ -159,12 +159,14 @@
                         </p>
                     </div>
 
+                    @if($product->price > 0)
                     <div>
                         <label class="text-sm font-medium text-gray-500 dark:text-gray-400">Price</label>
                         <p class="text-2xl font-bold text-gray-900 dark:text-white">
                             Rp {{ number_format($product->price, 0, ',', '.') }}
                         </p>
                     </div>
+                    @endif
 
                     <!-- Point Price (Only shown if is_reward is true) -->
                     @if($product->is_reward && $product->point_price)
@@ -175,6 +177,13 @@
                         </div>
                     </div>
                     @endif
+
+                    <div>
+                        <label class="text-sm font-medium text-gray-500 dark:text-gray-400">Weight</label>
+                        <p class="text-gray-900 dark:text-white">
+                            {{ $product->weight ? number_format($product->weight, 0) . ' grams' : 'Not specified' }}
+                        </p>
+                    </div>
 
                     <div>
                         <label class="text-sm font-medium text-gray-500 dark:text-gray-400">Status</label>

@@ -60,64 +60,112 @@
                 
                 {{-- Shipping Address Card --}}
                 <div class="bg-white rounded-3xl shadow-xl border border-gray-100 p-8">
-                    <div class="flex items-center gap-3 mb-6">
-                        <div class="w-12 h-12 rounded-full checkout-primary-gradient flex items-center justify-center text-white shadow-lg">
-                            <i class="fas fa-map-marker-alt text-xl"></i>
+                    <div class="flex items-center justify-between mb-6">
+                        <div class="flex items-center gap-3">
+                            <div class="w-12 h-12 rounded-full checkout-primary-gradient flex items-center justify-center text-white shadow-lg">
+                                <i class="fas fa-map-marker-alt text-xl"></i>
+                            </div>
+                            <div>
+                                <h2 class="text-2xl font-bold text-gray-900">Alamat Pengiriman</h2>
+                                <p class="text-sm text-gray-500">Pilih alamat pengiriman Anda</p>
+                            </div>
                         </div>
-                        <div>
-                            <h2 class="text-2xl font-bold text-gray-900">Alamat Pengiriman</h2>
-                            <p class="text-sm text-gray-500">Informasi pengiriman pesanan Anda</p>
-                        </div>
+                        <a href="{{ route('addresses.create') }}" class="text-purple-600 font-semibold hover:text-purple-700 text-sm">
+                            + Tambah Alamat
+                        </a>
                     </div>
                     
-                    <div class="space-y-5">
-                        <div>
-                            <label class="block text-sm font-semibold text-gray-700 mb-2">
-                                Alamat Lengkap <span class="text-red-500">*</span>
-                            </label>
-                            <textarea name="shipping_address" 
-                                      rows="3" 
-                                      required
-                                      class="w-full px-4 py-3 border border-gray-300 rounded-2xl focus:ring-2 focus:ring-purple-500 focus:border-transparent transition duration-200 resize-none"
-                                      placeholder="Jl. Contoh No. 123, RT/RW, Kelurahan, Kecamatan, Kota, Provinsi, Kode Pos">{{ old('shipping_address') }}</textarea>
-                            @error('shipping_address')
-                                <p class="mt-2 text-sm text-red-600 flex items-center">
-                                    <i class="fas fa-exclamation-circle mr-1"></i>{{ $message }}
-                                </p>
-                            @enderror
-                        </div>
-
-                        <div>
-                            <label class="block text-sm font-semibold text-gray-700 mb-2">
-                                Nomor Telepon <span class="text-red-500">*</span>
-                            </label>
-                            <div class="relative">
-                                <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                                    <i class="fas fa-phone text-gray-400"></i>
+                    <div class="space-y-4 mb-6">
+                        @if($primaryAddress)
+                            <div class="border border-purple-500 bg-purple-50/30 rounded-xl p-4 relative">
+                                <div class="flex items-center gap-2 mb-1">
+                                    <span class="font-bold text-gray-900">{{ $primaryAddress->label }}</span>
+                                    <span class="px-2 py-0.5 bg-purple-100 text-purple-700 text-xs rounded-full font-medium">Utama</span>
                                 </div>
-                                <input type="tel" 
-                                       name="phone" 
-                                       required
-                                       value="{{ old('phone') }}"
-                                       class="w-full pl-12 pr-4 py-3 border border-gray-300 rounded-2xl focus:ring-2 focus:ring-purple-500 focus:border-transparent transition duration-200"
-                                       placeholder="08123456789">
+                                <p class="text-gray-900 font-medium">{{ $primaryAddress->recipient_name }} ({{ $primaryAddress->phone }})</p>
+                                <p class="text-gray-500 text-sm mt-1">{{ $primaryAddress->full_address }}</p>
+                                
+                                <input type="hidden" name="user_address_id" id="user_address_id" value="{{ $primaryAddress->id }}" data-city="{{ $primaryAddress->city_id }}">
+                                
+                                <div class="mt-4">
+                                    <a href="{{ route('addresses.index') }}" class="text-sm text-purple-600 font-semibold hover:text-purple-700">
+                                        Ubah Alamat Utama
+                                    </a>
+                                </div>
                             </div>
-                            @error('phone')
-                                <p class="mt-2 text-sm text-red-600 flex items-center">
-                                    <i class="fas fa-exclamation-circle mr-1"></i>{{ $message }}
-                                </p>
-                            @enderror
-                        </div>
+                        @else
+                            <div class="text-center py-8 bg-gray-50 rounded-xl border border-dashed border-gray-300">
+                                <p class="text-gray-500 mb-4">Anda belum mengatur alamat utama.</p>
+                                <a href="{{ route('addresses.index') }}" class="inline-block px-6 py-2 bg-purple-600 text-white rounded-full hover:bg-purple-700 transition">
+                                    Atur Alamat
+                                </a>
+                            </div>
+                            <input type="hidden" name="user_address_id" required>
+                        @endif
+                        @error('user_address_id')
+                            <p class="mt-2 text-sm text-red-600 flex items-center">
+                                <i class="fas fa-exclamation-circle mr-1"></i>{{ $message }}
+                            </p>
+                        @enderror
+                    </div>
 
+                    {{-- Courier Selection --}}
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 border-t border-gray-100 pt-6">
                         <div>
                             <label class="block text-sm font-semibold text-gray-700 mb-2">
-                                Catatan Pesanan <span class="text-gray-400 font-normal">(Opsional)</span>
+                                Pilih Kurir
                             </label>
-                            <textarea name="notes" 
-                                      rows="2"
-                                      class="w-full px-4 py-3 border border-gray-300 rounded-2xl focus:ring-2 focus:ring-purple-500 focus:border-transparent transition duration-200 resize-none"
-                                      placeholder="Catatan untuk penjual, misalnya: warna alternatif, dll">{{ old('notes') }}</textarea>
+                            <select name="courier" id="courier" class="w-full px-4 py-3 border border-gray-300 rounded-2xl focus:ring-2 focus:ring-purple-500 focus:border-transparent transition duration-200">
+                                <option value="">Pilih Kurir</option>
+                                <option value="jne">JNE</option>
+                                <option value="pos">POS Indonesia</option>
+                                <option value="tiki">TIKI</option>
+                                <option value="sicepat">SiCepat</option>
+                                <option value="jnt">J&T</option>
+                                <option value="lion">Lion Parcel</option>
+                            </select>
+                            @error('courier')
+                                <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
+                            @enderror
+                            
+                            {{-- Same City Info --}}
+                            @if($primaryAddress && $primaryAddress->city_id == config('rajaongkir.origin_city'))
+                                <div class="mt-2 bg-blue-50 border border-blue-200 rounded-xl p-3">
+                                    <p class="text-xs text-blue-700 flex items-center gap-2">
+                                        <i class="fas fa-info-circle"></i>
+                                        <span>Pengiriman dalam kota. Beberapa kurir mungkin tidak tersedia.</span>
+                                    </p>
+                                </div>
+                            @endif
                         </div>
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">
+                                Layanan Pengiriman
+                            </label>
+                            <select name="shipping_service_select" id="shipping_service" disabled class="w-full px-4 py-3 border border-gray-300 rounded-2xl focus:ring-2 focus:ring-purple-500 focus:border-transparent transition duration-200 bg-gray-50">
+                                <option value="">Pilih Kurir Terlebih Dahulu</option>
+                            </select>
+                            <div id="shipping_error" class="hidden mt-2 text-sm text-red-600 bg-red-50 p-3 rounded-xl border border-red-100"></div>
+                            
+                            {{-- Hidden inputs for form submission --}}
+                            <input type="hidden" name="service" id="service_input">
+                            <input type="hidden" name="shipping_cost" id="shipping_cost_input" value="0">
+                            <input type="hidden" name="weight" value="{{ $totalWeight ?? 1000 }}">
+                            
+                            @error('service')
+                                <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
+                            @enderror
+                        </div>
+                    </div>
+
+                    <div class="mt-4">
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">
+                            Catatan Pesanan <span class="text-gray-400 font-normal">(Opsional)</span>
+                        </label>
+                        <textarea name="notes" 
+                                  rows="2"
+                                  class="w-full px-4 py-3 border border-gray-300 rounded-2xl focus:ring-2 focus:ring-purple-500 focus:border-transparent transition duration-200 resize-none"
+                                  placeholder="Catatan untuk penjual, misalnya: warna alternatif, dll">{{ old('notes') }}</textarea>
                     </div>
                 </div>
 
@@ -219,7 +267,7 @@
                                 <i class="fas fa-truck text-purple-500"></i>
                                 Ongkir
                             </span>
-                            <span class="font-semibold">Rp {{ number_format($shippingCost, 0, ',', '.') }}</span>
+                            <span class="font-semibold" id="shipping-cost-display">Rp 0</span>
                         </div>
 
                         {{-- PRODUCT POINTS REQUIRED --}}
@@ -271,8 +319,8 @@
                         <div class="pt-4 border-t-2 border-gray-200">
                             <div class="flex justify-between items-center mb-4">
                                 <span class="text-lg font-bold text-gray-900">Total Bayar</span>
-                                <span class="text-3xl font-bold text-transparent bg-clip-text checkout-primary-gradient">
-                                    Rp {{ number_format($total, 0, ',', '.') }}
+                                <span class="text-3xl font-bold text-transparent bg-clip-text checkout-primary-gradient" id="total-display">
+                                    Rp {{ number_format($subtotal, 0, ',', '.') }}
                                 </span>
                             </div>
                         </div>
@@ -350,3 +398,151 @@
     </form>
 </div>
 @endsection
+
+@push('scripts')
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const addressInput = document.getElementById('user_address_id');
+    const courierSelect = document.getElementById('courier');
+    const serviceSelect = document.getElementById('shipping_service');
+    const shippingCostDisplay = document.getElementById('shipping-cost-display');
+    const totalDisplay = document.getElementById('total-display');
+    const shippingCostInput = document.getElementById('shipping_cost_input');
+    const serviceInput = document.getElementById('service_input');
+    
+    const subtotal = {{ $subtotal }};
+    
+    function formatRupiah(amount) {
+        return 'Rp ' + new Intl.NumberFormat('id-ID').format(amount);
+    }
+    
+    const shippingErrorDiv = document.getElementById('shipping_error');
+    
+    function calculateShipping() {
+        const courier = courierSelect.value;
+        
+        // Reset error state
+        shippingErrorDiv.classList.add('hidden');
+        shippingErrorDiv.innerText = '';
+        
+        if (!addressInput || !courier) {
+            serviceSelect.innerHTML = '<option value="">Pilih Kurir Terlebih Dahulu</option>';
+            serviceSelect.disabled = true;
+            serviceSelect.classList.add('bg-gray-50');
+            return;
+        }
+        
+        const cityId = addressInput.dataset.city;
+        
+        // Show loading state
+        serviceSelect.innerHTML = '<option value="">Memuat Layanan...</option>';
+        serviceSelect.disabled = true;
+        
+        fetch('/calculate-cart', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+            },
+            body: JSON.stringify({
+                destination_city_id: cityId,
+                courier: courier
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log('API Response:', data);
+            
+            // Check success and structure
+            if (data.success && data.rajaongkir && data.rajaongkir.results && data.rajaongkir.results.length > 0) {
+                const results = data.rajaongkir.results[0];
+                
+                if (!results.costs || results.costs.length === 0) {
+                    serviceSelect.innerHTML = '<option value="">Tidak ada layanan tersedia</option>';
+                    shippingErrorDiv.innerHTML = 'Tidak ada layanan pengiriman tersedia untuk rute ini.<br><small class="text-xs">Silakan pilih kurir lain atau hubungi customer service.</small>';
+                    shippingErrorDiv.classList.remove('hidden');
+                    return;
+                }
+                
+                const costs = results.costs;
+                
+                serviceSelect.innerHTML = '<option value="">Pilih Layanan</option>';
+                
+                // FIX: Akses langsung ke cost object (bukan cost.cost)
+                costs.forEach((cost, index) => {
+                    const serviceName = cost.service;
+                    const serviceDesc = cost.description;
+                    const price = cost.cost;  // ✅ PERBAIKAN: Langsung ambil cost
+                    const etd = cost.etd;
+                    
+                    const optionText = `${serviceName} (${serviceDesc}) - ${formatRupiah(price)} (Est: ${etd})`;
+                    
+                    const option = document.createElement('option');
+                    option.value = price;
+                    option.text = optionText;
+                    option.dataset.service = serviceName;
+                    
+                    serviceSelect.appendChild(option);
+                });
+                
+                serviceSelect.disabled = false;
+                serviceSelect.classList.remove('bg-gray-50');
+                
+            } else {
+                const msg = data.message || 'Layanan tidak tersedia untuk rute ini';
+                serviceSelect.innerHTML = '<option value="">Tidak tersedia</option>';
+                
+                shippingErrorDiv.innerHTML = `
+                    <div class="font-semibold">${msg}</div>
+                    <small class="text-xs block mt-1">Coba pilih kurir lain atau hubungi customer service untuk bantuan.</small>
+                `;
+                shippingErrorDiv.classList.remove('hidden');
+                
+                console.warn('Shipping service unavailable:', data);
+            }
+        })
+        .catch(error => {
+            console.error('Fetch Error:', error);
+            serviceSelect.innerHTML = '<option value="">Gagal memuat layanan</option>';
+            
+            shippingErrorDiv.innerHTML = `
+                <div class="font-semibold">Terjadi kesalahan saat menghubungi server</div>
+                <small class="text-xs block mt-1">Silakan refresh halaman dan coba lagi.</small>
+            `;
+            shippingErrorDiv.classList.remove('hidden');
+        });
+    }
+    
+    function updateTotal() {
+        const selectedOption = serviceSelect.options[serviceSelect.selectedIndex];
+        
+        if (!selectedOption || !selectedOption.value) {
+            shippingCostDisplay.innerText = formatRupiah(0);
+            totalDisplay.innerText = formatRupiah(subtotal);
+            shippingCostInput.value = 0;
+            serviceInput.value = '';
+            return;
+        }
+
+        const shippingCost = parseInt(selectedOption.value) || 0;
+        const serviceName = selectedOption.dataset.service || '';
+        
+        const total = subtotal + shippingCost;
+        
+        shippingCostDisplay.innerText = formatRupiah(shippingCost);
+        totalDisplay.innerText = formatRupiah(total);
+        shippingCostInput.value = shippingCost;
+        serviceInput.value = serviceName;
+    }
+    
+    // Event Listeners
+    courierSelect.addEventListener('change', calculateShipping);
+    serviceSelect.addEventListener('change', updateTotal);
+    
+    // Initial check
+    if (addressInput && courierSelect.value) {
+        calculateShipping();
+    }
+});
+</script>
+@endpush

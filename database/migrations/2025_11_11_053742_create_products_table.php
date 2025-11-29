@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('slug')->unique();
             $table->string('name');
             $table->text('description')->nullable();
+            $table->integer('weight')->default(0); // berat dalam gram
             $table->decimal('price', 10, 2);
             $table->integer('point_price')->nullable(); // Harga dalam poin
             $table->boolean('is_active')->default(true);

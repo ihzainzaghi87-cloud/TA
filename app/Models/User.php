@@ -10,12 +10,14 @@ use Illuminate\Auth\Passwords\CanResetPassword;
 use Illuminate\Auth\Notifications\ResetPassword as ResetPasswordNotification;
 // Spatie:
 use Spatie\Permission\Traits\HasRoles;
+// Import WAJIB untuk relasi ✅
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class User extends Authenticatable implements CanResetPasswordContract
 {
     use HasApiTokens, Notifiable, HasRoles, CanResetPassword;
 
-    // Jika ingin pastikan guard untuk Spatie (default 'web'):
     protected $guard_name = 'web';
 
     protected $fillable = [
@@ -33,22 +35,10 @@ class User extends Authenticatable implements CanResetPasswordContract
         'email_verified_at' => 'datetime',
     ];
 
-    // public function sendPasswordResetNotification($token)
-    // {
-    //     $url = url(route('password.reset', [
-    //         'token' => $token,
-    //         'email' => $this->email,
-    //     ], false));
-
-    //     $this->notify((new ResetPasswordNotification($token))->createUrlUsing(function() use ($url) {
-    //         return $url; // atau URL custom kamu
-    //     }));
-    // }
-
     /**
      * Get the user's points.
      */
-    public function userPoint()
+    public function userPoint(): HasOne
     {
         return $this->hasOne(UserPoint::class);
     }
@@ -56,7 +46,7 @@ class User extends Authenticatable implements CanResetPasswordContract
     /**
      * Get the user's cart items.
      */
-    public function carts()
+    public function carts(): HasMany
     {
         return $this->hasMany(Cart::class);
     }
@@ -64,8 +54,46 @@ class User extends Authenticatable implements CanResetPasswordContract
     /**
      * Get the user's orders.
      */
-    public function orders()
+    public function orders(): HasMany
     {
         return $this->hasMany(Order::class);
+    }
+
+    /**
+     * Get all user addresses.
+     */
+    public function addresses(): HasMany
+    {
+        return $this->hasMany(UserAddress::class);
+    }
+    
+    /**
+     * Get only active addresses (is_active = true).
+     */
+    public function activeAddresses(): HasMany
+    {
+        return $this->hasMany(UserAddress::class)->where('is_active', true);
+    }
+    
+    /**
+     * Get primary address (is_primary = true).
+     */
+    public function primaryAddress(): HasOne
+    {
+        return $this->hasOne(UserAddress::class)->where('is_primary', true);
+    }
+    
+    /**
+     * Get primary address or first available address.
+     */
+    public function getPrimaryAddressOrFirst()
+    {
+        $primary = $this->primaryAddress()->first();
+        
+        if ($primary) {
+            return $primary;
+        }
+        
+        return $this->activeAddresses()->first();
     }
 }
