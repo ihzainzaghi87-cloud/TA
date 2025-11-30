@@ -23,6 +23,7 @@ class Order extends Model
      */
     protected $fillable = [
         'user_id',
+        'user_address_id',
         'order_number',
         'subtotal',
         'shipping_cost',
@@ -32,9 +33,17 @@ class Order extends Model
         'status',
         'snap_token',
         'payment_status',
-        'shipping_address',
-        'phone',
         'notes',
+        'shipping_recipient_name',
+        'shipping_phone',
+        'courier',
+        'service',
+        'weight',
+        'origin_city_id',
+        'destination_city_id',
+        'tracking_number',
+        'shipped_at',
+        'delivered_at',
     ];
 
     /**
@@ -48,6 +57,9 @@ class Order extends Model
         'total' => 'decimal:2',
         'total_points_used' => 'integer',
         'points_earned' => 'integer',
+        'weight' => 'integer',
+        'shipped_at' => 'datetime',
+        'delivered_at' => 'datetime',
     ];
 
     /**
@@ -103,6 +115,56 @@ class Order extends Model
         $date = now()->format('Ymd');
         $random = strtoupper(substr(md5(uniqid(rand(), true)), 0, 6));
         return "ORD-{$date}-{$random}";
+    }
+
+    public function isShipped(): bool
+    {
+        return $this->status === 'Shipped' || $this->status === 'Delivered';
+    }
+
+    public function isDelivered(): bool
+    {
+        return $this->status === 'Delivered';
+    }
+
+    public function canBeShipped(): bool
+    {
+        return $this->payment_status === 'Paid' && 
+               in_array($this->status, ['Processing', 'Pending']);
+    }
+
+    // ✅ NEW: Status constants
+    public const STATUS_PENDING = 'Pending';
+    public const STATUS_PROCESSING = 'Processing';
+    public const STATUS_SHIPPED = 'Shipped';
+    public const STATUS_DELIVERED = 'Delivered';
+    public const STATUS_CANCELLED = 'Cancelled';
+
+    public const PAYMENT_PENDING = 'Pending';
+    public const PAYMENT_PAID = 'Paid';
+    public const PAYMENT_FAILED = 'Failed';
+
+    public static function getStatusOptions(): array
+    {
+        return [
+            self::STATUS_PENDING => 'Pending',
+            self::STATUS_PROCESSING => 'Processing',
+            self::STATUS_SHIPPED => 'Shipped',
+            self::STATUS_DELIVERED => 'Delivered',
+            self::STATUS_CANCELLED => 'Cancelled',
+        ];
+    }
+
+    public static function getStatusBadgeClass(string $status): string
+    {
+        return match($status) {
+            self::STATUS_PENDING => 'bg-yellow-100 text-yellow-800',
+            self::STATUS_PROCESSING => 'bg-blue-100 text-blue-800',
+            self::STATUS_SHIPPED => 'bg-purple-100 text-purple-800',
+            self::STATUS_DELIVERED => 'bg-green-100 text-green-800',
+            self::STATUS_CANCELLED => 'bg-red-100 text-red-800',
+            default => 'bg-gray-100 text-gray-800',
+        };
     }
 
     /**

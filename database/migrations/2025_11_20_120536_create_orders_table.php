@@ -33,6 +33,10 @@ return new class extends Migration
             $table->integer('weight')->default(0); // dalam gram
             $table->unsignedInteger('origin_city_id')->nullable(); // ID kota asal
             $table->unsignedInteger('destination_city_id')->nullable(); // ID kota tujuan
+            // Tracking information
+            $table->string('tracking_number')->nullable();
+            $table->timestamp('shipped_at')->nullable();
+            $table->timestamp('delivered_at')->nullable();
             $table->timestamps();
 
             $table->index(['user_id', 'status']);

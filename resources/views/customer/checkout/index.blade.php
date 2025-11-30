@@ -409,14 +409,14 @@ document.addEventListener('DOMContentLoaded', function() {
     const totalDisplay = document.getElementById('total-display');
     const shippingCostInput = document.getElementById('shipping_cost_input');
     const serviceInput = document.getElementById('service_input');
+    const shippingErrorDiv = document.getElementById('shipping_error');
     
     const subtotal = {{ $subtotal }};
+    const weight = {{ $totalWeight }};
     
     function formatRupiah(amount) {
         return 'Rp ' + new Intl.NumberFormat('id-ID').format(amount);
     }
-    
-    const shippingErrorDiv = document.getElementById('shipping_error');
     
     function calculateShipping() {
         const courier = courierSelect.value;
@@ -434,9 +434,23 @@ document.addEventListener('DOMContentLoaded', function() {
         
         const cityId = addressInput.dataset.city;
         
-        // Show loading state
+        if (!cityId) {
+            console.error('❌ City ID not found');
+            serviceSelect.innerHTML = '<option value="">Alamat tidak valid</option>';
+            shippingErrorDiv.innerHTML = 'Alamat tidak memiliki data city_id.';
+            shippingErrorDiv.classList.remove('hidden');
+            return;
+        }
+        
+        // Show loading
         serviceSelect.innerHTML = '<option value="">Memuat Layanan...</option>';
         serviceSelect.disabled = true;
+        
+        console.log('📦 Request:', {
+            destination_city_id: cityId,
+            courier: courier,
+            weight: weight
+        });
         
         fetch('/calculate-cart', {
             method: 'POST',
@@ -449,66 +463,53 @@ document.addEventListener('DOMContentLoaded', function() {
                 courier: courier
             })
         })
-        .then(response => response.json())
+        .then(response => {
+            if (!response.ok) throw new Error(`HTTP ${response.status}`);
+            return response.json();
+        })
         .then(data => {
-            console.log('API Response:', data);
+            console.log('✅ Response:', data);
             
-            // Check success and structure
+            let costs = [];
+            let courierInfo = {};
+            
+            // Parse response (support 2 formats)
             if (data.success && data.rajaongkir && data.rajaongkir.results && data.rajaongkir.results.length > 0) {
-                const results = data.rajaongkir.results[0];
-                
-                if (!results.costs || results.costs.length === 0) {
-                    serviceSelect.innerHTML = '<option value="">Tidak ada layanan tersedia</option>';
-                    shippingErrorDiv.innerHTML = 'Tidak ada layanan pengiriman tersedia untuk rute ini.<br><small class="text-xs">Silakan pilih kurir lain atau hubungi customer service.</small>';
-                    shippingErrorDiv.classList.remove('hidden');
-                    return;
-                }
-                
-                const costs = results.costs;
+                const result = data.rajaongkir.results[0];
+                costs = result.costs || [];
+                courierInfo = { code: result.code, name: result.name };
+            } else if (data.success && data.data && data.data.costs) {
+                costs = data.data.costs;
+                courierInfo = data.data.courier;
+            }
+            
+            if (costs.length > 0) {
+                console.log(`✅ Found ${costs.length} options`);
                 
                 serviceSelect.innerHTML = '<option value="">Pilih Layanan</option>';
                 
-                // FIX: Akses langsung ke cost object (bukan cost.cost)
-                costs.forEach((cost, index) => {
-                    const serviceName = cost.service;
-                    const serviceDesc = cost.description;
-                    const price = cost.cost;  // ✅ PERBAIKAN: Langsung ambil cost
-                    const etd = cost.etd;
-                    
-                    const optionText = `${serviceName} (${serviceDesc}) - ${formatRupiah(price)} (Est: ${etd})`;
-                    
+                costs.forEach((cost) => {
                     const option = document.createElement('option');
-                    option.value = price;
-                    option.text = optionText;
-                    option.dataset.service = serviceName;
-                    
+                    option.value = cost.cost;
+                    option.text = `${cost.service} - ${cost.description} (${formatRupiah(cost.cost)}) • ${cost.etd}`;
+                    option.dataset.service = cost.service;
+                    option.dataset.courier = courierInfo.code || courier;
                     serviceSelect.appendChild(option);
                 });
                 
                 serviceSelect.disabled = false;
                 serviceSelect.classList.remove('bg-gray-50');
-                
             } else {
-                const msg = data.message || 'Layanan tidak tersedia untuk rute ini';
+                console.warn('⚠️ No costs');
                 serviceSelect.innerHTML = '<option value="">Tidak tersedia</option>';
-                
-                shippingErrorDiv.innerHTML = `
-                    <div class="font-semibold">${msg}</div>
-                    <small class="text-xs block mt-1">Coba pilih kurir lain atau hubungi customer service untuk bantuan.</small>
-                `;
+                shippingErrorDiv.innerHTML = `<div class="flex items-start gap-2"><i class="fas fa-exclamation-triangle text-red-500 mt-0.5"></i><div><div class="font-semibold">Tidak ada layanan</div><small class="text-xs">Pilih kurir lain</small></div></div>`;
                 shippingErrorDiv.classList.remove('hidden');
-                
-                console.warn('Shipping service unavailable:', data);
             }
         })
         .catch(error => {
-            console.error('Fetch Error:', error);
-            serviceSelect.innerHTML = '<option value="">Gagal memuat layanan</option>';
-            
-            shippingErrorDiv.innerHTML = `
-                <div class="font-semibold">Terjadi kesalahan saat menghubungi server</div>
-                <small class="text-xs block mt-1">Silakan refresh halaman dan coba lagi.</small>
-            `;
+            console.error('❌ Error:', error);
+            serviceSelect.innerHTML = '<option value="">Gagal</option>';
+            shippingErrorDiv.innerHTML = `<div class="flex items-start gap-2"><i class="fas fa-times-circle text-red-500 mt-0.5"></i><div><div class="font-semibold">Error</div><small class="text-xs">${error.message}</small></div></div>`;
             shippingErrorDiv.classList.remove('hidden');
         });
     }
@@ -519,7 +520,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if (!selectedOption || !selectedOption.value) {
             shippingCostDisplay.innerText = formatRupiah(0);
             totalDisplay.innerText = formatRupiah(subtotal);
-            shippingCostInput.value = 0;
+            shippingCostInput.value = '';
             serviceInput.value = '';
             return;
         }
@@ -531,18 +532,85 @@ document.addEventListener('DOMContentLoaded', function() {
         
         shippingCostDisplay.innerText = formatRupiah(shippingCost);
         totalDisplay.innerText = formatRupiah(total);
+        
+        // ✅ UPDATE HIDDEN INPUTS
         shippingCostInput.value = shippingCost;
         serviceInput.value = serviceName;
+        
+        console.log('✅ Updated hidden inputs:', {
+            shipping_cost: shippingCostInput.value,
+            service: serviceInput.value,
+            courier: courierSelect.value
+        });
     }
     
     // Event Listeners
-    courierSelect.addEventListener('change', calculateShipping);
+    courierSelect.addEventListener('change', function() {
+        serviceSelect.innerHTML = '<option value="">Pilih Kurir Terlebih Dahulu</option>';
+        serviceSelect.disabled = true;
+        shippingCostDisplay.innerText = formatRupiah(0);
+        totalDisplay.innerText = formatRupiah(subtotal);
+        shippingCostInput.value = '';
+        serviceInput.value = '';
+        
+        if (this.value) {
+            calculateShipping();
+        }
+    });
+    
     serviceSelect.addEventListener('change', updateTotal);
     
-    // Initial check
-    if (addressInput && courierSelect.value) {
-        calculateShipping();
-    }
+    // ✅ FORM VALIDATION & DEBUG
+    const checkoutForm = document.querySelector('form');
+    checkoutForm.addEventListener('submit', function(e) {
+        // Get ALL form data untuk debug
+        const formData = new FormData(this);
+        const formObject = {};
+        formData.forEach((value, key) => {
+            formObject[key] = value;
+        });
+        
+        console.log('🚀 ACTUAL FORM DATA BEING SUBMITTED:', formObject);
+        
+        // Validation
+        const courier = formData.get('courier');
+        const service = formData.get('service');
+        const shippingCost = formData.get('shipping_cost');
+        const userAddressId = formData.get('user_address_id');
+        const weight = formData.get('weight');
+        
+        if (!userAddressId) {
+            e.preventDefault();
+            alert('Alamat pengiriman belum dipilih!');
+            return false;
+        }
+        
+        if (!courier) {
+            e.preventDefault();
+            alert('Silakan pilih kurir pengiriman!');
+            courierSelect.focus();
+            return false;
+        }
+        
+        if (!service || !shippingCost || shippingCost == '0' || shippingCost == '') {
+            e.preventDefault();
+            alert('Silakan pilih layanan pengiriman!');
+            serviceSelect.focus();
+            return false;
+        }
+        
+        console.log('✅ VALIDATION PASSED');
+        console.log('📦 Shipping Data:', {
+            user_address_id: userAddressId,
+            courier: courier,
+            service: service,
+            shipping_cost: shippingCost,
+            weight: weight
+        });
+        
+        // Form will submit normally
+        return true;
+    });
 });
 </script>
 @endpush
