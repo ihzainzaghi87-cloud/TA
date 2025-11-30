@@ -531,19 +531,52 @@ class OrderController extends Controller
     /**
      * Display order success page
      */
-    public function success($orderId)
+    public function success(Request $request, $orderNumber = null)
     {
         try {
+            // ✅ Handle parameter dari route atau query string
+            $orderNumber = $orderNumber ?? $request->input('order_id');
+            
+            // ✅ Log untuk debugging
+            Log::info('Success page accessed', [
+                'orderNumber' => $orderNumber,
+                'user_id' => Auth::id(),
+                'query_params' => $request->all(),
+            ]);
+            
+            if (!$orderNumber) {
+                Log::warning('Order number is empty');
+                return redirect()->route('home')
+                            ->with('error', 'Nomor pesanan tidak ditemukan');
+            }
+
+            // ✅ Query dengan order_number, BUKAN id
             $order = Order::with(['orderItems.variation.product.images', 'shippingAddress'])
-                          ->where('user_id', Auth::id())
-                          ->findOrFail($orderId);
+                        ->where('user_id', Auth::id())
+                        ->where('order_number', $orderNumber)
+                        ->firstOrFail();
 
             return view('customer.checkout.success', compact('order'));
 
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            Log::error("Order not found: {$orderNumber} for user: " . Auth::id());
+            
+            // ✅ Debug: Cek apakah order ada di database
+            $orderExists = Order::where('order_number', $orderNumber)->exists();
+            Log::info("Order exists in DB: " . ($orderExists ? 'Yes' : 'No'));
+            
+            if ($orderExists) {
+                Log::warning("Order exists but belongs to different user");
+            }
+            
+            return redirect()->route('home')
+                        ->with('error', 'Pesanan tidak ditemukan');
+                        
         } catch (\Exception $e) {
             Log::error('Error loading order success: ' . $e->getMessage());
+            Log::error('Stack trace: ' . $e->getTraceAsString());
             return redirect()->route('home')
-                           ->with('error', 'Pesanan tidak ditemukan');
+                        ->with('error', 'Terjadi kesalahan saat memuat pesanan');
         }
     }
 

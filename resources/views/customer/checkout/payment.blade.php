@@ -108,11 +108,13 @@
             snap.pay('{{ $snapToken }}', {
                 onSuccess: function(result) {
                     console.log('Payment success:', result);
-                    window.location.href = "{{ route('orders.success', $order->id) }}";
+                    // ✅ PERBAIKAN: Kirim order_number, bukan id
+                    window.location.href = "{{ route('checkout.success', $order->order_number) }}";
                 },
                 onPending: function(result) {
                     console.log('Payment pending:', result);
                     alert('Menunggu pembayaran Anda!');
+                    // ✅ Tetap pakai id untuk detail order (sesuai route yang ada)
                     window.location.href = "{{ route('orders.show', $order->id) }}";
                 },
                 onError: function(result) {
