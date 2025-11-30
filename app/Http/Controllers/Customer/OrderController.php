@@ -22,10 +22,10 @@ class OrderController extends Controller
     public function __construct()
     {
         // Set Midtrans Configuration
-        Config::$serverKey = config('services.midtrans.server_key');
-        Config::$isProduction = config('services.midtrans.is_production', false);
-        Config::$isSanitized = true;
-        Config::$is3ds = true;
+        Config::$serverKey = config('midtrans.midtrans.server_key');
+        Config::$isProduction = config('midtrans.midtrans.is_production');
+        Config::$isSanitized = config('midtrans.midtrans.is_sanitized');
+        Config::$is3ds = config('midtrans.midtrans.is_3ds');
     }
 
     /**
@@ -334,6 +334,12 @@ class OrderController extends Controller
 
             // Prepare Midtrans transaction
             $user = Auth::user();
+
+            // Midtrans Configuration
+            Config::$serverKey = config('midtrans.midtrans.server_key');
+            Config::$isProduction = config('midtrans.midtrans.is_production');
+            Config::$isSanitized = config('midtrans.midtrans.is_sanitized');
+            Config::$is3ds = config('midtrans.midtrans.is_3ds');
             
             $transactionDetails = [
                 'order_id' => $order->order_number,
@@ -406,7 +412,7 @@ class OrderController extends Controller
             DB::rollBack();
             Log::error('Error creating order: ' . $e->getMessage());
             Log::error('Stack trace: ' . $e->getTraceAsString());
-            
+            dd($e);
             return redirect()->back()
                            ->with('error', 'Gagal membuat pesanan. Silakan coba lagi.')
                            ->withInput();
