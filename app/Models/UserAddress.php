@@ -31,6 +31,11 @@ class UserAddress extends Model
     {
         return $this->belongsTo(City::class, 'city_id', 'city_id');
     }
+
+    public function orders()
+    {
+        return $this->hasMany(Order::class, 'user_address_id');
+    }
     
     // Getter untuk alamat lengkap
     public function getFullAddressAttribute(): string

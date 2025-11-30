@@ -66,6 +66,11 @@ class Order extends Model
         return $this->hasMany(OrderItem::class);
     }
 
+    public function shippingAddress()
+    {
+        return $this->belongsTo(UserAddress::class, 'user_address_id');
+    }
+
     /**
      * Get all of the point transactions for the order.
      */

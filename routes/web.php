@@ -139,11 +139,11 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/checkout/select-products', [OrderController::class, 'selectProducts'])->name('checkout.select-products');
     Route::get('/checkout', [OrderController::class, 'checkout'])->name('checkout');
     Route::post('/orders', [OrderController::class, 'store'])->name('orders.store');
-    Route::get('/orders/success/{order}', [OrderController::class, 'success'])->name('orders.success');
+    Route::get('/orders/success/{orderNumber}', [OrderController::class, 'success'])->name('checkout.success');
     
     // My Orders
     Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
-    Route::get('/orders/{order}', [OrderController::class, 'show'])->name('orders.show');
+    Route::get('/orders/{orderId}', [OrderController::class, 'show'])->name('orders.show');
 
     // Calculate shipping for user's cart
     Route::post('/calculate-cart', [ShippingController::class, 'calculateCartShipping']);
