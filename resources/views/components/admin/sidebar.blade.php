@@ -50,7 +50,7 @@
             </a>
             @endcan
 
-            <!-- Category -->
+            <!-- Product -->
             @can('products.index')
             <a href="{{ route('admin.products.index') }}"" 
                class="group flex items-center px-3 py-2.5 text-sm font-medium rounded-lg transition-all duration-200 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">
@@ -61,6 +61,22 @@
                 </div>
                 <span>Products</span>
                 @if(request()->routeIs('admin.products.*'))
+                    <div class="ml-auto w-1 h-1 bg-white rounded-full animate-pulse"></div>
+                @endif
+            </a>
+            @endcan
+
+            <!-- Order -->
+            @can('orders.index')
+            <a href="{{ route('admin.orders.index') }}"" 
+               class="group flex items-center px-3 py-2.5 text-sm font-medium rounded-lg transition-all duration-200 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">
+                <div class="flex items-center justify-center w-7 h-7 rounded-lg bg-gray-100 dark:bg-gray-700 group-hover:bg-pink-100 dark:group-hover:bg-pink-900 mr-3 transition-colors duration-200">
+                    <svg class="w-4 h-4 text-gray-600 dark:text-gray-400 group-hover:text-pink-600 dark:group-hover:text-pink-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                    </svg>
+                </div>
+                <span>Orders</span>
+                @if(request()->routeIs('admin.orders.*'))
                     <div class="ml-auto w-1 h-1 bg-white rounded-full animate-pulse"></div>
                 @endif
             </a>

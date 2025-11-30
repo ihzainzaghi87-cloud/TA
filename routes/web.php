@@ -15,6 +15,7 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserManagementController;
+use App\Http\Controllers\AdminOrderController;
 use Illuminate\Support\Facades\Route;
 
 // ---------- Auth (web session) ----------
@@ -87,6 +88,19 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     // Delete image (jika ada method destroyImage di controller)
     Route::delete('products/images/{image}', [ProductController::class, 'destroyImage'])
         ->name('products.images.destroy');
+
+    // Orders
+    Route::resource('orders', AdminOrderController::class)->only(['index', 'show']);
+    
+    // Shipping update routes
+    Route::get('orders/{order}/edit-shipping', [AdminOrderController::class, 'editShipping'])
+         ->name('orders.edit-shipping');
+    
+    Route::put('orders/{order}/shipping', [AdminOrderController::class, 'updateShipping'])
+         ->name('orders.update-shipping');
+    
+    Route::patch('orders/{order}/status', [AdminOrderController::class, 'updateStatus'])
+         ->name('orders.update-status');
 
     // Banner
     Route::resource('banners', BannerController::class);
