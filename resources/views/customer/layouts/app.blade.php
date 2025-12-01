@@ -17,6 +17,10 @@
     <meta property="og:url" content="{{ url()->current() }}">
     
     <title>@yield('title', 'Home') - The Paranoia</title>
+
+    <meta name="theme-color" content="#6777ef">
+    <link rel="apple-touch-icon" href="{{ asset('logo.PNG') }}">
+    <link rel="manifest" href="/manifest.json">
     
     {{-- Tailwind CSS CDN - Latest Version --}}
     <script src="https://cdn.tailwindcss.com"></script>
@@ -28,6 +32,8 @@
     
     {{-- Alpine.js for Interactive Components --}}
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
+    @laravelPWA
     
     {{-- Custom Styles --}}
     <style>
@@ -105,5 +111,14 @@
     
     {{-- Additional Scripts --}}
     @stack('scripts')
+    
+    <script src="{{ asset('/sw.js') }}"></script>
+    <script>
+    if (!navigator.serviceWorker.controller) {
+        navigator.serviceWorker.register("/sw.js").then(function (reg) {
+        console.log("Service worker registered: " + reg.scope);
+        });
+    }
+    </script>
 </body>
 </html>
