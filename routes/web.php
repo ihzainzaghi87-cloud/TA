@@ -16,6 +16,8 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserManagementController;
 use App\Http\Controllers\AdminOrderController;
+use App\Http\Controllers\UserPointController;
+use App\Http\Controllers\PointTransactionController;
 use Illuminate\Support\Facades\Route;
 
 // ---------- Auth (web session) ----------
@@ -91,8 +93,19 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
 
     // Orders
     Route::resource('orders', AdminOrderController::class)->only(['index', 'show']);
+
+    // User Points
+    Route::resource('user-points', UserPointController::class)->only(['index', 'show']);
+    Route::post('user-points/{userId}/reset', [UserPointController::class, 'reset'])->name('user-points.reset');
+    Route::get('user-points-leaderboard', [UserPointController::class, 'leaderboard'])->name('user-points.leaderboard');
     
-    // Shipping update routes
+    // Point Transactions
+    Route::resource('point-transactions', PointTransactionController::class)->only(['index', 'show']);
+    Route::get('point-transactions/user/{userId}/earned', [PointTransactionController::class, 'earned'])->name('point-transactions.earned');
+    Route::get('point-transactions/user/{userId}/redeemed', [PointTransactionController::class, 'redeemed'])->name('point-transactions.redeemed');
+    Route::get('point-transactions/user/{userId}/statistics', [PointTransactionController::class, 'statistics'])->name('point-transactions.statistics');
+
+    // Shipping update
     Route::get('orders/{order}/edit-shipping', [AdminOrderController::class, 'editShipping'])
          ->name('orders.edit-shipping');
     
