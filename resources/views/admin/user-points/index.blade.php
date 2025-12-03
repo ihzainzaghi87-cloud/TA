@@ -130,18 +130,6 @@
                                     </svg>
                                     View
                                 </a>
-
-                                <form action="{{ route('admin.user-points.reset', $userPoint->user_id) }}" method="POST" class="inline"
-                                      onsubmit="return confirm('Reset poin untuk {{ $userPoint->user->name }}?')">
-                                    @csrf
-                                    <button type="submit" 
-                                            class="inline-flex items-center px-2 py-1 bg-gradient-to-r from-red-600 to-rose-600 border border-transparent rounded-md text-xs font-medium text-white hover:from-red-700 hover:to-rose-700 transition-all duration-200">
-                                        <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
-                                        </svg>
-                                        Reset
-                                    </button>
-                                </form>
                             </div>
                         </td>
                     </tr>
