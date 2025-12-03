@@ -22,6 +22,8 @@ class PermissionAndRoleSeeder extends Seeder
             'categories' => ['index', 'view', 'create', 'update', 'delete'],
             'products' => ['index', 'view', 'create', 'update', 'delete', 'destroy-image'],
             'orders' => ['index', 'view', 'edit', 'update'],
+            'user-points' => ['index', 'view'],
+            'point-transactions' => ['index', 'view'],
         ];
 
         $all = [];
