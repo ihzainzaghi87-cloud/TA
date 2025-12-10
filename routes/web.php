@@ -8,6 +8,7 @@ use App\Http\Controllers\Customer\CartController;
 use App\Http\Controllers\Customer\PagesController;
 use App\Http\Controllers\Customer\ShippingController;
 use App\Http\Controllers\Customer\UserAddressController;
+use App\Http\Controllers\Customer\CustomerProfileController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\PasswordResetController;
 use App\Http\Controllers\PermissionController;
@@ -174,6 +175,31 @@ Route::middleware(['auth'])->group(function () {
     // My Orders
     Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
     Route::get('/orders/{orderId}', [OrderController::class, 'show'])->name('orders.show');
+
+    // Customer Profile
+    Route::prefix('profile')->name('customer.')->group(function () {
+        // Profile
+        Route::get('/', [CustomerProfileController::class, 'index'])->name('index');
+        Route::get('/edit', [CustomerProfileController::class, 'edit'])->name('edit');
+        Route::put('/update', [CustomerProfileController::class, 'update'])->name('update');
+        
+        // Password
+        Route::get('/change-password', [CustomerProfileController::class, 'showChangePasswordForm'])->name('change-password');
+        Route::put('/update-password', [CustomerProfileController::class, 'updatePassword'])->name('update-password');
+        
+        // Points
+        Route::get('/points', [CustomerProfileController::class, 'points'])->name('points');
+        Route::get('/point-transactions', [CustomerProfileController::class, 'pointTransactions'])->name('point-transactions');
+        
+        // Orders
+        Route::get('/orders', [CustomerProfileController::class, 'orders'])->name('orders');
+        Route::get('/orders/{orderId}', [CustomerProfileController::class, 'orderDetail'])->name('order-detail');
+        Route::get('/orders/{orderId}/track', [CustomerProfileController::class, 'trackOrder'])->name('track-order');
+        Route::post('/orders/{orderId}/confirm-received', [CustomerProfileController::class, 'confirmReceived'])->name('confirm-received');
+        
+        // Addresses (redirect to UserAddressController)
+        Route::get('/addresses', [CustomerProfileController::class, 'addresses'])->name('addresses');
+    });
 
     // Calculate shipping for user's cart
     Route::post('/calculate-cart', [ShippingController::class, 'calculateCartShipping']);

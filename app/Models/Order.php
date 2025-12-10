@@ -168,6 +168,34 @@ class Order extends Model
     }
 
     /**
+     * Check if order has tracking
+     */
+    public function hasTracking(): bool
+    {
+        return !empty($this->tracking_number) && !empty($this->courier);
+    }
+
+    /**
+     * Get courier for tracking (lowercase)
+     */
+    public function getCourierForTracking(): string
+    {
+        return strtolower($this->courier ?? '');
+    }
+
+    /**
+     * Get formatted tracking status badge
+     */
+    public function getTrackingStatusBadgeAttribute(): string
+    {
+        if (!$this->hasTracking()) {
+            return '<span class="px-3 py-1 rounded-full text-sm bg-gray-100 text-gray-600">Belum Dikirim</span>';
+        }
+        
+        return '<span class="px-3 py-1 rounded-full text-sm bg-blue-100 text-blue-600">Dalam Pengiriman</span>';
+    }
+
+    /**
      * Boot the model.
      */
     protected static function boot()

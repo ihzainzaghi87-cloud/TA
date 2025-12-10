@@ -86,13 +86,17 @@
                              x-transition:leave-end="opacity-0 transform scale-95"
                              class="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-xl py-2 border border-gray-200"
                              style="display: none;">
-                            <a href="{{ url('/admin') }}" 
+                            <a href="{{ route('customer.index') }}" 
                                class="block px-4 py-2 text-sm text-gray-700 hover:bg-yellow-50 hover:text-yellow-600 transition duration-150">
-                                <i class="fas fa-user mr-2"></i> Profile
+                                <i class="fas fa-user mr-2"></i> Profil Saya
+                            </a>
+                            <a href="{{ route('orders.index') }}" 
+                               class="block px-4 py-2 text-sm text-gray-700 hover:bg-yellow-50 hover:text-yellow-600 transition duration-150">
+                                <i class="fas fa-box mr-2"></i> Pesanan Saya
                             </a>
                             <a href="{{ route('cart.index') }}" 
                                class="block px-4 py-2 text-sm text-gray-700 hover:bg-yellow-50 hover:text-yellow-600 transition duration-150">
-                                <i class="fas fa-shopping-cart mr-2"></i> My Cart
+                                <i class="fas fa-shopping-cart mr-2"></i> Keranjang
                                 @if($cartCount > 0)
                                 <span class="ml-1 text-xs bg-yellow-100 text-yellow-600 px-2 py-0.5 rounded-full">{{ $cartCount }}</span>
                                 @endif
@@ -101,7 +105,7 @@
                             <form method="POST" action="{{ route('logout') }}">
                                 @csrf
                                 <button type="submit" 
-                                        class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-purple-50 hover:text-purple-600 transition duration-150">
+                                        class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-red-50 hover:text-red-600 transition duration-150">
                                     <i class="fas fa-sign-out-alt mr-2"></i> Logout
                                 </button>
                             </form>
@@ -192,14 +196,18 @@
                         <div class="px-3 py-2 text-sm text-gray-500 font-medium">
                             Logged in as {{ Auth::user()->name }}
                         </div>
-                        <a href="{{ url('/admin') }}" 
+                        <a href="{{ route('customer.index') }}" 
                            class="block px-3 py-2 text-gray-700 hover:bg-yellow-50 hover:text-yellow-600 rounded-md transition duration-150">
-                            <i class="fas fa-user mr-2"></i> Profile
+                            <i class="fas fa-user mr-2"></i> Profil Saya
+                        </a>
+                        <a href="{{ route('customer.orders') }}" 
+                           class="block px-3 py-2 text-gray-700 hover:bg-yellow-50 hover:text-yellow-600 rounded-md transition duration-150">
+                            <i class="fas fa-box mr-2"></i> Pesanan Saya
                         </a>
                         <form method="POST" action="{{ route('logout') }}">
                             @csrf
                             <button type="submit" 
-                                    class="w-full text-left px-3 py-2 text-gray-700 hover:bg-purple-50 hover:text-purple-600 rounded-md transition duration-150">
+                                    class="w-full text-left px-3 py-2 text-gray-700 hover:bg-red-50 hover:text-red-600 rounded-md transition duration-150">
                                 <i class="fas fa-sign-out-alt mr-2"></i> Logout
                             </button>
                         </form>

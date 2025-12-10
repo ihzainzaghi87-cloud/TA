@@ -101,10 +101,10 @@ Route::middleware('auth:sanctum')->group(function () {
 });
 
 // PROFILE (protected)
-Route::middleware('auth:sanctum')->prefix('profile')->group(function () {
-    Route::get('/',         [UserProfileController::class, 'show']);
-    Route::put('/',         [UserProfileController::class, 'update']);
-    Route::put('/password', [UserProfileController::class, 'updatePassword']);
-});
+// Route::middleware('auth:sanctum')->prefix('profile')->group(function () {
+//     Route::get('/',         [UserProfileController::class, 'show']);
+//     Route::put('/',         [UserProfileController::class, 'update']);
+//     Route::put('/password', [UserProfileController::class, 'updatePassword']);
+// });
 
 Route::post('/midtrans/notification', [\App\Http\Controllers\Customer\OrderController::class, 'callback']);

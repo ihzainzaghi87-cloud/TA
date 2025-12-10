@@ -219,4 +219,49 @@ class RajaOngkirService
             ]
         ];
     }
+
+    public function trackWaybill(string $awb, ?string $courier = null): array
+    {
+        try {
+            Log::info("Tracking waybill: {$awb}, Courier: " . ($courier ?? 'auto'));
+            
+            $params = ['awb' => $awb];
+            
+            if ($courier) {
+                $params['courier'] = strtolower($courier);
+            }
+            
+            $response = Http::withHeaders([
+                'key' => $this->apiKey
+            ])->post("{$this->baseUrl}/track/waybill", $params);
+
+            if ($response->failed()) {
+                Log::error('RajaOngkir tracking failed', [
+                    'status' => $response->status(),
+                    'body' => $response->body()
+                ]);
+                
+                return [
+                    'error' => 'Gagal melacak pengiriman. Silakan coba lagi.'
+                ];
+            }
+
+            $result = $response->json();
+            
+            Log::info('Tracking result:', $result);
+            
+            // Check if tracking successful
+            if (!isset($result['meta']) || $result['meta']['code'] != 200) {
+                return [
+                    'error' => $result['meta']['message'] ?? 'Data tracking tidak ditemukan'
+                ];
+            }
+            
+            return $result;
+            
+        } catch (\Exception $e) {
+            Log::error('Track waybill error: ' . $e->getMessage());
+            return ['error' => 'Terjadi kesalahan saat melacak pengiriman'];
+        }
+    }
 }
