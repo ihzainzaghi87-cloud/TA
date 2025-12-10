@@ -30,6 +30,9 @@
           integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" 
           crossorigin="anonymous" referrerpolicy="no-referrer" />
     
+    {{-- Google Fonts - Poppins & Bebas Neue --}}
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&family=Bebas+Neue&display=swap" rel="stylesheet">
+    
     {{-- Alpine.js for Interactive Components --}}
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 
@@ -37,12 +40,32 @@
     
     {{-- Custom Styles --}}
     <style>
+        /* Alpine.js cloak */
+        [x-cloak] {
+            display: none !important;
+        }
+        
+        /* Font Family */
+        body {
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        .font-bebas {
+            font-family: 'Bebas Neue', cursive;
+        }
+        
+        /* Prevent horizontal scroll */
+        html, body {
+            overflow-x: hidden;
+            max-width: 100vw;
+        }
+        
         /* Smooth Scroll Behavior */
         html {
             scroll-behavior: smooth;
         }
         
-        /* Custom Scrollbar */
+        /* Custom Scrollbar - No Gradient */
         ::-webkit-scrollbar {
             width: 10px;
         }
@@ -52,12 +75,12 @@
         }
         
         ::-webkit-scrollbar-thumb {
-            background: linear-gradient(to bottom, #9333ea, #ec4899);
+            background: #FAD470;
             border-radius: 5px;
         }
         
         ::-webkit-scrollbar-thumb:hover {
-            background: linear-gradient(to bottom, #7e22ce, #db2777);
+            background: #F59E0B;
         }
         
         /* Animation Classes */
@@ -75,29 +98,11 @@
         .fade-in {
             animation: fadeIn 0.6s ease-out;
         }
-        
-        /* Gradient Text Animation */
-        @keyframes gradient {
-            0% {
-                background-position: 0% 50%;
-            }
-            50% {
-                background-position: 100% 50%;
-            }
-            100% {
-                background-position: 0% 50%;
-            }
-        }
-        
-        .gradient-animate {
-            background-size: 200% 200%;
-            animation: gradient 3s ease infinite;
-        }
     </style>
     
     @stack('styles')
 </head>
-<body class="antialiased bg-gray-50 text-gray-900">
+<body class="antialiased bg-gray-50 text-gray-900 font-['Poppins'] overflow-x-hidden">
     {{-- Include Navbar Component --}}
     @include('components.customer.navbar')
     
