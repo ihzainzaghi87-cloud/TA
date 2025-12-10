@@ -128,6 +128,9 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
 // ---------- Customer Page ----------
 Route::get('/', [PagesController::class, 'index'])->name('home');
 
+// Product Detail Page (Customer)
+Route::get('/product/{slug}', [ProductController::class, 'customerShow'])->name('product.detail');
+
 Route::prefix('shipping')->name('shipping.')->group(function () {
     // Get provinces & cities
     Route::get('/provinces', [ShippingController::class, 'getProvinces']);

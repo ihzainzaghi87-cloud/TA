@@ -418,23 +418,66 @@
 {{-- Catalog Section --}}
 <section class="pb-8 pt-5 bg-gray-50">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <?php
+        // Array data produk
+        $catalogProducts = [
+            [
+                'id' => 1,
+                'name' => 'Classic White T-Shirt',
+                'price' => 29.99,
+                'image' => 'ui/catalog/product1.jpg',
+                'category' => 'tshirt',
+                'slug' => 'classic-white-t-shirt'
+            ],
+            [
+                'id' => 2,
+                'name' => 'Denim Jacket Classic',
+                'price' => 89.99,
+                'image' => 'ui/catalog/product2.jpg',
+                'category' => 'jacket',
+                'slug' => 'denim-jacket-classic'
+            ],
+            [
+                'id' => 3,
+                'name' => 'Leather Crossbody Bag',
+                'price' => 129.99,
+                'image' => 'ui/catalog/product3.jpg',
+                'category' => 'bag',
+                'slug' => 'leather-crossbody-bag'
+            ],
+            [
+                'id' => 4,
+                'name' => 'Slim Fit Chino Pants',
+                'price' => 59.99,
+                'image' => 'ui/catalog/product4.jpg',
+                'category' => 'pants',
+                'slug' => 'slim-fit-chino-pants'
+            ],
+            [
+                'id' => 5,
+                'name' => 'Graphic Print Hoodie',
+                'price' => 45.99,
+                'image' => 'ui/catalog/product5.jpg',
+                'category' => 'tshirt',
+                'slug' => 'graphic-print-hoodie'
+            ]
+        ];
+        ?>
+
         <!-- Product Grid -->
         <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 md:gap-6">
-            <!-- Product 1 -->
-            <div class="group rounded-lg hover:shadow-lg transition-all duration-300 overflow-hidden">
+            @foreach($catalogProducts as $product)
+            <a href="{{ route('product.detail', $product['slug']) }}" class="group rounded-lg hover:shadow-lg transition-all duration-300 overflow-hidden">
                 <!-- Product Image -->
                 <div class="relative aspect-square bg-gray-100 overflow-hidden">
-                    <img src="{{ asset('ui/catalog/product1.jpg') }}"
-                         alt="Product 1"
+                    <img src="{{ asset($product['image']) }}"
+                         alt="{{ $product['name'] }}"
                          class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
 
                     <!-- Quick Actions Overlay -->
                     <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-all duration-300 flex items-center justify-center">
                         <div class="opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex gap-2">
-                            <button class="bg-white p-2 rounded-lg shadow-md hover:bg-gray-100 transition-colors">
-                                <i class="fas fa-eye text-gray-700 text-sm"></i>
-                            </button>
-                            <button class="bg-white p-2 rounded-lg shadow-md hover:bg-gray-100 transition-colors">
+                            <button class="bg-white p-2 rounded-lg shadow-md hover:bg-gray-100 transition-colors" onclick="event.stopPropagation(); addToWishlist({{ $product['id'] }})">
                                 <i class="fas fa-heart text-gray-700 text-sm"></i>
                             </button>
                         </div>
@@ -444,308 +487,36 @@
                 <!-- Product Info -->
                 <div class="p-4">
                     <h3 class="font-semibold text-gray-900 text-sm mb-2 line-clamp-2">
-                        Classic White T-Shirt
+                        {{ $product['name'] }}
                     </h3>
 
                     <!-- Price -->
                     <div class="flex items-center justify-between mb-3">
                         <span class="text-lg font-bold text-gray-900">
-                            $29.99
+                            ${{ number_format($product['price'], 2) }}
                         </span>
                     </div>
                 </div>
-            </div>
-
-            <!-- Product 2 -->
-            <div class="group  rounded-lg hover:shadow-lg transition-all duration-300 overflow-hidden">
-                <div class="relative aspect-square bg-gray-100 overflow-hidden">
-                    <img src="{{ asset('ui/catalog/product2.jpg') }}"
-                         alt="Product 2"
-                         class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
-
-                    <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-all duration-300 flex items-center justify-center">
-                        <div class="opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex gap-2">
-                            <button class="bg-white p-2 rounded-lg shadow-md hover:bg-gray-100 transition-colors">
-                                <i class="fas fa-eye text-gray-700 text-sm"></i>
-                            </button>
-                            <button class="bg-white p-2 rounded-lg shadow-md hover:bg-gray-100 transition-colors">
-                                <i class="fas fa-heart text-gray-700 text-sm"></i>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="p-4">
-                    <h3 class="font-semibold text-gray-900 text-sm mb-2 line-clamp-2">
-                        Denim Jacket Classic
-                    </h3>
-
-                    <div class="flex items-center justify-between mb-3">
-                        <span class="text-lg font-bold text-gray-900">
-                            $89.99
-                        </span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Product 3 -->
-            <div class="group  rounded-lg  hover:shadow-lg transition-all duration-300 overflow-hidden">
-                <div class="relative aspect-square bg-gray-100 overflow-hidden">
-                    <img src="{{ asset('ui/catalog/product3.jpg') }}"
-                         alt="Product 3"
-                         class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
-
-                    <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-all duration-300 flex items-center justify-center">
-                        <div class="opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex gap-2">
-                            <button class="bg-white p-2 rounded-lg shadow-md hover:bg-gray-100 transition-colors">
-                                <i class="fas fa-eye text-gray-700 text-sm"></i>
-                            </button>
-                            <button class="bg-white p-2 rounded-lg shadow-md hover:bg-gray-100 transition-colors">
-                                <i class="fas fa-heart text-gray-700 text-sm"></i>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="p-4">
-                    <h3 class="font-semibold text-gray-900 text-sm mb-2 line-clamp-2">
-                        Leather Crossbody Bag
-                    </h3>
-
-                    <div class="flex items-center justify-between mb-3">
-                        <span class="text-lg font-bold text-gray-900">
-                            $129.99
-                        </span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Product 4 -->
-            <div class="group bg-white rounded-lg shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden">
-                <div class="relative aspect-square bg-gray-100 overflow-hidden">
-                    <img src="{{ asset('ui/catalog/product4.jpg') }}"
-                         alt="Product 4"
-                         class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
-
-                    <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-all duration-300 flex items-center justify-center">
-                        <div class="opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex gap-2">
-                            <button class="bg-white p-2 rounded-lg shadow-md hover:bg-gray-100 transition-colors">
-                                <i class="fas fa-eye text-gray-700 text-sm"></i>
-                            </button>
-                            <button class="bg-white p-2 rounded-lg shadow-md hover:bg-gray-100 transition-colors">
-                                <i class="fas fa-heart text-gray-700 text-sm"></i>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="p-4">
-                    <h3 class="font-semibold text-gray-900 text-sm mb-2 line-clamp-2">
-                        Slim Fit Chino Pants
-                    </h3>
-
-                    <div class="flex items-center justify-between mb-3">
-                        <span class="text-lg font-bold text-gray-900">
-                            $59.99
-                        </span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Product 5 -->
-            <div class="group bg-white rounded-lg shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden">
-                <div class="relative aspect-square bg-gray-100 overflow-hidden">
-                    <img src="{{ asset('ui/catalog/product5.jpg') }}"
-                         alt="Product 5"
-                         class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
-
-                    <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-all duration-300 flex items-center justify-center">
-                        <div class="opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex gap-2">
-                            <button class="bg-white p-2 rounded-lg shadow-md hover:bg-gray-100 transition-colors">
-                                <i class="fas fa-eye text-gray-700 text-sm"></i>
-                            </button>
-                            <button class="bg-white p-2 rounded-lg shadow-md hover:bg-gray-100 transition-colors">
-                                <i class="fas fa-heart text-gray-700 text-sm"></i>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="p-4">
-                    <h3 class="font-semibold text-gray-900 text-sm mb-2 line-clamp-2">
-                        Graphic Print Hoodie
-                    </h3>
-
-                    <div class="flex items-center justify-between mb-3">
-                        <span class="text-lg font-bold text-gray-900">
-                            $45.99
-                        </span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Product 6 -->
-            <div class="group bg-white rounded-lg shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden">
-                <div class="relative aspect-square bg-gray-100 overflow-hidden">
-                    <img src="{{ asset('ui/catalog/product6.jpg') }}"
-                         alt="Product 6"
-                         class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
-
-                    <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-all duration-300 flex items-center justify-center">
-                        <div class="opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex gap-2">
-                            <button class="bg-white p-2 rounded-lg shadow-md hover:bg-gray-100 transition-colors">
-                                <i class="fas fa-eye text-gray-700 text-sm"></i>
-                            </button>
-                            <button class="bg-white p-2 rounded-lg shadow-md hover:bg-gray-100 transition-colors">
-                                <i class="fas fa-heart text-gray-700 text-sm"></i>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="p-4">
-                    <h3 class="font-semibold text-gray-900 text-sm mb-2 line-clamp-2">
-                        Canvas Backpack
-                    </h3>
-
-                    <div class="flex items-center justify-between mb-3">
-                        <span class="text-lg font-bold text-gray-900">
-                            $39.99
-                        </span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Product 7 -->
-            <div class="group bg-white rounded-lg shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden">
-                <div class="relative aspect-square bg-gray-100 overflow-hidden">
-                    <img src="{{ asset('ui/catalog/product7.jpg') }}"
-                         alt="Product 7"
-                         class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
-
-                    <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-all duration-300 flex items-center justify-center">
-                        <div class="opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex gap-2">
-                            <button class="bg-white p-2 rounded-lg shadow-md hover:bg-gray-100 transition-colors">
-                                <i class="fas fa-eye text-gray-700 text-sm"></i>
-                            </button>
-                            <button class="bg-white p-2 rounded-lg shadow-md hover:bg-gray-100 transition-colors">
-                                <i class="fas fa-heart text-gray-700 text-sm"></i>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="p-4">
-                    <h3 class="font-semibold text-gray-900 text-sm mb-2 line-clamp-2">
-                        Casual Cotton Shorts
-                    </h3>
-
-                    <div class="flex items-center justify-between mb-3">
-                        <span class="text-lg font-bold text-gray-900">
-                            $34.99
-                        </span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Product 8 -->
-            <div class="group bg-white rounded-lg shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden">
-                <div class="relative aspect-square bg-gray-100 overflow-hidden">
-                    <img src="{{ asset('ui/catalog/product8.jpg') }}"
-                         alt="Product 8"
-                         class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
-
-                    <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-all duration-300 flex items-center justify-center">
-                        <div class="opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex gap-2">
-                            <button class="bg-white p-2 rounded-lg shadow-md hover:bg-gray-100 transition-colors">
-                                <i class="fas fa-eye text-gray-700 text-sm"></i>
-                            </button>
-                            <button class="bg-white p-2 rounded-lg shadow-md hover:bg-gray-100 transition-colors">
-                                <i class="fas fa-heart text-gray-700 text-sm"></i>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="p-4">
-                    <h3 class="font-semibold text-gray-900 text-sm mb-2 line-clamp-2">
-                        Wool Blend Sweater
-                    </h3>
-
-                    <div class="flex items-center justify-between mb-3">
-                        <span class="text-lg font-bold text-gray-900">
-                            $69.99
-                        </span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Product 9 -->
-            <div class="group bg-white rounded-lg shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden">
-                <div class="relative aspect-square bg-gray-100 overflow-hidden">
-                    <img src="{{ asset('ui/catalog/product9.jpg') }}"
-                         alt="Product 9"
-                         class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
-
-                    <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-all duration-300 flex items-center justify-center">
-                        <div class="opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex gap-2">
-                            <button class="bg-white p-2 rounded-lg shadow-md hover:bg-gray-100 transition-colors">
-                                <i class="fas fa-eye text-gray-700 text-sm"></i>
-                            </button>
-                            <button class="bg-white p-2 rounded-lg shadow-md hover:bg-gray-100 transition-colors">
-                                <i class="fas fa-heart text-gray-700 text-sm"></i>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="p-4">
-                    <h3 class="font-semibold text-gray-900 text-sm mb-2 line-clamp-2">
-                        Sport Cap Collection
-                    </h3>
-
-                    <div class="flex items-center justify-between mb-3">
-                        <span class="text-lg font-bold text-gray-900">
-                            $24.99
-                        </span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Product 10 -->
-            <div class="group bg-white rounded-lg shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden">
-                <div class="relative aspect-square bg-gray-100 overflow-hidden">
-                    <img src="{{ asset('ui/catalog/product10.jpg') }}"
-                         alt="Product 10"
-                         class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
-
-                    <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-all duration-300 flex items-center justify-center">
-                        <div class="opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex gap-2">
-                            <button class="bg-white p-2 rounded-lg shadow-md hover:bg-gray-100 transition-colors">
-                                <i class="fas fa-eye text-gray-700 text-sm"></i>
-                            </button>
-                            <button class="bg-white p-2 rounded-lg shadow-md hover:bg-gray-100 transition-colors">
-                                <i class="fas fa-heart text-gray-700 text-sm"></i>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="p-4">
-                    <h3 class="font-semibold text-gray-900 text-sm mb-2 line-clamp-2">
-                        Running Shoes Pro
-                    </h3>
-
-                    <div class="flex items-center justify-between mb-3">
-                        <span class="text-lg font-bold text-gray-900">
-                            $79.99
-                        </span>
-                    </div>
-                </div>
-            </div>
+            </a>
+            @endforeach
         </div>
     </div>
 </section>
+
+<script>
+// JavaScript functions untuk product actions
+function viewProduct(productSlug) {
+    console.log('View product:', productSlug);
+    // Redirect ke halaman detail product
+    window.location.href = `/product/${productSlug}`;
+}
+
+function addToWishlist(productId) {
+    console.log('Add to wishlist:', productId);
+    // Implementasi wishlist akan ditambahkan di sini
+    alert('Added to wishlist! Product ID: ' + productId);
+}
+</script>
 
 {{-- About Section --}}
 <section id="about" class="py-16 bg-white">
