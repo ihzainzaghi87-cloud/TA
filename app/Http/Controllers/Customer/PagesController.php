@@ -30,4 +30,40 @@ class PagesController extends Controller
 
         return view('customer.home', compact('categories', 'popularProducts', 'banners'));
     }
+
+    /**
+     * Display the specified product for customer view.
+     */
+    public function customerShow($slug)
+    {
+        $product = Product::with(['category', 'images', 'variations'])
+            ->where('slug', $slug)
+            ->where('is_active', true)
+            ->firstOrFail();
+
+        // Get related products
+        $relatedProducts = Product::with(['images'])
+            ->where('category_id', $product->category_id)
+            ->where('id', '!=', $product->id)
+            ->where('is_active', true)
+            ->take(4)
+            ->get();
+
+        // Get stock information
+        $totalStock = $product->variations->sum('stock');
+        $availableVariations = $product->variations->where('stock', '>', 0);
+
+        // Get unique colors and sizes
+        $colors = $product->variations->pluck('color')->unique()->filter();
+        $sizes = $product->variations->pluck('size')->unique()->filter();
+
+        return view('customer.products.detail', compact(
+            'product',
+            'relatedProducts',
+            'totalStock',
+            'availableVariations',
+            'colors',
+            'sizes'
+        ));
+    }
 }
