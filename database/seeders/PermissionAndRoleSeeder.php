@@ -19,6 +19,7 @@ class PermissionAndRoleSeeder extends Seeder
             'permissions' => ['index', 'view', 'create', 'update', 'delete'],
             'users'       => ['index', 'view', 'create', 'update', 'delete', 'assign-roles', 'grant-permissions'],
             'banners' => ['index', 'view', 'create', 'update', 'delete'],
+            'articles' => ['index', 'view', 'create', 'update', 'delete', 'publish'],
             'categories' => ['index', 'view', 'create', 'update', 'delete'],
             'products' => ['index', 'view', 'create', 'update', 'delete', 'destroy-image'],
             'orders' => ['index', 'view', 'edit', 'update'],

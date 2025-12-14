@@ -13,6 +13,9 @@
 
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Trix Editor Assets -->
+    @trixassets
     
     <!-- Alpine.js -->
     <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
@@ -72,6 +75,74 @@
         
         .dark ::-webkit-scrollbar-thumb:hover {
             background: #64748b;
+        }
+
+        /* Trix Editor Styling */
+        trix-editor {
+            min-height: 300px;
+            max-height: 500px;
+            overflow-y: auto;
+        }
+        
+        /* Trix Content Display - untuk halaman show */
+        .prose figure {
+            margin: 1.5rem 0;
+        }
+        
+        .prose figure img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+        
+        .prose figure figcaption {
+            margin-top: 0.5rem;
+            font-size: 0.875rem;
+            color: #6b7280;
+            text-align: center;
+        }
+        
+        .dark .prose figure figcaption {
+            color: #9ca3af;
+        }
+        
+        /* Trix Attachment */
+        .attachment {
+            display: inline-block;
+            margin: 0.5rem 0;
+        }
+        
+        .attachment__caption {
+            font-size: 0.875rem;
+            color: #6b7280;
+        }
+        
+        .dark .attachment__caption {
+            color: #9ca3af;
+        }
+
+        /* Hide Trix Image Caption (filename and filesize) */
+        .attachment__caption,
+        figcaption.attachment__caption {
+            display: none !important;
+        }
+        
+        /* Style untuk gambar Trix di content display */
+        .prose figure.attachment {
+            margin: 1.5rem 0;
+        }
+        
+        .prose figure.attachment img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* Dark mode */
+        .dark .prose figure.attachment img {
+            border-color: #374151;
         }
     </style>
 </head>

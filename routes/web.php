@@ -19,6 +19,8 @@ use App\Http\Controllers\UserManagementController;
 use App\Http\Controllers\AdminOrderController;
 use App\Http\Controllers\UserPointController;
 use App\Http\Controllers\PointTransactionController;
+use App\Http\Controllers\ArticleController;
+use Te7aHoudini\LaravelTrix\Http\Controllers\TrixAttachmentController;
 use Illuminate\Support\Facades\Route;
 
 // ---------- Auth (web session) ----------
@@ -120,6 +122,16 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     Route::resource('banners', BannerController::class);
     Route::patch('banners/{banner}/toggle-status', [BannerController::class, 'toggleStatus'])
         ->name('banners.toggle-status');
+
+    // Articles
+    Route::resource('articles', ArticleController::class);
+    Route::post('trix-attachments', [TrixAttachmentController::class, 'store'])
+        ->name('trix.attachments.store');
+    
+    Route::delete('trix-attachments/{attachment}', [TrixAttachmentController::class, 'destroy'])
+        ->name('trix.attachments.destroy');
+    Route::patch('articles/{article}/toggle-publish', [ArticleController::class, 'togglePublish'])
+        ->name('articles.toggle-publish');
 
     // Shipping
     Route::post('shipping/sync-provinces', [ShippingController::class, 'syncProvinces']);
