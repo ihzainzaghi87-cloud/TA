@@ -136,7 +136,7 @@
                             <i class="fas fa-coins w-5 mr-3"></i>
                             <span>Poin Saya</span>
                         </a>
-                        <a href="{{ route('orders.index') }}" class="menu-item">
+                        <a href="{{ route('customer.orders') }}" class="menu-item">
                             <i class="fas fa-box w-5 mr-3"></i>
                             <span>Pesanan Saya</span>
                         </a>
@@ -173,10 +173,10 @@
                                class="filter-btn {{ $type == 'redeemed' ? 'active' : '' }}">
                                 Digunakan
                             </a>
-                            <a href="{{ route('customer.point-transactions', ['type' => 'refund']) }}" 
+                            <!-- <a href="{{ route('customer.point-transactions', ['type' => 'refund']) }}" 
                                class="filter-btn {{ $type == 'refund' ? 'active' : '' }}">
                                 Refund
-                            </a>
+                            </a> -->
                         </div>
                     </div>
 

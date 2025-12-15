@@ -90,7 +90,7 @@
                                class="block px-4 py-2 text-sm text-gray-700 hover:bg-yellow-50 hover:text-yellow-600 transition duration-150">
                                 <i class="fas fa-user mr-2"></i> Profil Saya
                             </a>
-                            <a href="{{ route('orders.index') }}" 
+                            <a href="{{ route('customer.orders') }}" 
                                class="block px-4 py-2 text-sm text-gray-700 hover:bg-yellow-50 hover:text-yellow-600 transition duration-150">
                                 <i class="fas fa-box mr-2"></i> Pesanan Saya
                             </a>

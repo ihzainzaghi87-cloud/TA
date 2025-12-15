@@ -174,7 +174,7 @@
                             <i class="fas fa-coins w-5 mr-3"></i>
                             <span>Poin Saya</span>
                         </a>
-                        <a href="{{ route('orders.index') }}" class="menu-item">
+                        <a href="{{ route('customer.orders') }}" class="menu-item">
                             <i class="fas fa-box w-5 mr-3"></i>
                             <span>Pesanan Saya</span>
                         </a>

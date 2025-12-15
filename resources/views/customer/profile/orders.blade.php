@@ -379,7 +379,7 @@
                                         <i class="fas fa-eye mr-1"></i> Detail
                                     </a>
                                     
-                                    @if($order->status == 'shipped')
+                                    @if($order->status == 'Shipped')
                                     <a href="{{ route('customer.track-order', $order->id) }}" 
                                        class="px-4 py-2 bg-gradient-to-r from-amber-500 to-yellow-500 text-white rounded-lg text-sm font-semibold hover:from-amber-600 hover:to-yellow-600 transition-all">
                                         <i class="fas fa-truck mr-1"></i> Lacak

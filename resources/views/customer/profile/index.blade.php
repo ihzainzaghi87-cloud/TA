@@ -97,7 +97,7 @@
                             <i class="fas fa-coins w-5 mr-3"></i>
                             <span>Poin Saya</span>
                         </a>
-                        <a href="{{ route('orders.index') }}" class="menu-item">
+                        <a href="{{ route('customer.orders') }}" class="menu-item">
                             <i class="fas fa-box w-5 mr-3"></i>
                             <span>Pesanan Saya</span>
                         </a>
@@ -259,7 +259,7 @@
 
                 <!-- Quick Actions -->
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <a href="{{ route('orders.index') }}" class="profile-card p-6 flex items-center hover:border-amber-400 group">
+                    <a href="{{ route('customer.orders') }}" class="profile-card p-6 flex items-center hover:border-amber-400 group">
                         <div class="w-14 h-14 bg-blue-100 rounded-xl flex items-center justify-center mr-4 group-hover:bg-blue-200 transition-colors">
                             <i class="fas fa-box text-blue-600 text-xl"></i>
                         </div>

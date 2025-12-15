@@ -265,32 +265,28 @@ class CustomerProfileController extends Controller
                 ->where('user_id', Auth::id())
                 ->orderBy('created_at', 'desc');
 
-            if ($status && in_array($status, [
-                Order::STATUS_PENDING,
-                Order::STATUS_PROCESSING,
-                Order::STATUS_SHIPPED,
-                Order::STATUS_DELIVERED,
-                Order::STATUS_CANCELLED
-            ])) {
+            // ✅ FIXED: Accept both lowercase and capitalized
+            if ($status) {
                 $query->where('status', $status);
             }
 
             $orders = $query->paginate(10);
 
-            // ✅ ADD TRACKING DATA TO EACH ORDER
+            // ADD TRACKING DATA
             foreach ($orders as $order) {
                 $order->trackingData = null;
-                if ($order->status == Order::STATUS_SHIPPED && $order->hasTracking()) {
+                if ($order->status == 'Shipped' && $order->hasTracking()) {
                     $order->trackingData = $this->getTrackingData($order);
                 }
             }
 
+            // ✅ Stats dengan format yang benar
             $orderStats = [
                 'total' => Order::where('user_id', Auth::id())->count(),
-                'pending' => Order::where('user_id', Auth::id())->where('status', Order::STATUS_PENDING)->count(),
-                'processing' => Order::where('user_id', Auth::id())->where('status', Order::STATUS_PROCESSING)->count(),
-                'shipped' => Order::where('user_id', Auth::id())->where('status', Order::STATUS_SHIPPED)->count(),
-                'delivered' => Order::where('user_id', Auth::id())->where('status', Order::STATUS_DELIVERED)->count(),
+                'pending' => Order::where('user_id', Auth::id())->where('status', 'Pending')->count(),
+                'processing' => Order::where('user_id', Auth::id())->where('status', 'Processing')->count(),
+                'shipped' => Order::where('user_id', Auth::id())->where('status', 'Shipped')->count(),
+                'delivered' => Order::where('user_id', Auth::id())->where('status', 'Delivered')->count(),
             ];
 
             return view('customer.profile.orders', compact('orders', 'orderStats', 'status'));
@@ -426,23 +422,24 @@ class CustomerProfileController extends Controller
         try {
             $order = Order::where('user_id', Auth::id())
                 ->where('id', $orderId)
-                ->where('status', Order::STATUS_SHIPPED)
+                ->whereIn('status', ['Shipped', 'shipped'])
                 ->firstOrFail();
 
             $order->update([
-                'status' => Order::STATUS_DELIVERED,
+                'status' => 'Delivered',
                 'delivered_at' => now()
             ]);
 
             Log::info("Order #{$order->order_number} marked as delivered by user");
 
-            return redirect()->route('profile.order-detail', $orderId)
+            return redirect()->route('customer.order-detail', $orderId)
                 ->with('success', 'Terima kasih! Pesanan telah dikonfirmasi diterima');
         } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
-            return redirect()->route('profile.orders')
+            return redirect()->route('customer.orders')
                 ->with('error', 'Pesanan tidak ditemukan atau tidak dapat dikonfirmasi');
         } catch (\Exception $e) {
             Log::error('Error confirming order received: ' . $e->getMessage());
+            dd($e);
             return redirect()->back()
                 ->with('error', 'Gagal mengkonfirmasi penerimaan pesanan');
         }
