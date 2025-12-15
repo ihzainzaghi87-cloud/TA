@@ -50,7 +50,7 @@
                      alt="{{ $banner->title }}"
                      class="w-full h-full object-cover"
                      loading="eager">
-                <div class="absolute inset-0 bg-gradient-to-r from-black/50 to-transparent flex items-center">
+                <div class="absolute inset-0 bg-gradient-to-r from-white/10 to-transparent flex items-center">
                     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
                         <div class="max-w-2xl">
                             <h2 class="text-4xl md:text-6xl font-bold text-white mb-4">
