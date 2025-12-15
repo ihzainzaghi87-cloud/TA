@@ -239,7 +239,7 @@
 
                         <!-- Order Actions -->
                         <div class="p-4 bg-gray-50 flex flex-wrap gap-2 justify-end">
-                            <a href="{{ route('orders.show', $order->id) }}" 
+                            <a href="{{ route('customer.order-detail', $order->id) }}" 
                                class="px-4 py-2 bg-white border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:border-amber-400 hover:text-amber-600 transition-all">
                                 <i class="fas fa-eye mr-1"></i>
                                 Detail

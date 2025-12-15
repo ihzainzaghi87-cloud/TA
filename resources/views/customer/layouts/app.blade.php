@@ -117,7 +117,7 @@
     {{-- Additional Scripts --}}
     @stack('scripts')
     
-    <script src="{{ asset('/sw.js') }}"></script>
+    <!-- <script src="{{ asset('/sw.js') }}"></script> -->
     <script>
     if (!navigator.serviceWorker.controller) {
         navigator.serviceWorker.register("/sw.js").then(function (reg) {

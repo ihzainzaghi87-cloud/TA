@@ -183,6 +183,23 @@ class Order extends Model
         return strtolower($this->courier ?? '');
     }
 
+    public function getCourierCodeAttribute(): string
+    {
+        // Convert courier code to lowercase untuk API
+        $courierMap = [
+            'JNT' => 'jnt',
+            'J&T' => 'jnt',
+            'JNE' => 'jne',
+            'SICEPAT' => 'sicepat',
+            'POS' => 'pos',
+            'TIKI' => 'tiki',
+            'ANTERAJA' => 'anteraja',
+        ];
+        
+        $courier = strtoupper($this->courier);
+        return $courierMap[$courier] ?? strtolower($this->courier);
+    }
+
     /**
      * Get formatted tracking status badge
      */

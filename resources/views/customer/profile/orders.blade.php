@@ -121,6 +121,19 @@
         object-fit: cover;
         border: 1px solid #e5e7eb;
     }
+
+    @keyframes pulse {
+        0%, 100% {
+            opacity: 1;
+        }
+        50% {
+            opacity: .7;
+        }
+    }
+
+    .animate-pulse {
+        animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    }
 </style>
 @endpush
 
@@ -176,7 +189,7 @@
                             <i class="fas fa-coins w-5 mr-3"></i>
                             <span>Poin Saya</span>
                         </a>
-                        <a href="{{ route('orders.index') }}" class="menu-item active">
+                        <a href="{{ route('customer.orders') }}" class="menu-item active">
                             <i class="fas fa-box w-5 mr-3"></i>
                             <span>Pesanan Saya</span>
                         </a>
@@ -194,6 +207,15 @@
 
             <!-- Main Content -->
             <div class="lg:col-span-3 space-y-6">
+                <!-- Page Title -->
+                <div class="profile-card p-6">
+                    <h1 class="text-2xl font-bold text-gray-900 flex items-center gap-3">
+                        <i class="fas fa-box text-amber-500"></i>
+                        Pesanan Saya
+                    </h1>
+                    <p class="text-gray-500 mt-1">Kelola dan lacak pesanan Anda</p>
+                </div>
+
                 <!-- Order Stats -->
                 <div class="grid grid-cols-2 sm:grid-cols-5 gap-3">
                     <div class="stat-card">
@@ -224,24 +246,24 @@
                        class="filter-btn {{ !$status ? 'active' : '' }}">
                         Semua
                     </a>
-                    <a href="{{ route('customer.orders', ['status' => 'pending']) }}" 
-                       class="filter-btn {{ $status == 'pending' ? 'active' : '' }}">
+                    <a href="{{ route('customer.orders', ['status' => 'Pending']) }}" 
+                       class="filter-btn {{ $status == 'Pending' ? 'active' : '' }}">
                         Pending
                     </a>
-                    <a href="{{ route('customer.orders', ['status' => 'processing']) }}" 
-                       class="filter-btn {{ $status == 'processing' ? 'active' : '' }}">
+                    <a href="{{ route('customer.orders', ['status' => 'Processing']) }}" 
+                       class="filter-btn {{ $status == 'Processing' ? 'active' : '' }}">
                         Diproses
                     </a>
-                    <a href="{{ route('customer.orders', ['status' => 'shipped']) }}" 
-                       class="filter-btn {{ $status == 'shipped' ? 'active' : '' }}">
+                    <a href="{{ route('customer.orders', ['status' => 'Shipped']) }}" 
+                       class="filter-btn {{ $status == 'Shipped' ? 'active' : '' }}">
                         Dikirim
                     </a>
-                    <a href="{{ route('customer.orders', ['status' => 'delivered']) }}" 
-                       class="filter-btn {{ $status == 'delivered' ? 'active' : '' }}">
+                    <a href="{{ route('customer.orders', ['status' => 'Delivered']) }}" 
+                       class="filter-btn {{ $status == 'Delivered' ? 'active' : '' }}">
                         Selesai
                     </a>
-                    <a href="{{ route('customer.orders', ['status' => 'cancelled']) }}" 
-                       class="filter-btn {{ $status == 'cancelled' ? 'active' : '' }}">
+                    <a href="{{ route('customer.orders', ['status' => 'Cancelled']) }}" 
+                       class="filter-btn {{ $status == 'Cancelled' ? 'active' : '' }}">
                         Dibatalkan
                     </a>
                 </div>
@@ -250,35 +272,56 @@
                 @if($orders->count() > 0)
                 <div class="space-y-4">
                     @foreach($orders as $order)
+                    @php
+                        // Check delivery status from tracking data
+                        $isDelivered = false;
+                        if (isset($order->trackingData)) {
+                            $isDelivered = ($order->trackingData['delivered'] ?? false) === true
+                                        || (isset($order->trackingData['delivery_status']['status']) && $order->trackingData['delivery_status']['status'] === 'DELIVERED')
+                                        || (isset($order->trackingData['detail']['status']) && $order->trackingData['detail']['status'] === 'DELIVERED');
+                        }
+                    @endphp
+
                     <div class="order-card">
                         <!-- Order Header -->
-                        <div class="p-4 bg-gray-50 border-b border-gray-100 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
-                            <div class="flex items-center gap-3">
-                                <span class="text-sm text-gray-500">{{ $order->created_at->format('d M Y, H:i') }}</span>
-                                <span class="text-gray-300">|</span>
-                                <span class="text-sm font-semibold text-gray-900">#{{ $order->order_number }}</span>
+                        <div class="p-4 bg-gray-50 border-b border-gray-100">
+                            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+                                <div class="flex items-center gap-3">
+                                    <span class="text-sm text-gray-500">{{ $order->created_at->format('d M Y, H:i') }}</span>
+                                    <span class="text-gray-300">|</span>
+                                    <span class="text-sm font-semibold text-gray-900">#{{ $order->order_number }}</span>
+                                </div>
+                                <div class="flex flex-wrap items-center gap-2">
+                                    <span class="status-badge status-{{ strtolower($order->status) }} inline-block">
+                                        @switch(strtolower($order->status))
+                                            @case('pending')
+                                                <i class="fas fa-clock mr-1"></i> Menunggu Pembayaran
+                                                @break
+                                            @case('processing')
+                                                <i class="fas fa-cog mr-1"></i> Diproses
+                                                @break
+                                            @case('shipped')
+                                                <i class="fas fa-shipping-fast mr-1"></i> Dikirim
+                                                @break
+                                            @case('delivered')
+                                                <i class="fas fa-check-circle mr-1"></i> Selesai
+                                                @break
+                                            @case('cancelled')
+                                                <i class="fas fa-times-circle mr-1"></i> Dibatalkan
+                                                @break
+                                            @default
+                                                {{ $order->status }}
+                                        @endswitch
+                                    </span>
+
+                                    {{-- Delivery Status Badge --}}
+                                    @if($order->status == 'Shipped' && $isDelivered)
+                                    <span class="status-badge bg-green-100 text-green-700 animate-pulse">
+                                        <i class="fas fa-box-check mr-1"></i> Sudah Diterima
+                                    </span>
+                                    @endif
+                                </div>
                             </div>
-                            <span class="status-badge status-{{ $order->status }}">
-                                @switch($order->status)
-                                    @case('pending')
-                                        Menunggu Pembayaran
-                                        @break
-                                    @case('processing')
-                                        Sedang Diproses
-                                        @break
-                                    @case('shipped')
-                                        Dalam Pengiriman
-                                        @break
-                                    @case('delivered')
-                                        Selesai
-                                        @break
-                                    @case('cancelled')
-                                        Dibatalkan
-                                        @break
-                                    @default
-                                        {{ ucfirst($order->status) }}
-                                @endswitch
-                            </span>
                         </div>
 
                         <!-- Order Items -->
@@ -294,15 +337,18 @@
                                     <i class="fas fa-image text-gray-400"></i>
                                 </div>
                                 @endif
+                                
                                 <div class="flex-1 min-w-0">
                                     <h4 class="font-semibold text-gray-900 truncate">
                                         {{ $item->variation->product->name ?? 'Produk tidak tersedia' }}
                                     </h4>
                                     <p class="text-sm text-gray-500">
-                                        {{ $item->variation->color ?? '' }} {{ $item->variation->size ? '- ' . $item->variation->size : '' }}
+                                        {{ $item->variation->color ?? '' }} 
+                                        {{ $item->variation->size ? '- ' . $item->variation->size : '' }}
                                     </p>
                                     <p class="text-sm text-gray-500">x{{ $item->quantity }}</p>
                                 </div>
+                                
                                 <p class="font-semibold text-gray-900">
                                     Rp {{ number_format($item->price * $item->quantity, 0, ',', '.') }}
                                 </p>
@@ -317,24 +363,43 @@
                         </div>
 
                         <!-- Order Footer -->
-                        <div class="p-4 bg-gray-50 border-t border-gray-100 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-                            <div>
-                                <p class="text-sm text-gray-500">Total Pesanan</p>
-                                <p class="text-lg font-bold text-amber-600">
-                                    Rp {{ number_format($order->total_amount, 0, ',', '.') }}
-                                </p>
-                            </div>
-                            <div class="flex gap-2">
-                                <a href="{{ route('customer.order-detail', $order->id) }}" 
-                                   class="px-4 py-2 bg-white border border-gray-300 rounded-lg text-sm font-semibold text-gray-700 hover:border-amber-400 hover:text-amber-600 transition-all">
-                                    Lihat Detail
-                                </a>
-                                @if($order->status == 'shipped')
-                                <a href="{{ route('customer.track-order', $order->id) }}" 
-                                   class="px-4 py-2 bg-gradient-to-r from-amber-500 to-yellow-500 text-white rounded-lg text-sm font-semibold hover:from-amber-600 hover:to-yellow-600 transition-all">
-                                    <i class="fas fa-truck mr-1"></i> Lacak
-                                </a>
-                                @endif
+                        <div class="p-4 bg-gray-50 border-t border-gray-100">
+                            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                                <div>
+                                    <p class="text-sm text-gray-500">Total Pesanan</p>
+                                    <p class="text-lg font-bold text-amber-600">
+                                        Rp {{ number_format($order->total_amount, 0, ',', '.') }}
+                                    </p>
+                                </div>
+
+                                <!-- Action Buttons -->
+                                <div class="flex flex-wrap gap-2">
+                                    <a href="{{ route('customer.order-detail', $order->id) }}" 
+                                       class="px-4 py-2 bg-white border border-gray-300 rounded-lg text-sm font-semibold text-gray-700 hover:border-amber-400 hover:text-amber-600 transition-all">
+                                        <i class="fas fa-eye mr-1"></i> Detail
+                                    </a>
+                                    
+                                    @if($order->status == 'shipped')
+                                    <a href="{{ route('customer.track-order', $order->id) }}" 
+                                       class="px-4 py-2 bg-gradient-to-r from-amber-500 to-yellow-500 text-white rounded-lg text-sm font-semibold hover:from-amber-600 hover:to-yellow-600 transition-all">
+                                        <i class="fas fa-truck mr-1"></i> Lacak
+                                    </a>
+
+                                    {{-- Confirm Receipt Button if Delivered --}}
+                                    @if($isDelivered)
+                                    <form action="{{ route('customer.confirm-received', $order->id) }}" 
+                                          method="POST" 
+                                          onsubmit="return confirm('Konfirmasi bahwa pesanan sudah diterima?')"
+                                          class="inline-block">
+                                        @csrf
+                                        <button type="submit" 
+                                                class="px-4 py-2 bg-green-500 text-white rounded-lg text-sm font-semibold hover:bg-green-600 transition-all animate-pulse">
+                                            <i class="fas fa-check-circle mr-1"></i> Konfirmasi
+                                        </button>
+                                    </form>
+                                    @endif
+                                    @endif
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -346,6 +411,7 @@
                     {{ $orders->appends(['status' => $status])->links() }}
                 </div>
                 @else
+                <!-- Empty State -->
                 <div class="profile-card p-12 text-center">
                     <div class="w-24 h-24 mx-auto bg-gray-100 rounded-full flex items-center justify-center mb-4">
                         <i class="fas fa-box-open text-gray-400 text-4xl"></i>
@@ -353,7 +419,7 @@
                     <h4 class="text-xl font-bold text-gray-900 mb-2">Belum Ada Pesanan</h4>
                     <p class="text-gray-500 mb-6">
                         @if($status)
-                            Tidak ada pesanan dengan status "{{ $status }}"
+                            Tidak ada pesanan dengan status "{{ ucfirst($status) }}"
                         @else
                             Anda belum memiliki pesanan. Mulai belanja sekarang!
                         @endif

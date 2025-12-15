@@ -163,9 +163,9 @@
                     </div>
                     <p class="text-sm text-amber-800 font-medium">Tujuan</p>
                     <p class="text-lg font-bold text-amber-900">
-                        {{ $order->shippingAddress->city->name ?? 'Kota' }}
+                        {{ $order->shippingAddress->city_name ?? 'Kota' }}
                     </p>
-                    <p class="text-sm text-amber-700">{{ $order->shippingAddress->province->name ?? '' }}</p>
+                    <p class="text-sm text-amber-700">{{ $order->shippingAddress->province_name ?? '' }}</p>
                 </div>
             </div>
         </div>
@@ -286,20 +286,49 @@
         @endif
 
         <!-- Confirm Received Button -->
-        @if($order->status == 'shipped')
+        @php
+            // Check if delivered based on tracking data OR order status
+            $isDelivered = false;
+            
+            if ($trackingData) {
+                // Check multiple indicators of delivery
+                $isDelivered = ($trackingData['delivered'] ?? false) === true
+                            || (isset($trackingData['delivery_status']['status']) && $trackingData['delivery_status']['status'] === 'DELIVERED')
+                            || (isset($trackingData['detail']['status']) && $trackingData['detail']['status'] === 'DELIVERED');
+            }
+            
+            // Show button if order is shipped OR tracking shows delivered
+            $showConfirmButton = ($order->status == 'shipped') || ($isDelivered && $order->status != 'delivered');
+        @endphp
+
+        @if($showConfirmButton)
         <div class="profile-card p-6 mb-6">
             <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
                 <div>
-                    <h4 class="font-bold text-gray-900">Sudah menerima pesanan?</h4>
-                    <p class="text-sm text-gray-500">Konfirmasi penerimaan untuk menyelesaikan pesanan</p>
+                    <h4 class="font-bold text-gray-900">
+                        @if($isDelivered)
+                            <i class="fas fa-check-circle text-green-500 mr-2"></i>
+                            Paket sudah diterima oleh {{ $trackingData['delivery_status']['pod_receiver'] ?? 'penerima' }}
+                        @else
+                            Sudah menerima pesanan?
+                        @endif
+                    </h4>
+                    <p class="text-sm text-gray-500">
+                        @if($isDelivered && isset($trackingData['delivery_status']['pod_date']))
+                            Diterima pada {{ $trackingData['delivery_status']['pod_date'] }} {{ $trackingData['delivery_status']['pod_time'] ?? '' }}
+                            <br>Konfirmasi untuk menyelesaikan pesanan
+                        @else
+                            Konfirmasi penerimaan untuk menyelesaikan pesanan
+                        @endif
+                    </p>
                 </div>
                 <form action="{{ route('customer.confirm-received', $order->id) }}" method="POST" 
-                      onsubmit="return confirm('Konfirmasi bahwa pesanan sudah diterima?')">
+                    onsubmit="return confirm('Konfirmasi bahwa pesanan sudah diterima?')">
                     @csrf
                     <button type="submit" 
                             class="w-full md:w-auto px-6 py-3 bg-green-500 text-white rounded-xl font-semibold hover:bg-green-600 transition-all">
                         <i class="fas fa-check-circle mr-2"></i>
-                        Pesanan Sudah Diterima
+                        Pesanan Diterima
                     </button>
                 </form>
             </div>

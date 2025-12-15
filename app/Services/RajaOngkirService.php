@@ -223,45 +223,68 @@ class RajaOngkirService
     public function trackWaybill(string $awb, ?string $courier = null): array
     {
         try {
-            Log::info("Tracking waybill: {$awb}, Courier: " . ($courier ?? 'auto'));
+            Log::info("=== RAJAONGKIR TRACK REQUEST ===", [
+                'awb' => $awb,
+                'courier' => $courier,
+                'url' => "{$this->baseUrl}/track/waybill"
+            ]);
             
-            $params = ['awb' => $awb];
+            // ✅ CRITICAL FIX: Build URL with query parameters
+            $url = "{$this->baseUrl}/track/waybill?awb={$awb}";
             
             if ($courier) {
-                $params['courier'] = strtolower($courier);
+                $url .= "&courier=" . strtolower($courier);
             }
             
+            Log::info('Request URL', ['url' => $url]);
+            
+            // ✅ POST request WITHOUT body, parameters in URL
             $response = Http::withHeaders([
                 'key' => $this->apiKey
-            ])->post("{$this->baseUrl}/track/waybill", $params);
+            ])->timeout(30)->post($url);
+
+            Log::info('=== HTTP RESPONSE ===', [
+                'status' => $response->status(),
+                'successful' => $response->successful(),
+            ]);
 
             if ($response->failed()) {
-                Log::error('RajaOngkir tracking failed', [
+                $errorBody = $response->body();
+                Log::error('API HTTP Failed', [
                     'status' => $response->status(),
-                    'body' => $response->body()
+                    'body' => $errorBody
                 ]);
                 
                 return [
-                    'error' => 'Gagal melacak pengiriman. Silakan coba lagi.'
+                    'error' => "HTTP {$response->status()}: Gagal melacak pengiriman"
                 ];
             }
 
             $result = $response->json();
             
-            Log::info('Tracking result:', $result);
-            
-            // Check if tracking successful
-            if (!isset($result['meta']) || $result['meta']['code'] != 200) {
-                return [
-                    'error' => $result['meta']['message'] ?? 'Data tracking tidak ditemukan'
-                ];
-            }
-            
+            Log::info('=== PARSED JSON ===', [
+                'has_meta' => isset($result['meta']),
+                'has_data' => isset($result['data']),
+                'meta_code' => $result['meta']['code'] ?? 'N/A',
+                'meta_status' => $result['meta']['status'] ?? 'N/A',
+            ]);
+
+            // ✅ Return full result
             return $result;
             
+        } catch (\Illuminate\Http\Client\ConnectionException $e) {
+            Log::error('Connection Error', [
+                'message' => $e->getMessage()
+            ]);
+            return ['error' => 'Koneksi ke server tracking gagal. Coba lagi nanti.'];
+            
         } catch (\Exception $e) {
-            Log::error('Track waybill error: ' . $e->getMessage());
-            return ['error' => 'Terjadi kesalahan saat melacak pengiriman'];
+            Log::error('=== UNEXPECTED EXCEPTION ===', [
+                'type' => get_class($e),
+                'message' => $e->getMessage(),
+            ]);
+            
+            return ['error' => 'Error: ' . $e->getMessage()];
         }
     }
 }

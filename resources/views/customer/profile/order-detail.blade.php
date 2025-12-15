@@ -166,20 +166,36 @@
                                 @break
                         @endswitch
                     </span>
-                    @if($order->status == 'shipped')
+                    @if($order->status == 'Shipped')
                     <div class="flex gap-2">
                         <a href="{{ route('customer.track-order', $order->id) }}" 
-                           class="px-4 py-2 bg-gradient-to-r from-amber-500 to-yellow-500 text-white rounded-lg text-sm font-semibold hover:from-amber-600 hover:to-yellow-600 transition-all">
+                        class="px-4 py-2 bg-gradient-to-r from-amber-500 to-yellow-500 text-white rounded-lg text-sm font-semibold hover:from-amber-600 hover:to-yellow-600 transition-all">
                             <i class="fas fa-truck mr-1"></i> Lacak Pengiriman
                         </a>
+                        
+                        @php
+                            // Check if delivered based on tracking data
+                            $isDelivered = false;
+                            if (isset($trackingData)) {
+                                $isDelivered = ($trackingData['delivered'] ?? false) === true
+                                            || (isset($trackingData['delivery_status']['status']) && $trackingData['delivery_status']['status'] === 'DELIVERED')
+                                            || (isset($trackingData['detail']['status']) && $trackingData['detail']['status'] === 'DELIVERED');
+                            }
+                            
+                            $showConfirmButton = true; // Always show for shipped status
+                        @endphp
+                        
+                        @if($showConfirmButton)
                         <form action="{{ route('customer.confirm-received', $order->id) }}" method="POST" 
-                              onsubmit="return confirm('Konfirmasi bahwa pesanan sudah diterima?')">
+                            onsubmit="return confirm('Konfirmasi bahwa pesanan sudah diterima?')">
                             @csrf
                             <button type="submit" 
-                                    class="px-4 py-2 bg-green-500 text-white rounded-lg text-sm font-semibold hover:bg-green-600 transition-all">
-                                <i class="fas fa-check mr-1"></i> Pesanan Diterima
+                                    class="px-4 py-2 {{ $isDelivered ? 'bg-green-600 animate-pulse' : 'bg-green-500' }} text-white rounded-lg text-sm font-semibold hover:bg-green-600 transition-all">
+                                <i class="fas fa-check mr-1"></i> 
+                                {{ $isDelivered ? 'Konfirmasi Diterima' : 'Pesanan Diterima' }}
                             </button>
                         </form>
+                        @endif
                     </div>
                     @endif
                 </div>

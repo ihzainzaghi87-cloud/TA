@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\Rules\Password;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class CustomerProfileController extends Controller
 {
@@ -20,15 +21,54 @@ class CustomerProfileController extends Controller
 
     public function __construct(RajaOngkirService $rajaOngkir)
     {
-        // $this->middleware('auth');
         $this->rajaOngkir = $rajaOngkir;
+    }
+
+    // ================== HELPER METHOD ==================
+    
+    /**
+     * Get tracking data for an order
+     */
+    private function getTrackingData($order)
+    {
+        if (!$order->hasTracking()) {
+            return null;
+        }
+
+        try {
+            $courierCode = $order->courier_code;
+            
+            $result = $this->rajaOngkir->trackWaybill(
+                $order->tracking_number,
+                $courierCode
+            );
+
+            if (isset($result['error'])) {
+                Log::warning('Tracking API Error', [
+                    'order_id' => $order->id,
+                    'error' => $result['error']
+                ]);
+                return null;
+            }
+
+            if (isset($result['meta']) && $result['meta']['code'] == 200 && isset($result['data'])) {
+                return $result['data'];
+            }
+
+            return null;
+        } catch (\Exception $e) {
+            Log::error('Error fetching tracking data', [
+                'order_id' => $order->id,
+                'message' => $e->getMessage()
+            ]);
+            return null;
+        }
     }
 
     // ================== PROFILE SECTION ==================
 
-    /**
-     * Display user profile
-     */
+    // ... (profile methods tetap sama) ...
+    
     public function index()
     {
         try {
@@ -47,15 +87,11 @@ class CustomerProfileController extends Controller
             ));
         } catch (\Exception $e) {
             Log::error('Error loading profile: ' . $e->getMessage());
-            dd($e->getMessage());
             return redirect()->back()
                 ->with('error', 'Gagal memuat profil');
         }
     }
 
-    /**
-     * Show edit profile form
-     */
     public function edit()
     {
         try {
@@ -68,9 +104,6 @@ class CustomerProfileController extends Controller
         }
     }
 
-    /**
-     * Update user profile
-     */
     public function update(Request $request)
     {
         try {
@@ -106,17 +139,11 @@ class CustomerProfileController extends Controller
         }
     }
 
-    /**
-     * Show change password form
-     */
     public function showChangePasswordForm()
     {
         return view('customer.profile.change-password');
     }
 
-    /**
-     * Update user password
-     */
     public function updatePassword(Request $request)
     {
         try {
@@ -132,14 +159,12 @@ class CustomerProfileController extends Controller
 
             $user = Auth::user();
 
-            // Check if current password is correct
             if (!Hash::check($validated['current_password'], $user->password)) {
                 return redirect()->back()
                     ->withErrors(['current_password' => 'Password lama tidak sesuai'])
                     ->withInput();
             }
 
-            // Update password
             $user->update([
                 'password' => Hash::make($validated['password'])
             ]);
@@ -159,9 +184,6 @@ class CustomerProfileController extends Controller
 
     // ================== POINTS SECTION ==================
 
-    /**
-     * Display user points overview
-     */
     public function points()
     {
         try {
@@ -171,14 +193,12 @@ class CustomerProfileController extends Controller
                 ['total_points' => 0]
             );
 
-            // Get recent transactions (last 5)
             $recentTransactions = PointTransaction::where('user_id', $user->id)
                 ->with('transactionable')
                 ->orderBy('created_at', 'desc')
                 ->limit(5)
                 ->get();
 
-            // Calculate statistics
             $totalEarned = PointTransaction::where('user_id', $user->id)
                 ->where('type', 'earned')
                 ->sum('points');
@@ -200,27 +220,22 @@ class CustomerProfileController extends Controller
         }
     }
 
-    /**
-     * Display point transactions history
-     */
     public function pointTransactions(Request $request)
     {
         try {
             $user = Auth::user();
-            $type = $request->input('type'); // 'earned', 'redeemed', or 'all'
+            $type = $request->input('type');
 
             $query = PointTransaction::where('user_id', $user->id)
                 ->with('transactionable')
                 ->orderBy('created_at', 'desc');
 
-            // Filter by type if specified
             if ($type && in_array($type, ['earned', 'redeemed', 'refund'])) {
                 $query->where('type', $type);
             }
 
             $transactions = $query->paginate(20);
 
-            // Get current balance
             $userPoint = UserPoint::where('user_id', $user->id)->first();
             $currentBalance = $userPoint ? $userPoint->total_points : 0;
 
@@ -239,18 +254,17 @@ class CustomerProfileController extends Controller
     // ================== ORDER SECTION ==================
 
     /**
-     * Display order history
+     * Display order history WITH TRACKING DATA
      */
     public function orders(Request $request)
     {
         try {
-            $status = $request->input('status'); // Filter by status
+            $status = $request->input('status');
 
             $query = Order::with(['orderItems.variation.product.images', 'shippingAddress'])
                 ->where('user_id', Auth::id())
                 ->orderBy('created_at', 'desc');
 
-            // Filter by status if specified
             if ($status && in_array($status, [
                 Order::STATUS_PENDING,
                 Order::STATUS_PROCESSING,
@@ -263,7 +277,14 @@ class CustomerProfileController extends Controller
 
             $orders = $query->paginate(10);
 
-            // Get order statistics
+            // ✅ ADD TRACKING DATA TO EACH ORDER
+            foreach ($orders as $order) {
+                $order->trackingData = null;
+                if ($order->status == Order::STATUS_SHIPPED && $order->hasTracking()) {
+                    $order->trackingData = $this->getTrackingData($order);
+                }
+            }
+
             $orderStats = [
                 'total' => Order::where('user_id', Auth::id())->count(),
                 'pending' => Order::where('user_id', Auth::id())->where('status', Order::STATUS_PENDING)->count(),
@@ -281,7 +302,7 @@ class CustomerProfileController extends Controller
     }
 
     /**
-     * Display order detail
+     * Display order detail WITH TRACKING DATA
      */
     public function orderDetail($orderId)
     {
@@ -294,7 +315,13 @@ class CustomerProfileController extends Controller
                 ->where('user_id', Auth::id())
                 ->findOrFail($orderId);
 
-            return view('customer.profile.order-detail', compact('order'));
+            // ✅ ADD TRACKING DATA
+            $trackingData = null;
+            if ($order->status == Order::STATUS_SHIPPED && $order->hasTracking()) {
+                $trackingData = $this->getTrackingData($order);
+            }
+
+            return view('customer.profile.order-detail', compact('order', 'trackingData'));
         } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
             Log::error("Order not found: {$orderId} for user: " . Auth::id());
             return redirect()->route('profile.orders')
@@ -316,36 +343,78 @@ class CustomerProfileController extends Controller
                 'orderItems.variation.product.images',
                 'shippingAddress'
             ])
-                ->where('user_id', Auth::id())
-                ->findOrFail($orderId);
+            ->where('user_id', Auth::id())
+            ->findOrFail($orderId);
 
-            // Check if order has tracking information
             if (!$order->hasTracking()) {
-                return redirect()->route('profile.order-detail', $orderId)
-                    ->with('error', 'Nomor resi belum tersedia. Pesanan belum dikirim.');
+                return redirect()->route('customer.order-detail', $orderId)
+                            ->with('error', 'Nomor resi belum tersedia. Pesanan belum dikirim.');
             }
 
-            // Get tracking data from RajaOngkir
+            $courierCode = $order->courier_code;
+            
+            Log::info('=== TRACKING ORDER ===', [
+                'order_id' => $orderId,
+                'tracking_number' => $order->tracking_number,
+                'courier_raw' => $order->courier,
+                'courier_code' => $courierCode,
+                'status' => $order->status
+            ]);
+
             $trackingData = null;
+            
             try {
-                $trackingData = $this->rajaOngkir->trackWaybill(
-                    $order->getCourierForTracking(),
-                    $order->tracking_number
+                $result = $this->rajaOngkir->trackWaybill(
+                    $order->tracking_number,
+                    $courierCode
                 );
+
+                Log::info('=== API RAW RESPONSE ===', $result);
+
+                if (isset($result['error'])) {
+                    Log::error('API Error', ['error' => $result['error']]);
+                    session()->flash('warning', 'Gagal mengambil data tracking: ' . $result['error']);
+                }
+                elseif (isset($result['meta']) && isset($result['data'])) {
+                    if ($result['meta']['code'] == 200) {
+                        $trackingData = $result['data'];
+                        Log::info('SUCCESS: Tracking data extracted', [
+                            'has_manifest' => isset($trackingData['manifest']),
+                            'manifest_count' => isset($trackingData['manifest']) ? count($trackingData['manifest']) : 0
+                        ]);
+                    } else {
+                        Log::warning('API returned non-200 code', [
+                            'code' => $result['meta']['code'],
+                            'message' => $result['meta']['message'] ?? 'Unknown'
+                        ]);
+                        session()->flash('warning', $result['meta']['message'] ?? 'Data tracking tidak ditemukan');
+                    }
+                } else {
+                    Log::error('Unexpected API response structure', [
+                        'keys' => array_keys($result)
+                    ]);
+                }
+
             } catch (\Exception $e) {
-                Log::error('Error tracking shipment: ' . $e->getMessage());
-                // Continue without tracking data
+                Log::error('=== TRACKING EXCEPTION ===', [
+                    'message' => $e->getMessage(),
+                    'file' => $e->getFile(),
+                    'line' => $e->getLine()
+                ]);
             }
 
             return view('customer.profile.track-order', compact('order', 'trackingData'));
-        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
-            Log::error("Order not found for tracking: {$orderId} for user: " . Auth::id());
-            return redirect()->route('profile.orders')
-                ->with('error', 'Pesanan tidak ditemukan');
+
+        } catch (ModelNotFoundException $e) {
+            return redirect()->route('customer.orders')
+                        ->with('error', 'Pesanan tidak ditemukan');
         } catch (\Exception $e) {
-            Log::error('Error loading order tracking: ' . $e->getMessage());
-            return redirect()->route('profile.order-detail', $orderId)
-                ->with('error', 'Gagal memuat informasi pengiriman');
+            Log::error('Error loading order tracking', [
+                'message' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+            return redirect()->route('customer.order-detail', $orderId)
+                        ->with('error', 'Gagal memuat informasi pengiriman');
         }
     }
 
@@ -380,12 +449,7 @@ class CustomerProfileController extends Controller
     }
 
     // ================== ADDRESS SECTION ==================
-    // Note: User address management is handled by UserAddressController
-    // This method just redirects to the address management page
 
-    /**
-     * Redirect to address management
-     */
     public function addresses()
     {
         return redirect()->route('addresses.index');
