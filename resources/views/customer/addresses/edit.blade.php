@@ -2,187 +2,327 @@
 
 @section('title', 'Edit Alamat')
 
+@push('styles')
+<style>
+    .profile-card {
+        background: #fff;
+        border: 1px solid #e5e7eb;
+        border-radius: 16px;
+        transition: all 0.3s ease;
+    }
+
+    .profile-card:hover {
+        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.1);
+    }
+
+    .menu-item {
+        display: flex;
+        align-items: center;
+        padding: 16px 20px;
+        border-radius: 12px;
+        transition: all 0.2s ease;
+        color: #374151;
+    }
+
+    .menu-item:hover {
+        background: #fffbeb;
+        color: #92400e;
+    }
+
+    .menu-item.active {
+        background: #FAD470;
+        color: #92400e;
+        font-weight: 600;
+    }
+
+    .avatar-ring {
+        background: linear-gradient(135deg, #FAD470 0%, #F8B500 100%);
+    }
+
+    .form-input {
+        width: 100%;
+        padding: 12px 16px;
+        border: 1px solid #e5e7eb;
+        border-radius: 12px;
+        font-size: 14px;
+        transition: all 0.2s ease;
+    }
+
+    .form-input:focus {
+        outline: none;
+        border-color: #FAD470;
+        box-shadow: 0 0 0 3px rgba(250, 212, 112, 0.2);
+    }
+
+    .form-input:disabled {
+        background-color: #f9fafb;
+    }
+
+    .form-label {
+        display: block;
+        font-size: 14px;
+        font-weight: 500;
+        color: #374151;
+        margin-bottom: 8px;
+    }
+
+    .form-label .required {
+        color: #ef4444;
+    }
+</style>
+@endpush
+
 @section('content')
-<div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-    <div class="mb-8">
-        <a href="{{ route('addresses.index') }}" class="text-gray-500 hover:text-purple-600 transition mb-4 inline-flex items-center gap-2">
-            <i class="fas fa-arrow-left"></i> Kembali ke Daftar Alamat
-        </a>
-        <h1 class="text-3xl font-bold text-gray-900">Edit Alamat</h1>
-    </div>
+<div class="min-h-screen bg-gray-50 py-8">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <!-- Breadcrumb -->
+        <nav class="flex items-center mb-8 text-sm">
+            <a href="{{ route('home') }}" class="text-gray-500 hover:text-amber-600 transition-colors">
+                <i class="fas fa-home"></i>
+            </a>
+            <i class="fas fa-chevron-right text-gray-300 mx-3 text-xs"></i>
+            <a href="{{ route('customer.index') }}" class="text-gray-500 hover:text-amber-600 transition-colors">
+                Profil
+            </a>
+            <i class="fas fa-chevron-right text-gray-300 mx-3 text-xs"></i>
+            <a href="{{ route('addresses.index') }}" class="text-gray-500 hover:text-amber-600 transition-colors">
+                Alamat
+            </a>
+            <i class="fas fa-chevron-right text-gray-300 mx-3 text-xs"></i>
+            <span class="text-gray-900 font-medium">Edit</span>
+        </nav>
 
-    <div class="bg-white rounded-3xl shadow-xl border border-gray-100 p-8">
-        <form action="{{ route('addresses.update', $address->id) }}" method="POST" class="space-y-6">
-            @csrf
-            @method('PUT')
+        <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
+            <!-- Sidebar Menu -->
+            <div class="lg:col-span-1">
+                <div class="profile-card p-6">
+                    <!-- User Avatar & Info -->
+                    <div class="text-center mb-6">
+                        <div class="w-24 h-24 mx-auto avatar-ring rounded-full flex items-center justify-center text-white text-3xl font-bold mb-4">
+                            {{ strtoupper(substr(auth()->user()->name, 0, 1)) }}
+                        </div>
+                        <h2 class="text-xl font-bold text-gray-900">{{ auth()->user()->name }}</h2>
+                        <p class="text-gray-500 text-sm">{{ auth()->user()->email }}</p>
+                    </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {{-- Label Alamat --}}
-                <div class="md:col-span-2">
-                    <label for="label" class="block text-sm font-medium text-gray-700 mb-2">Label Alamat (Opsional)</label>
-                    <input type="text" name="label" id="label" value="{{ old('label', $address->label) }}" 
-                           class="w-full rounded-xl border-gray-300 focus:border-purple-500 focus:ring-purple-500"
-                           placeholder="Contoh: Rumah, Kantor, Apartemen">
-                    @error('label')
-                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                    @enderror
-                </div>
-
-                {{-- Nama Penerima --}}
-                <div>
-                    <label for="recipient_name" class="block text-sm font-medium text-gray-700 mb-2">Nama Penerima <span class="text-red-500">*</span></label>
-                    <input type="text" name="recipient_name" id="recipient_name" value="{{ old('recipient_name', $address->recipient_name) }}" required
-                           class="w-full rounded-xl border-gray-300 focus:border-purple-500 focus:ring-purple-500">
-                    @error('recipient_name')
-                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                    @enderror
-                </div>
-
-                {{-- Nomor Telepon --}}
-                <div>
-                    <label for="phone" class="block text-sm font-medium text-gray-700 mb-2">Nomor Telepon <span class="text-red-500">*</span></label>
-                    <input type="tel" name="phone" id="phone" value="{{ old('phone', $address->phone) }}" required
-                           class="w-full rounded-xl border-gray-300 focus:border-purple-500 focus:ring-purple-500">
-                    @error('phone')
-                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                    @enderror
-                </div>
-
-                {{-- Provinsi --}}
-                <div>
-                    <label for="province_id" class="block text-sm font-medium text-gray-700 mb-2">
-                        Provinsi <span class="text-red-500">*</span>
-                    </label>
-                    <select name="province_id" id="province_id" required
-                            class="w-full rounded-xl border-gray-300 focus:border-purple-500 focus:ring-purple-500">
-                        <option value="">Pilih Provinsi</option>
-                        @if(!empty($provinces) && is_array($provinces))
-                            @foreach($provinces as $province)
-                                @php
-                                    // Check if it's an array
-                                    if (is_array($province)) {
-                                        $provinceId = $province['province_id'] ?? 
-                                                    $province['id'] ?? 
-                                                    ($province['provinceId'] ?? '');
-                                        
-                                        $provinceName = $province['province'] ?? 
-                                                    $province['name'] ?? 
-                                                    ($province['province_name'] ?? 'Unknown Province');
-                                    } else {
-                                        // If it's an object
-                                        $provinceId = $province->province_id ?? 
-                                                    $province->id ?? 
-                                                    ($province->provinceId ?? '');
-                                        
-                                        $provinceName = $province->province ?? 
-                                                    $province->name ?? 
-                                                    ($province->province_name ?? 'Unknown Province');
-                                    }
-                                @endphp
-                                
-                                @if($provinceId && $provinceName !== 'Unknown Province')
-                                    <option value="{{ $provinceId }}" {{ old('province_id', $address->province_id) == $provinceId ? 'selected' : '' }}>
-                                        {{ $provinceName }}
-                                    </option>
-                                @endif
-                            @endforeach
-                        @else
-                            <option value="">Gagal memuat provinsi - Coba refresh halaman</option>
-                        @endif
-                    </select>
-                    <input type="hidden" name="province_name" id="province_name" value="{{ old('province_name', $address->province_name) }}">
-                    @error('province_id')
-                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                    @enderror
-                </div>
-
-                {{-- Kota/Kabupaten --}}
-                <div>
-                    <label for="city_id" class="block text-sm font-medium text-gray-700 mb-2">Kota/Kabupaten <span class="text-red-500">*</span></label>
-                    <select name="city_id" id="city_id" required
-                            class="w-full rounded-xl border-gray-300 focus:border-purple-500 focus:ring-purple-500">
-                        <option value="">Pilih Kota/Kabupaten</option>
-                        @if(!empty($cities) && is_array($cities))
-                            @foreach($cities as $city)
-                                @php
-                                    // ✅ COMPLETE HANDLING with type
-                                    if (is_array($city)) {
-                                        $cityId = $city['city_id'] ?? $city['id'] ?? '';
-                                        $cityType = $city['type'] ?? '';  // ✅ ADD THIS
-                                        $cityName = $city['city_name'] ?? $city['name'] ?? 'Unknown City';
-                                    } else {
-                                        $cityId = $city->city_id ?? $city->id ?? '';
-                                        $cityType = $city->type ?? '';  // ✅ ADD THIS
-                                        $cityName = $city->city_name ?? $city->name ?? 'Unknown City';
-                                    }
-                                    
-                                    // Format display name
-                                    $displayName = trim(($cityType ? $cityType . ' ' : '') . $cityName);
-                                @endphp
-                                
-                                @if($cityId)
-                                    <option value="{{ $cityId }}" {{ old('city_id', $address->city_id) == $cityId ? 'selected' : '' }}>
-                                        {{ $displayName }}
-                                    </option>
-                                @endif
-                            @endforeach
-                        @endif
-                    </select>
-                    <input type="hidden" name="city_name" id="city_name" value="{{ old('city_name', $address->city_name) }}">
-                    @error('city_id')
-                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                    @enderror
-                </div>
-
-
-                {{-- Kode Pos --}}
-                <div>
-                    <label for="postal_code" class="block text-sm font-medium text-gray-700 mb-2">Kode Pos (Opsional)</label>
-                    <input type="text" name="postal_code" id="postal_code" value="{{ old('postal_code', $address->postal_code) }}"
-                           class="w-full rounded-xl border-gray-300 focus:border-purple-500 focus:ring-purple-500">
-                    @error('postal_code')
-                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                    @enderror
-                </div>
-
-                {{-- Alamat Lengkap --}}
-                <div class="md:col-span-2">
-                    <label for="address" class="block text-sm font-medium text-gray-700 mb-2">Alamat Lengkap <span class="text-red-500">*</span></label>
-                    <textarea name="address" id="address" rows="3" required
-                              class="w-full rounded-xl border-gray-300 focus:border-purple-500 focus:ring-purple-500"
-                              placeholder="Nama Jalan, No. Rumah, RT/RW, Kelurahan, Kecamatan">{{ old('address', $address->address) }}</textarea>
-                    @error('address')
-                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                    @enderror
-                </div>
-
-                {{-- Catatan --}}
-                <div class="md:col-span-2">
-                    <label for="note" class="block text-sm font-medium text-gray-700 mb-2">Catatan (Opsional)</label>
-                    <input type="text" name="note" id="note" value="{{ old('note', $address->note) }}"
-                           class="w-full rounded-xl border-gray-300 focus:border-purple-500 focus:ring-purple-500"
-                           placeholder="Warna rumah, patokan, dll">
-                </div>
-
-                {{-- Jadikan Utama --}}
-                <div class="md:col-span-2">
-                    <label class="inline-flex items-center gap-3">
-                        <input type="checkbox" name="is_primary" value="1" {{ old('is_primary', $address->is_primary) ? 'checked' : '' }}
-                               class="w-5 h-5 rounded border-gray-300 text-purple-600 focus:ring-purple-500">
-                        <span class="text-gray-700 font-medium">Jadikan sebagai alamat utama</span>
-                    </label>
+                    <!-- Menu Navigation -->
+                    <nav class="space-y-2">
+                        <a href="{{ route('customer.index') }}" class="menu-item">
+                            <i class="fas fa-user w-5 mr-3"></i>
+                            <span>Profil Saya</span>
+                        </a>
+                        <a href="{{ route('customer.points') }}" class="menu-item">
+                            <i class="fas fa-coins w-5 mr-3"></i>
+                            <span>Poin Saya</span>
+                        </a>
+                        <a href="{{ route('customer.orders') }}" class="menu-item">
+                            <i class="fas fa-box w-5 mr-3"></i>
+                            <span>Pesanan Saya</span>
+                        </a>
+                        <a href="{{ route('addresses.index') }}" class="menu-item active">
+                            <i class="fas fa-map-marker-alt w-5 mr-3"></i>
+                            <span>Alamat</span>
+                        </a>
+                        <a href="{{ route('customer.change-password') }}" class="menu-item">
+                            <i class="fas fa-lock w-5 mr-3"></i>
+                            <span>Ubah Password</span>
+                        </a>
+                        <form method="POST" action="{{ route('logout') }}" class="mt-4">
+                            @csrf
+                            <button type="submit" class="menu-item w-full text-red-600 hover:bg-red-50 hover:text-red-700">
+                                <i class="fas fa-sign-out-alt w-5 mr-3"></i>
+                                <span>Logout</span>
+                            </button>
+                        </form>
+                    </nav>
                 </div>
             </div>
 
-            <div class="pt-6 border-t border-gray-100 flex justify-end gap-4">
-                <a href="{{ route('addresses.index') }}" class="px-6 py-3 rounded-full border border-gray-300 text-gray-700 font-semibold hover:bg-gray-50 transition">
-                    Batal
-                </a>
-                <button type="submit" class="px-6 py-3 rounded-full bg-gradient-to-r from-purple-600 to-pink-600 text-white font-semibold hover:from-purple-700 hover:to-pink-700 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition">
-                    Simpan Perubahan
-                </button>
+            <!-- Main Content -->
+            <div class="lg:col-span-3">
+                <div class="profile-card p-6 md:p-8">
+                    <!-- Header -->
+                    <div class="flex items-center gap-4 mb-8">
+                        <a href="{{ route('addresses.index') }}" 
+                           class="w-10 h-10 bg-gray-100 hover:bg-amber-100 rounded-lg flex items-center justify-center text-gray-600 hover:text-amber-600 transition-colors">
+                            <i class="fas fa-arrow-left"></i>
+                        </a>
+                        <div>
+                            <h1 class="text-2xl font-bold text-gray-900">Edit Alamat</h1>
+                            <p class="text-gray-500 text-sm">Ubah detail alamat pengiriman Anda</p>
+                        </div>
+                        @if($address->is_primary)
+                            <span class="ml-auto inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-amber-100 text-amber-800">
+                                <i class="fas fa-star mr-1"></i> Alamat Utama
+                            </span>
+                        @endif
+                    </div>
+
+                    <form action="{{ route('addresses.update', $address->id) }}" method="POST">
+                        @csrf
+                        @method('PUT')
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            {{-- Label Alamat --}}
+                            <div class="md:col-span-2">
+                                <label for="label" class="form-label">Label Alamat (Opsional)</label>
+                                <input type="text" name="label" id="label" value="{{ old('label', $address->label) }}" 
+                                       class="form-input"
+                                       placeholder="Contoh: Rumah, Kantor, Apartemen">
+                                @error('label')
+                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                @enderror
+                            </div>
+
+                            {{-- Nama Penerima --}}
+                            <div>
+                                <label for="recipient_name" class="form-label">
+                                    Nama Penerima <span class="required">*</span>
+                                </label>
+                                <input type="text" name="recipient_name" id="recipient_name" value="{{ old('recipient_name', $address->recipient_name) }}" required
+                                       class="form-input" placeholder="Nama lengkap penerima">
+                                @error('recipient_name')
+                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                @enderror
+                            </div>
+
+                            {{-- Nomor Telepon --}}
+                            <div>
+                                <label for="phone" class="form-label">
+                                    Nomor Telepon <span class="required">*</span>
+                                </label>
+                                <input type="tel" name="phone" id="phone" value="{{ old('phone', $address->phone) }}" required
+                                       class="form-input" placeholder="08xxxxxxxxxx">
+                                @error('phone')
+                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                @enderror
+                            </div>
+
+                            {{-- Provinsi --}}
+                            <div>
+                                <label for="province_id" class="form-label">
+                                    Provinsi <span class="required">*</span>
+                                </label>
+                                <select name="province_id" id="province_id" required class="form-input">
+                                    <option value="">Pilih Provinsi</option>
+                                    @if(!empty($provinces) && is_array($provinces))
+                                        @foreach($provinces as $province)
+                                            @php
+                                                if (is_array($province)) {
+                                                    $provinceId = $province['province_id'] ?? $province['id'] ?? ($province['provinceId'] ?? '');
+                                                    $provinceName = $province['province'] ?? $province['name'] ?? ($province['province_name'] ?? 'Unknown Province');
+                                                } else {
+                                                    $provinceId = $province->province_id ?? $province->id ?? ($province->provinceId ?? '');
+                                                    $provinceName = $province->province ?? $province->name ?? ($province->province_name ?? 'Unknown Province');
+                                                }
+                                            @endphp
+                                            @if($provinceId && $provinceName !== 'Unknown Province')
+                                                <option value="{{ $provinceId }}" {{ old('province_id', $address->province_id) == $provinceId ? 'selected' : '' }}>
+                                                    {{ $provinceName }}
+                                                </option>
+                                            @endif
+                                        @endforeach
+                                    @else
+                                        <option value="">Gagal memuat provinsi - Coba refresh halaman</option>
+                                    @endif
+                                </select>
+                                <input type="hidden" name="province_name" id="province_name" value="{{ old('province_name', $address->province_name) }}">
+                                @error('province_id')
+                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                @enderror
+                            </div>
+
+                            {{-- Kota/Kabupaten --}}
+                            <div>
+                                <label for="city_id" class="form-label">
+                                    Kota/Kabupaten <span class="required">*</span>
+                                </label>
+                                <select name="city_id" id="city_id" required class="form-input">
+                                    <option value="">Pilih Kota/Kabupaten</option>
+                                    @if(!empty($cities) && is_array($cities))
+                                        @foreach($cities as $city)
+                                            @php
+                                                if (is_array($city)) {
+                                                    $cityId = $city['city_id'] ?? $city['id'] ?? '';
+                                                    $cityType = $city['type'] ?? '';
+                                                    $cityName = $city['city_name'] ?? $city['name'] ?? '';
+                                                } else {
+                                                    $cityId = $city->city_id ?? $city->id ?? '';
+                                                    $cityType = $city->type ?? '';
+                                                    $cityName = $city->city_name ?? $city->name ?? '';
+                                                }
+                                                $displayName = $cityType ? "{$cityType} {$cityName}" : $cityName;
+                                            @endphp
+                                            @if($cityId)
+                                                <option value="{{ $cityId }}" {{ old('city_id', $address->city_id) == $cityId ? 'selected' : '' }}>
+                                                    {{ $displayName }}
+                                                </option>
+                                            @endif
+                                        @endforeach
+                                    @endif
+                                </select>
+                                <input type="hidden" name="city_name" id="city_name" value="{{ old('city_name', $address->city_name) }}">
+                                @error('city_id')
+                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                @enderror
+                            </div>
+
+                            {{-- Kode Pos --}}
+                            <div>
+                                <label for="postal_code" class="form-label">Kode Pos (Opsional)</label>
+                                <input type="text" name="postal_code" id="postal_code" value="{{ old('postal_code', $address->postal_code) }}"
+                                       class="form-input" placeholder="Kode pos">
+                                @error('postal_code')
+                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                @enderror
+                            </div>
+
+                            {{-- Alamat Lengkap --}}
+                            <div class="md:col-span-2">
+                                <label for="address" class="form-label">
+                                    Alamat Lengkap <span class="required">*</span>
+                                </label>
+                                <textarea name="address" id="address" rows="3" required
+                                          class="form-input"
+                                          placeholder="Nama Jalan, No. Rumah, RT/RW, Kelurahan, Kecamatan">{{ old('address', $address->address) }}</textarea>
+                                @error('address')
+                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                @enderror
+                            </div>
+
+                            {{-- Catatan --}}
+                            <div class="md:col-span-2">
+                                <label for="note" class="form-label">Catatan (Opsional)</label>
+                                <input type="text" name="note" id="note" value="{{ old('note', $address->note) }}"
+                                       class="form-input"
+                                       placeholder="Warna rumah, patokan, dll">
+                            </div>
+
+                            {{-- Jadikan Utama --}}
+                            <div class="md:col-span-2">
+                                <label class="inline-flex items-center gap-3 cursor-pointer">
+                                    <input type="checkbox" name="is_primary" value="1" {{ old('is_primary', $address->is_primary) ? 'checked' : '' }}
+                                           class="w-5 h-5 rounded border-gray-300 text-amber-500 focus:ring-amber-500">
+                                    <span class="text-gray-700 font-medium">Jadikan sebagai alamat utama</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="mt-8 pt-6 border-t border-gray-100 flex flex-col sm:flex-row justify-end gap-4">
+                            <a href="{{ route('addresses.index') }}" 
+                               class="px-6 py-3 rounded-xl border border-gray-300 text-gray-700 font-semibold hover:bg-gray-50 transition text-center">
+                                Batal
+                            </a>
+                            <button type="submit" 
+                                    class="px-6 py-3 rounded-xl bg-gradient-to-r from-amber-500 to-yellow-500 text-white font-semibold hover:from-amber-600 hover:to-yellow-600 shadow-lg hover:shadow-xl transition">
+                                <i class="fas fa-save mr-2"></i>
+                                Simpan Perubahan
+                            </button>
+                        </div>
+                    </form>
+                </div>
             </div>
-        </form>
+        </div>
     </div>
 </div>
 @endsection
@@ -196,7 +336,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const cityNameInput = document.getElementById('city_name');
     const oldCityId = "{{ old('city_id') }}";
 
-    // Function to update hidden names
     function updateHiddenNames() {
         if (provinceSelect.selectedIndex >= 0) {
             provinceNameInput.value = provinceSelect.options[provinceSelect.selectedIndex].text.trim();
@@ -206,12 +345,10 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // Function to load cities
     function loadCities(provinceId, selectedCityId = null) {
         if (!provinceId) {
             citySelect.innerHTML = '<option value="">Pilih Provinsi Terlebih Dahulu</option>';
             citySelect.disabled = true;
-            citySelect.classList.add('bg-gray-50');
             return;
         }
 
@@ -221,20 +358,36 @@ document.addEventListener('DOMContentLoaded', function() {
         fetch(`/api/provinces/${provinceId}/cities`)
             .then(response => response.json())
             .then(response => {
-                const cities = response.data || response; // Handle wrapped or direct array
-                citySelect.innerHTML = '<option value="">Pilih Kota/Kabupaten</option>';
+                let cities = [];
                 
-                if (Array.isArray(cities)) {
-                    cities.forEach(city => {
-                        const isSelected = selectedCityId == city.city_id ? 'selected' : '';
-                        citySelect.innerHTML += `<option value="${city.city_id}" ${isSelected}>${city.type} ${city.name}</option>`;
-                    });
+                if (response.success && response.data) {
+                    cities = Array.isArray(response.data) ? response.data : [];
+                } else if (Array.isArray(response)) {
+                    cities = response;
+                } else if (response.data && Array.isArray(response.data)) {
+                    cities = response.data;
                 }
                 
-                citySelect.disabled = false;
-                citySelect.classList.remove('bg-gray-50');
+                if (cities.length === 0) {
+                    citySelect.innerHTML = '<option value="">Tidak ada kota ditemukan</option>';
+                    return;
+                }
                 
-                // Update hidden name for city
+                citySelect.innerHTML = '<option value="">Pilih Kota/Kabupaten</option>';
+                
+                cities.forEach(city => {
+                    const cityId = city.city_id || city.id || city.cityId || '';
+                    const cityType = city.type || '';
+                    const cityName = city.city_name || city.name || city.cityName || '';
+                    
+                    if (cityId) {
+                        const isSelected = selectedCityId == cityId ? 'selected' : '';
+                        const displayName = cityType ? `${cityType} ${cityName}` : cityName;
+                        citySelect.innerHTML += `<option value="${cityId}" ${isSelected}>${displayName}</option>`;
+                    }
+                });
+                
+                citySelect.disabled = false;
                 updateHiddenNames();
             })
             .catch(error => {
@@ -243,29 +396,22 @@ document.addEventListener('DOMContentLoaded', function() {
             });
     }
 
-    // Event listener for province change
     provinceSelect.addEventListener('change', function() {
         updateHiddenNames();
         loadCities(this.value);
     });
     
-    // Event listener for city change
     citySelect.addEventListener('change', function() {
         updateHiddenNames();
     });
 
-    // Check if we need to reload cities (e.g. validation error with different province)
-    // If the rendered options don't match the selected province (which is rare unless validation error changed province but not city list)
-    // Actually, to be safe and consistent with Create, we can just rely on PHP for initial load
-    // BUT if validation failed and province changed, PHP $cities is wrong.
-    // So we should check if the selected province is different from the address province.
+    // Check if province changed (validation error case)
     const originalProvinceId = "{{ $address->province_id }}";
     if (provinceSelect.value != originalProvinceId) {
         loadCities(provinceSelect.value, oldCityId);
+    } else {
+        updateHiddenNames();
     }
-
-    // Initial population of hidden inputs
-    updateHiddenNames();
 });
 </script>
 @endpush
