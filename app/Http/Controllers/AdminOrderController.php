@@ -7,6 +7,7 @@ use App\Models\Order;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use App\Services\RajaOngkirService;
 use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware as ControllerMiddleware;
 
@@ -30,6 +31,13 @@ class AdminOrderController extends Controller
             // SHOW DETAIL order
             (new ControllerMiddleware('permission:orders.view'))->only(['show']),
         ];
+    }
+
+    protected $rajaOngkir;
+
+    public function __construct(RajaOngkirService $rajaOngkir)
+    {
+        $this->rajaOngkir = $rajaOngkir;
     }
 
     /**
@@ -77,7 +85,24 @@ class AdminOrderController extends Controller
             'orderItems.variation.product.images'
         ]);
 
-        return view('admin.orders.show', compact('order'));
+        // AMBIL TRACKING DATA untuk status Shipped atau Delivered
+        $trackingData = null;
+        if (in_array($order->status, ['Shipped', 'Delivered']) && $order->hasTracking()) {
+            $trackingData = $this->getTrackingData($order);
+            
+            // DEBUG: Log tracking data untuk troubleshooting
+            Log::info('Admin Order Tracking', [
+                'order_id' => $order->id,
+                'status' => $order->status,
+                'has_tracking' => $order->hasTracking(),
+                'tracking_number' => $order->tracking_number,
+                'courier' => $order->courier,
+                'has_trackingData' => !is_null($trackingData),
+                'manifest_count' => isset($trackingData['manifest']) ? count($trackingData['manifest']) : 0
+            ]);
+        }
+
+        return view('admin.orders.show', compact('order', 'trackingData'));
     }
 
     /**
@@ -170,5 +195,98 @@ class AdminOrderController extends Controller
         $order->update(['status' => $validated['status']]);
 
         return redirect()->back()->with('success', 'Status pesanan berhasil diupdate');
+    }
+
+    private function getTrackingData($order)
+    {
+        if (!$order->hasTracking()) {
+            return null;
+        }
+
+        try {
+            // EXTRACT COURIER CODE dengan fallback
+            $courierCode = $this->extractCourierCode($order->courier);
+            
+            Log::info('Fetching tracking data', [
+                'order_id' => $order->id,
+                'tracking_number' => $order->tracking_number,
+                'courier_raw' => $order->courier,
+                'courier_code' => $courierCode
+            ]);
+
+            $result = $this->rajaOngkir->trackWaybill(
+                $order->tracking_number,
+                $courierCode
+            );
+
+            if (isset($result['error'])) {
+                Log::warning('Tracking API Error', [
+                    'order_id' => $order->id,
+                    'error' => $result['error']
+                ]);
+                return null;
+            }
+
+            if (isset($result['meta']) && $result['meta']['code'] == 200 && isset($result['data'])) {
+                Log::info('Tracking data retrieved successfully', [
+                    'order_id' => $order->id,
+                    'has_manifest' => isset($result['data']['manifest'])
+                ]);
+                return $result['data'];
+            }
+
+            Log::warning('Tracking API returned unexpected response', [
+                'order_id' => $order->id,
+                'response_keys' => array_keys($result)
+            ]);
+            return null;
+
+        } catch (\Exception $e) {
+            Log::error('Error fetching tracking data', [
+                'order_id' => $order->id,
+                'message' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+            return null;
+        }
+    }
+
+    private function extractCourierCode($courier)
+    {
+        if (!$courier) {
+            return null;
+        }
+
+        // Jika sudah dalam format yang benar (jne, tiki, pos, dll)
+        $courier = strtolower(trim($courier));
+        
+        // Mapping untuk berbagai format courier
+        $courierMap = [
+            'jne' => 'jne',
+            'pos indonesia' => 'pos',
+            'pos' => 'pos',
+            'tiki' => 'tiki',
+            'jnt' => 'jnt',
+            'j&t' => 'jnt',
+            'sicepat' => 'sicepat',
+            'anteraja' => 'anteraja',
+            'ninja' => 'ninja',
+            'lion' => 'lion',
+            'pcp' => 'pcp',
+            'sap' => 'sap',
+            'jet' => 'jet',
+            'dse' => 'dse',
+            'first' => 'first',
+        ];
+
+        // Cek apakah ada match di mapping
+        foreach ($courierMap as $key => $code) {
+            if (strpos($courier, $key) !== false) {
+                return $code;
+            }
+        }
+
+        // Default return courier as is
+        return $courier;
     }
 }
