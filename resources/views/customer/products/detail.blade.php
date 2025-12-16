@@ -447,7 +447,7 @@
                                 <i class="fas fa-ruler mr-2 text-amber-500"></i>
                                 Pilih Ukuran
                             </label>
-                            <div class="flex flex-wrap gap-2">
+                            <div class="flex flex-wrap gap-2 mb-3">
                                 @foreach($sizes as $size)
                                 <button type="button"
                                         class="variation-btn px-5 py-2.5 rounded-xl text-sm font-medium {{ request('size') == $size ? 'selected' : '' }}"

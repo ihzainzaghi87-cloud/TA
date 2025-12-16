@@ -361,7 +361,7 @@
                                     No. Resi: <span class="font-mono font-semibold">{{ $order->tracking_number }}</span>
                                 </p>
                                 <p class="text-xs text-gray-500">
-                                    Kurir: {{ strtoupper($order->courier ?? '-') }} - {{ $order->courier_service ?? '-' }}
+                                    Kurir: {{ strtoupper($order->courier ?? '-') }} - {{ $order->service ?? '-' }}
                                 </p>
                                 @else
                                 <p class="text-sm text-gray-400">Menunggu pengiriman</p>
