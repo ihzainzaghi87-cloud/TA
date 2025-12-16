@@ -29,9 +29,9 @@
                    class="text-gray-700 hover:text-yellow-600 px-3 py-2 text-sm font-medium transition duration-300 ease-in-out">
                     Reward
                 </a>
-                <a href="#blog" 
+                <a href="{{ route('articles.index') }}" 
                    class="text-gray-700 hover:text-yellow-600 px-3 py-2 text-sm font-medium transition duration-300 ease-in-out">
-                    Blog
+                    Articles
                 </a>
                 
                 {{-- Cart Icon with Badge --}}

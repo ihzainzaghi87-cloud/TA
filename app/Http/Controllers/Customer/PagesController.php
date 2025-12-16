@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Customer;
 
 use App\Http\Controllers\Controller;
+use App\Models\Article;
 use App\Models\Banner;
 use App\Models\Category;
 use App\Models\Product;
@@ -64,6 +65,58 @@ class PagesController extends Controller
             'availableVariations',
             'colors',
             'sizes'
+        ));
+    }
+
+    /**
+     * Display a listing of published articles.
+     */
+    public function articles()
+    {
+        $articles = Article::published()
+            ->with('trixRichText')
+            ->orderBy('published_at', 'desc')
+            ->orderBy('created_at', 'desc')
+            ->paginate(9);
+
+        return view('customer.articles.index', compact('articles'));
+    }
+
+    /**
+     * Display the specified article.
+     */
+    public function articleShow($slug)
+    {
+        $article = Article::published()
+            ->with('trixRichText')
+            ->where('slug', $slug)
+            ->firstOrFail();
+
+        // Get related articles (excluding current one)
+        $relatedArticles = Article::published()
+            ->with('trixRichText')
+            ->where('id', '!=', $article->id)
+            ->orderBy('published_at', 'desc')
+            ->orderBy('created_at', 'desc')
+            ->take(5)
+            ->get();
+
+        // Get previous and next articles for navigation
+        $previousArticle = Article::published()
+            ->where('id', '<', $article->id)
+            ->orderBy('id', 'desc')
+            ->first();
+
+        $nextArticle = Article::published()
+            ->where('id', '>', $article->id)
+            ->orderBy('id', 'asc')
+            ->first();
+
+        return view('customer.articles.show', compact(
+            'article',
+            'relatedArticles',
+            'previousArticle',
+            'nextArticle'
         ));
     }
 }

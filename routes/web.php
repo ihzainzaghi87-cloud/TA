@@ -144,6 +144,10 @@ Route::get('/', [PagesController::class, 'index'])->name('home');
 // Product Detail Page (Customer)
 Route::get('/products/{slug}', [PagesController::class, 'customerShow'])->name('product.detail');
 
+// Customer Articles
+Route::get('/articles', [PagesController::class, 'articles'])->name('articles.index');
+Route::get('/articles/{slug}', [PagesController::class, 'articleShow'])->name('articles.show');
+
 Route::prefix('shipping')->name('shipping.')->group(function () {
     // Get provinces & cities
     Route::get('/provinces', [ShippingController::class, 'getProvinces']);
@@ -156,7 +160,7 @@ Route::prefix('shipping')->name('shipping.')->group(function () {
     Route::post('/calculate', [ShippingController::class, 'calculateShippingCost']);
 });
 
-// ---------- Cart Routes ----------
+// ---------- Auth ----------
 Route::middleware(['auth'])->group(function () {
     // User Addresses
     Route::prefix('addresses')->name('addresses.')->group(function () {
