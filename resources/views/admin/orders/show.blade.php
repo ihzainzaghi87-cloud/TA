@@ -343,6 +343,10 @@
                         <p class="text-xs text-gray-600 dark:text-gray-400">Email</p>
                         <p class="font-medium text-gray-900 dark:text-white">{{ $order->user->email }}</p>
                     </div>
+                    <div>
+                        <p class="text-xs text-gray-600 dark:text-gray-400">Phone</p>
+                        <p class="font-medium text-gray-900 dark:text-white">{{ $order->user->phone_number }}</p>
+                    </div>
                 </div>
             </div>
 
