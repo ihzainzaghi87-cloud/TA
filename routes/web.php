@@ -238,6 +238,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/orders/{orderId}', [CustomerProfileController::class, 'orderDetail'])->name('order-detail');
         Route::get('/orders/{orderId}/track', [CustomerProfileController::class, 'trackOrder'])->name('track-order');
         Route::post('/orders/{orderId}/confirm-received', [CustomerProfileController::class, 'confirmReceived'])->name('confirm-received');
+        Route::get('/orders/{order}/invoice', [CustomerProfileController::class, 'printInvoice'])->name('print-invoice');
         
         // Addresses (redirect to UserAddressController)
         Route::get('/addresses', [CustomerProfileController::class, 'addresses'])->name('addresses');

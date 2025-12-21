@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\Rules\Password;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class CustomerProfileController extends Controller
 {
@@ -443,6 +444,33 @@ class CustomerProfileController extends Controller
             return redirect()->back()
                 ->with('error', 'Gagal mengkonfirmasi penerimaan pesanan');
         }
+    }
+
+    public function printInvoice(Order $order)
+    {
+        // Ensure user can only print their own invoice
+        if ($order->user_id !== auth()->id()) {
+            abort(403, 'Unauthorized action.');
+        }
+
+        $data = [
+            'order' => $order->load([
+                'user',
+                'orderItems.variation.product.images',
+                'shippingAddress.province',
+                'shippingAddress.city',
+                'pointTransactions'
+            ]),
+            'companyName' => 'The Paranoia',
+            'companyAddress' => 'Jl. Fashion Street No. 123, Jakarta',
+            'companyPhone' => '+62 21 1234 5678',
+            'companyEmail' => 'info@theparanoia.com',
+        ];
+
+        $pdf = Pdf::loadView('customer.profile.invoice', $data)
+            ->setPaper('a4', 'portrait');
+
+        return $pdf->stream('invoice-' . $order->order_number . '.pdf');
     }
 
     // ================== ADDRESS SECTION ==================

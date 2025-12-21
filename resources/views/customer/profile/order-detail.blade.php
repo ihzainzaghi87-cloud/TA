@@ -199,6 +199,14 @@
                                 @break
                         @endswitch
                     </span>
+
+                    <!-- Print Invoice Button -->
+                    <a href="{{ route('customer.print-invoice', $order->id) }}" 
+                    target="_blank"
+                    class="inline-flex items-center justify-center gap-2 px-4 py-2 bg-white border-2 border-gray-300 rounded-lg text-gray-700 hover:border-amber-400 hover:text-amber-600 hover:bg-amber-50 transition-all text-sm font-semibold">
+                        <i class="fas fa-print"></i>
+                        <span>Print Invoice</span>
+                    </a>
                     
                     @if($order->status == 'Shipped')
                     <div class="flex gap-2">
