@@ -25,6 +25,7 @@ class PermissionAndRoleSeeder extends Seeder
             'orders' => ['index', 'view', 'edit', 'update'],
             'user-points' => ['index', 'view'],
             'point-transactions' => ['index', 'view'],
+            'reports' => ['index', 'view', 'orders', 'products', 'users', 'points', 'sales'],
         ];
 
         $all = [];

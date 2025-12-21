@@ -20,6 +20,7 @@ use App\Http\Controllers\AdminOrderController;
 use App\Http\Controllers\UserPointController;
 use App\Http\Controllers\PointTransactionController;
 use App\Http\Controllers\ArticleController;
+use App\Http\Controllers\ReportController;
 use Te7aHoudini\LaravelTrix\Http\Controllers\TrixAttachmentController;
 use Illuminate\Support\Facades\Route;
 
@@ -97,6 +98,16 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     // Orders
     Route::resource('orders', AdminOrderController::class)->only(['index', 'show']);
 
+    // Shipping update
+    Route::get('orders/{order}/edit-shipping', [AdminOrderController::class, 'editShipping'])
+         ->name('orders.edit-shipping');
+    
+    Route::put('orders/{order}/shipping', [AdminOrderController::class, 'updateShipping'])
+         ->name('orders.update-shipping');
+    
+    Route::patch('orders/{order}/status', [AdminOrderController::class, 'updateStatus'])
+         ->name('orders.update-status');
+
     // User Points
     Route::resource('user-points', UserPointController::class)->only(['index', 'show']);
     Route::post('user-points/{userId}/reset', [UserPointController::class, 'reset'])->name('user-points.reset');
@@ -108,15 +119,34 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     Route::get('point-transactions/user/{userId}/redeemed', [PointTransactionController::class, 'redeemed'])->name('point-transactions.redeemed');
     Route::get('point-transactions/user/{userId}/statistics', [PointTransactionController::class, 'statistics'])->name('point-transactions.statistics');
 
-    // Shipping update
-    Route::get('orders/{order}/edit-shipping', [AdminOrderController::class, 'editShipping'])
-         ->name('orders.edit-shipping');
-    
-    Route::put('orders/{order}/shipping', [AdminOrderController::class, 'updateShipping'])
-         ->name('orders.update-shipping');
-    
-    Route::patch('orders/{order}/status', [AdminOrderController::class, 'updateStatus'])
-         ->name('orders.update-status');
+    // Reports
+    Route::prefix('reports')->name('reports.')->group(function () {
+        Route::get('/', [ReportController::class, 'index'])->name('index');
+        
+        // Orders
+        Route::get('/orders', [ReportController::class, 'orders'])->name('orders');
+        Route::get('/orders/export-pdf', [ReportController::class, 'ordersExportPdf'])->name('orders.pdf');
+        Route::get('/orders/export-excel', [ReportController::class, 'ordersExportExcel'])->name('orders.excel');
+        
+        // Products
+        Route::get('/products', [ReportController::class, 'products'])->name('products');
+        Route::get('/products/export-pdf', [ReportController::class, 'productsExportPdf'])->name('products.pdf');
+        Route::get('/products/export-excel', [ReportController::class, 'productsExportExcel'])->name('products.excel');
+        
+        // Users
+        Route::get('/users', [ReportController::class, 'users'])->name('users');
+        Route::get('/users/export-pdf', [ReportController::class, 'usersExportPdf'])->name('users.pdf');
+        Route::get('/users/export-excel', [ReportController::class, 'usersExportExcel'])->name('users.excel');
+        
+        // Point Transactions
+        Route::get('/point-transactions', [ReportController::class, 'pointTransactions'])->name('point-transactions');
+        Route::get('/point-transactions/export-pdf', [ReportController::class, 'pointTransactionsExportPdf'])->name('point-transactions.pdf');
+        Route::get('/point-transactions/export-excel', [ReportController::class, 'pointTransactionsExportExcel'])->name('point-transactions.excel');
+        
+        // Sales Summary
+        Route::get('/sales-summary', [ReportController::class, 'salesSummary'])->name('sales-summary');
+        Route::get('/sales-summary/export-pdf', [ReportController::class, 'salesSummaryExportPdf'])->name('sales-summary.pdf');
+    });
 
     // Banner
     Route::resource('banners', BannerController::class);
