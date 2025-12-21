@@ -19,6 +19,9 @@
     
     <!-- Alpine.js -->
     <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
     
     <script>
         tailwind.config = {
@@ -166,6 +169,8 @@
                     @if (session('error'))
                         <x-alert type="error" :message="session('error')" />
                     @endif
+
+                    @stack('scripts')
 
                     @yield('content')
                 </div>

@@ -6,9 +6,7 @@
     <div class="flex items-center justify-center h-14 px-4 bg-gradient-to-r from-indigo-600 to-purple-600 dark:from-indigo-700 dark:to-purple-700">
         <div class="flex items-center space-x-2">
             <div class="w-8 h-8 bg-white bg-opacity-20 rounded-lg flex items-center justify-center">
-                <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
-                </svg>
+                <span class="font-bold text-white font-bebas text-md">TP</span>
             </div>
             <a href="{{ route('dashboard') }}" class="text-lg font-bold text-white">The Paranoia</a>
         </div>
@@ -81,33 +79,6 @@
                 @endif
             </a>
             @endcan
-
-            <!-- Point Transactions -->
-            <!-- @can('point-transactions.index')
-            <a href="{{ route('admin.point-transactions.index') }}"" 
-               class="group flex items-center px-3 py-2.5 text-sm font-medium rounded-lg transition-all duration-200 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">
-                <div class="flex items-center justify-center w-7 h-7 rounded-lg bg-gray-100 dark:bg-gray-700 group-hover:bg-pink-100 dark:group-hover:bg-pink-900 mr-3 transition-colors duration-200">
-                    <svg class="w-4 h-4 text-gray-600 dark:text-gray-400 group-hover:text-pink-600 dark:group-hover:text-pink-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
-                    </svg>
-                </div>
-                <span>Point Transactions</span>
-                @if(request()->routeIs('admin.point-transactions.*'))
-                    <div class="ml-auto w-1 h-1 bg-white rounded-full animate-pulse"></div>
-                @endif
-            </a>
-            @endcan -->
-            
-            <!-- Analytics -->
-            <a href="#" 
-               class="group flex items-center px-3 py-2.5 text-sm font-medium rounded-lg transition-all duration-200 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">
-                <div class="flex items-center justify-center w-7 h-7 rounded-lg bg-gray-100 dark:bg-gray-700 group-hover:bg-pink-100 dark:group-hover:bg-pink-900 mr-3 transition-colors duration-200">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
-                    </svg>
-                </div>
-                <span>Analytics</span>
-            </a>
 
             <!-- Reports -->
             @can('reports.index')
@@ -197,6 +168,104 @@
                         @endif
                     </a>
                     @endcan
+                </div>
+            </div>
+
+            <!-- Divider -->
+            <div class="my-3 border-t border-gray-200 dark:border-gray-700"></div>
+
+            <!-- Analytics Dropdown -->
+            <div class="space-y-1" x-data="{ open: {{ request()->routeIs('admin.analytics.*') ? 'true' : 'false' }} }">
+                <button @click="open = !open" 
+                        class="group w-full flex items-center justify-between px-3 py-2.5 text-sm font-medium rounded-lg transition-all duration-200 {{ request()->routeIs('admin.analytics.*') ? 'bg-gradient-to-r from-pink-600 to-rose-600 text-white shadow-md' : 'text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700' }}">
+                    <div class="flex items-center">
+                        <div class="flex items-center justify-center w-7 h-7 rounded-lg {{ request()->routeIs('admin.analytics.*') ? 'bg-white bg-opacity-20' : 'bg-gray-100 dark:bg-gray-700 group-hover:bg-pink-100 dark:group-hover:bg-pink-900' }} mr-3 transition-colors duration-200">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                            </svg>
+                        </div>
+                        <span>Analytics</span>
+                    </div>
+                    <svg class="w-4 h-4 transition-transform duration-200" :class="{ 'rotate-180': open }" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                    </svg>
+                </button>
+
+                <!-- Dropdown Menu -->
+                <div x-show="open" 
+                    x-transition:enter="transition ease-out duration-200"
+                    x-transition:enter-start="opacity-0 -translate-y-2"
+                    x-transition:enter-end="opacity-100 translate-y-0"
+                    x-transition:leave="transition ease-in duration-150"
+                    x-transition:leave-start="opacity-100 translate-y-0"
+                    x-transition:leave-end="opacity-0 -translate-y-2"
+                    class="ml-6 space-y-1">
+                    
+                    <!-- Overview -->
+                    <a href="{{ route('admin.analytics.index') }}" 
+                    class="group flex items-center px-3 py-2 text-sm font-medium rounded-lg transition-all duration-200 {{ request()->routeIs('admin.analytics.index') ? 'bg-gradient-to-r from-indigo-500 to-purple-600 text-white shadow-md' : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700' }}">
+                        <div class="flex items-center justify-center w-5 h-5 rounded-md {{ request()->routeIs('admin.analytics.index') ? 'bg-white bg-opacity-20' : 'bg-gray-100 dark:bg-gray-700 group-hover:bg-indigo-100 dark:group-hover:bg-indigo-900' }} mr-3 transition-colors duration-200">
+                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 5a1 1 0 011-1h4a1 1 0 011 1v7a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM14 5a1 1 0 011-1h4a1 1 0 011 1v7a1 1 0 01-1 1h-4a1 1 0 01-1-1V5zM4 16a1 1 0 011-1h4a1 1 0 011 1v3a1 1 0 01-1 1H5a1 1 0 01-1-1v-3zM14 16a1 1 0 011-1h4a1 1 0 011 1v3a1 1 0 01-1 1h-4a1 1 0 01-1-1v-3z"></path>
+                            </svg>
+                        </div>
+                        <span class="text-xs">Overview</span>
+                    </a>
+
+                    <!-- Sales Analysis -->
+                    <a href="{{ route('admin.analytics.sales') }}" 
+                    class="group flex items-center px-3 py-2 text-sm font-medium rounded-lg transition-all duration-200 {{ request()->routeIs('admin.analytics.sales') ? 'bg-gradient-to-r from-blue-500 to-cyan-600 text-white shadow-md' : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700' }}">
+                        <div class="flex items-center justify-center w-5 h-5 rounded-md {{ request()->routeIs('admin.analytics.sales') ? 'bg-white bg-opacity-20' : 'bg-gray-100 dark:bg-gray-700 group-hover:bg-blue-100 dark:group-hover:bg-blue-900' }} mr-3 transition-colors duration-200">
+                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
+                            </svg>
+                        </div>
+                        <span class="text-xs">Sales Analysis</span>
+                    </a>
+
+                    <!-- Product Performance -->
+                    <a href="{{ route('admin.analytics.products') }}" 
+                    class="group flex items-center px-3 py-2 text-sm font-medium rounded-lg transition-all duration-200 {{ request()->routeIs('admin.analytics.products') ? 'bg-gradient-to-r from-green-500 to-emerald-600 text-white shadow-md' : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700' }}">
+                        <div class="flex items-center justify-center w-5 h-5 rounded-md {{ request()->routeIs('admin.analytics.products') ? 'bg-white bg-opacity-20' : 'bg-gray-100 dark:bg-gray-700 group-hover:bg-green-100 dark:group-hover:bg-green-900' }} mr-3 transition-colors duration-200">
+                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
+                            </svg>
+                        </div>
+                        <span class="text-xs">Products</span>
+                    </a>
+
+                    <!-- Customer Insights -->
+                    <a href="{{ route('admin.analytics.customers') }}" 
+                    class="group flex items-center px-3 py-2 text-sm font-medium rounded-lg transition-all duration-200 {{ request()->routeIs('admin.analytics.customers') ? 'bg-gradient-to-r from-yellow-500 to-orange-600 text-white shadow-md' : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700' }}">
+                        <div class="flex items-center justify-center w-5 h-5 rounded-md {{ request()->routeIs('admin.analytics.customers') ? 'bg-white bg-opacity-20' : 'bg-gray-100 dark:bg-gray-700 group-hover:bg-yellow-100 dark:group-hover:bg-yellow-900' }} mr-3 transition-colors duration-200">
+                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path>
+                            </svg>
+                        </div>
+                        <span class="text-xs">Customers</span>
+                    </a>
+
+                    <!-- Points System -->
+                    <a href="{{ route('admin.analytics.points') }}" 
+                    class="group flex items-center px-3 py-2 text-sm font-medium rounded-lg transition-all duration-200 {{ request()->routeIs('admin.analytics.points') ? 'bg-gradient-to-r from-purple-500 to-pink-600 text-white shadow-md' : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700' }}">
+                        <div class="flex items-center justify-center w-5 h-5 rounded-md {{ request()->routeIs('admin.analytics.points') ? 'bg-white bg-opacity-20' : 'bg-gray-100 dark:bg-gray-700 group-hover:bg-purple-100 dark:group-hover:bg-purple-900' }} mr-3 transition-colors duration-200">
+                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"></path>
+                            </svg>
+                        </div>
+                        <span class="text-xs">Points</span>
+                    </a>
+
+                    <!-- Content Analytics -->
+                    <a href="{{ route('admin.analytics.content') }}" 
+                    class="group flex items-center px-3 py-2 text-sm font-medium rounded-lg transition-all duration-200 {{ request()->routeIs('admin.analytics.content') ? 'bg-gradient-to-r from-red-500 to-rose-600 text-white shadow-md' : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700' }}">
+                        <div class="flex items-center justify-center w-5 h-5 rounded-md {{ request()->routeIs('admin.analytics.content') ? 'bg-white bg-opacity-20' : 'bg-gray-100 dark:bg-gray-700 group-hover:bg-red-100 dark:group-hover:bg-red-900' }} mr-3 transition-colors duration-200">
+                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"></path>
+                            </svg>
+                        </div>
+                        <span class="text-xs">Content</span>
+                    </a>
                 </div>
             </div>
 

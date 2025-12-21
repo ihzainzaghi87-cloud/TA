@@ -21,6 +21,7 @@ use App\Http\Controllers\UserPointController;
 use App\Http\Controllers\PointTransactionController;
 use App\Http\Controllers\ArticleController;
 use App\Http\Controllers\ReportController;
+use App\Http\Controllers\AnalyticsController;
 use Te7aHoudini\LaravelTrix\Http\Controllers\TrixAttachmentController;
 use Illuminate\Support\Facades\Route;
 
@@ -146,6 +147,16 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
         // Sales Summary
         Route::get('/sales-summary', [ReportController::class, 'salesSummary'])->name('sales-summary');
         Route::get('/sales-summary/export-pdf', [ReportController::class, 'salesSummaryExportPdf'])->name('sales-summary.pdf');
+    });
+
+    Route::prefix('analytics')->name('analytics.')->group(function () {
+        Route::get('/', [AnalyticsController::class, 'index'])->name('index');
+        Route::get('/sales', [AnalyticsController::class, 'sales'])->name('sales');
+        Route::get('/products', [AnalyticsController::class, 'products'])->name('products');
+        Route::get('/customers', [AnalyticsController::class, 'customers'])->name('customers');
+        Route::get('/points', [AnalyticsController::class, 'points'])->name('points');
+        Route::get('/content', [AnalyticsController::class, 'content'])->name('content');
+        Route::get('/export', [AnalyticsController::class, 'export'])->name('export');
     });
 
     // Banner

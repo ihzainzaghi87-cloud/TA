@@ -458,8 +458,8 @@
                         </p>
                         <p class="text-sm text-gray-600">
                             {{ $order->shippingAddress->full_address }},
-                            {{ $order->shippingAddress->city->name ?? '' }},
-                            {{ $order->shippingAddress->province->name ?? '' }}
+                            {{ $order->shippingAddress->city_name ?? '' }},
+                            {{ $order->shippingAddress->province_name ?? '' }}
                             {{ $order->shippingAddress->postal_code }}
                         </p>
                     </div>
