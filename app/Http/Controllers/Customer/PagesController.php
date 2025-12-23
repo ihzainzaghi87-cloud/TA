@@ -40,6 +40,7 @@ class PagesController extends Controller
         $product = Product::with(['category', 'images', 'variations'])
             ->where('slug', $slug)
             ->where('is_active', true)
+            ->where('is_reward', false)
             ->firstOrFail();
 
         // Get related products

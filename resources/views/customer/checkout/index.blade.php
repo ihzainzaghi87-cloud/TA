@@ -5,31 +5,36 @@
 @push('styles')
 <style>
     [x-cloak] { display: none !important; }
-    .checkout-hero-gradient {
-        background: linear-gradient(90deg, #9333ea, #ec4899, #ef4444);
+    .checkout-hero-bg { background-color: #FAD470; }
+    .checkout-primary-btn { background-color: #000; color: #FAD471; }
+    .checkout-primary-btn:hover { background-color: #333; }
+    .checkout-secondary-btn { background-color: #FAD470; color: #000; }
+    .checkout-secondary-btn:hover { background-color: #F59E0B; }
+    .checkout-card { 
+        background: #fff; 
+        border: 2px solid #FAD470;
+        border-radius: 1.5rem;
     }
-    .checkout-primary-gradient {
-        background: linear-gradient(90deg, #9333ea, #ec4899);
-    }
-    .checkout-card-shadow {
-        box-shadow: 0 4px 20px rgba(147, 51, 234, 0.1);
+    .checkout-input:focus {
+        border-color: #FAD470;
+        ring-color: #FAD470;
     }
 </style>
 @endpush
 
 @section('content')
 {{-- Hero Section --}}
-<section class="checkout-hero-gradient text-white py-16">
+<section class="checkout-hero-bg py-16">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-        <p class="text-sm uppercase tracking-[0.3em] text-white/80 mb-4">Secure Checkout</p>
-        <h1 class="text-3xl md:text-4xl font-bold">Finalize Your Order</h1>
-        <p class="mt-4 text-white/80 max-w-2xl mx-auto">
-            Review your items, fill in shipping details, and complete your purchase securely.
+        <p class="text-sm uppercase tracking-[0.3em] text-black/60 mb-4">Secure Checkout</p>
+        <h1 class="font-bebas text-5xl md:text-6xl text-black">CHECKOUT</h1>
+        <p class="mt-4 text-black/70 max-w-2xl mx-auto">
+            Lengkapi detail pengiriman dan selesaikan pesanan Anda dengan aman.
         </p>
     </div>
 </section>
 
-<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-12 pb-20 relative z-10">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-8 pb-20 relative z-10">
     
     {{-- Flash Messages --}}
     @if(session('success'))
@@ -59,28 +64,28 @@
             <div class="lg:col-span-2 space-y-6">
                 
                 {{-- Shipping Address Card --}}
-                <div class="bg-white rounded-3xl shadow-xl border border-gray-100 p-8">
+                <div class="checkout-card shadow-xl p-8">
                     <div class="flex items-center justify-between mb-6">
                         <div class="flex items-center gap-3">
-                            <div class="w-12 h-12 rounded-full checkout-primary-gradient flex items-center justify-center text-white shadow-lg">
+                            <div class="w-12 h-12 rounded-full bg-[#FAD470] flex items-center justify-center text-black shadow-lg">
                                 <i class="fas fa-map-marker-alt text-xl"></i>
                             </div>
                             <div>
-                                <h2 class="text-2xl font-bold text-gray-900">Alamat Pengiriman</h2>
+                                <h2 class="font-bebas text-2xl text-black">ALAMAT PENGIRIMAN</h2>
                                 <p class="text-sm text-gray-500">Pilih alamat pengiriman Anda</p>
                             </div>
                         </div>
-                        <a href="{{ route('addresses.create') }}" class="text-purple-600 font-semibold hover:text-purple-700 text-sm">
+                        <a href="{{ route('addresses.create') }}" class="checkout-secondary-btn px-4 py-2 rounded-full font-semibold text-sm hover:shadow-lg transition">
                             + Tambah Alamat
                         </a>
                     </div>
                     
                     <div class="space-y-4 mb-6">
                         @if($primaryAddress)
-                            <div class="border border-purple-500 bg-purple-50/30 rounded-xl p-4 relative">
+                            <div class="border-2 border-[#FAD470] bg-[#FAD470]/10 rounded-2xl p-4 relative">
                                 <div class="flex items-center gap-2 mb-1">
                                     <span class="font-bold text-gray-900">{{ $primaryAddress->label }}</span>
-                                    <span class="px-2 py-0.5 bg-purple-100 text-purple-700 text-xs rounded-full font-medium">Utama</span>
+                                    <span class="px-2 py-0.5 bg-[#FAD470] text-black text-xs rounded-full font-medium">Utama</span>
                                 </div>
                                 <p class="text-gray-900 font-medium">{{ $primaryAddress->recipient_name }} ({{ $primaryAddress->phone }})</p>
                                 <p class="text-gray-500 text-sm mt-1">{{ $primaryAddress->full_address }}</p>
@@ -88,15 +93,15 @@
                                 <input type="hidden" name="user_address_id" id="user_address_id" value="{{ $primaryAddress->id }}" data-city="{{ $primaryAddress->city_id }}">
                                 
                                 <div class="mt-4">
-                                    <a href="{{ route('addresses.index') }}" class="text-sm text-purple-600 font-semibold hover:text-purple-700">
-                                        Ubah Alamat Utama
+                                    <a href="{{ route('addresses.index') }}" class="text-sm text-black font-semibold hover:underline flex items-center gap-1">
+                                        <i class="fas fa-edit"></i> Ubah Alamat Utama
                                     </a>
                                 </div>
                             </div>
                         @else
-                            <div class="text-center py-8 bg-gray-50 rounded-xl border border-dashed border-gray-300">
+                            <div class="text-center py-8 bg-gray-50 rounded-2xl border-2 border-dashed border-[#FAD470]">
                                 <p class="text-gray-500 mb-4">Anda belum mengatur alamat utama.</p>
-                                <a href="{{ route('addresses.index') }}" class="inline-block px-6 py-2 bg-purple-600 text-white rounded-full hover:bg-purple-700 transition">
+                                <a href="{{ route('addresses.index') }}" class="inline-block px-6 py-2 checkout-primary-btn rounded-full font-semibold transition">
                                     Atur Alamat
                                 </a>
                             </div>
@@ -110,12 +115,12 @@
                     </div>
 
                     {{-- Courier Selection --}}
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 border-t border-gray-100 pt-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 border-t-2 border-[#FAD470]/30 pt-6">
                         <div>
-                            <label class="block text-sm font-semibold text-gray-700 mb-2">
-                                Pilih Kurir
+                            <label class="block text-sm font-bold text-gray-700 mb-2">
+                                <i class="fas fa-truck text-[#FAD470] mr-1"></i> Pilih Kurir
                             </label>
-                            <select name="courier" id="courier" class="w-full px-4 py-3 border border-gray-300 rounded-2xl focus:ring-2 focus:ring-purple-500 focus:border-transparent transition duration-200">
+                            <select name="courier" id="courier" class="w-full px-4 py-3 border-2 border-gray-200 rounded-2xl focus:ring-2 focus:ring-[#FAD470] focus:border-[#FAD470] transition duration-200">
                                 <option value="">Pilih Kurir</option>
                                 <option value="jne">JNE</option>
                                 <option value="pos">POS Indonesia</option>
@@ -130,7 +135,7 @@
                             
                             {{-- Same City Info --}}
                             @if($primaryAddress && $primaryAddress->city_id == config('rajaongkir.origin_city'))
-                                <div class="mt-2 bg-blue-50 border border-blue-200 rounded-xl p-3">
+                                <div class="mt-2 bg-blue-50 border-2 border-blue-200 rounded-xl p-3">
                                     <p class="text-xs text-blue-700 flex items-center gap-2">
                                         <i class="fas fa-info-circle"></i>
                                         <span>Pengiriman dalam kota. Beberapa kurir mungkin tidak tersedia.</span>
@@ -139,10 +144,10 @@
                             @endif
                         </div>
                         <div>
-                            <label class="block text-sm font-semibold text-gray-700 mb-2">
-                                Layanan Pengiriman
+                            <label class="block text-sm font-bold text-gray-700 mb-2">
+                                <i class="fas fa-box text-[#FAD470] mr-1"></i> Layanan Pengiriman
                             </label>
-                            <select name="shipping_service_select" id="shipping_service" disabled class="w-full px-4 py-3 border border-gray-300 rounded-2xl focus:ring-2 focus:ring-purple-500 focus:border-transparent transition duration-200 bg-gray-50">
+                            <select name="shipping_service_select" id="shipping_service" disabled class="w-full px-4 py-3 border-2 border-gray-200 rounded-2xl focus:ring-2 focus:ring-[#FAD470] focus:border-[#FAD470] transition duration-200 bg-gray-50">
                                 <option value="">Pilih Kurir Terlebih Dahulu</option>
                             </select>
                             <div id="shipping_error" class="hidden mt-2 text-sm text-red-600 bg-red-50 p-3 rounded-xl border border-red-100"></div>
@@ -158,30 +163,30 @@
                         </div>
                     </div>
 
-                    <div class="mt-4">
-                        <label class="block text-sm font-semibold text-gray-700 mb-2">
-                            Catatan Pesanan <span class="text-gray-400 font-normal">(Opsional)</span>
+                    <div class="mt-6">
+                        <label class="block text-sm font-bold text-gray-700 mb-2">
+                            <i class="fas fa-sticky-note text-[#FAD470] mr-1"></i> Catatan Pesanan <span class="text-gray-400 font-normal">(Opsional)</span>
                         </label>
                         <textarea name="notes" 
                                   rows="2"
-                                  class="w-full px-4 py-3 border border-gray-300 rounded-2xl focus:ring-2 focus:ring-purple-500 focus:border-transparent transition duration-200 resize-none"
+                                  class="w-full px-4 py-3 border-2 border-gray-200 rounded-2xl focus:ring-2 focus:ring-[#FAD470] focus:border-[#FAD470] transition duration-200 resize-none"
                                   placeholder="Catatan untuk penjual, misalnya: warna alternatif, dll">{{ old('notes') }}</textarea>
                     </div>
                 </div>
 
                 {{-- Order Items Card --}}
-                <div class="bg-white rounded-3xl shadow-xl border border-gray-100 p-8">
+                <div class="checkout-card shadow-xl p-8">
                     <div class="flex items-center justify-between mb-6">
                         <div class="flex items-center gap-3">
-                            <div class="w-12 h-12 rounded-full checkout-primary-gradient flex items-center justify-center text-white shadow-lg">
+                            <div class="w-12 h-12 rounded-full bg-[#FAD470] flex items-center justify-center text-black shadow-lg">
                                 <i class="fas fa-shopping-bag text-xl"></i>
                             </div>
                             <div>
-                                <h2 class="text-2xl font-bold text-gray-900">Item Pesanan</h2>
+                                <h2 class="font-bebas text-2xl text-black">ITEM PESANAN</h2>
                                 <p class="text-sm text-gray-500">{{ $cartItems->count() }} produk</p>
                             </div>
                         </div>
-                        <span class="bg-purple-100 text-purple-700 px-4 py-2 rounded-full text-sm font-semibold">
+                        <span class="bg-[#FAD470] text-black px-4 py-2 rounded-full text-sm font-bold">
                             {{ $cartItems->sum('quantity') }} Item
                         </span>
                     </div>
@@ -193,15 +198,15 @@
                                 $variation = $item->variation;
                             @endphp
                             
-                            <article class="flex gap-4 pb-5 border-b border-gray-100 last:border-0 last:pb-0">
+                            <article class="flex gap-4 pb-5 border-b-2 border-gray-100 last:border-0 last:pb-0">
                                 {{-- Product Image --}}
                                 <div class="w-20 h-20 shrink-0">
                                     @if($product->images && $product->images->count() > 0)
                                         <img src="{{ asset('storage/products/' . $product->images->first()->image) }}" 
                                              alt="{{ $product->name }}"
-                                             class="w-full h-full object-cover rounded-xl shadow-sm">
+                                             class="w-full h-full object-cover rounded-2xl border-2 border-gray-100 shadow-sm">
                                     @else
-                                        <div class="w-full h-full bg-linear-to-br from-gray-200 to-gray-300 rounded-xl flex items-center justify-center">
+                                        <div class="w-full h-full bg-gray-100 rounded-2xl flex items-center justify-center">
                                             <i class="fas fa-image text-gray-400 text-2xl"></i>
                                         </div>
                                     @endif
@@ -212,19 +217,19 @@
                                     <h3 class="font-bold text-gray-900 mb-1 truncate">{{ $product->name }}</h3>
                                     <p class="text-sm text-gray-500 flex flex-wrap gap-2 mb-2">
                                         @if($variation->color)
-                                            <span class="inline-flex items-center gap-1">
-                                                <i class="fas fa-palette text-xs text-purple-500"></i>
+                                            <span class="inline-flex items-center gap-1 bg-gray-100 px-2 py-1 rounded-full text-xs">
+                                                <i class="fas fa-palette text-[#FAD470]"></i>
                                                 {{ ucfirst($variation->color) }}
                                             </span>
                                         @endif
                                         @if($variation->size)
-                                            <span class="inline-flex items-center gap-1">
-                                                <i class="fas fa-ruler text-xs text-purple-500"></i>
+                                            <span class="inline-flex items-center gap-1 bg-gray-100 px-2 py-1 rounded-full text-xs">
+                                                <i class="fas fa-ruler text-[#FAD470]"></i>
                                                 {{ strtoupper($variation->size) }}
                                             </span>
                                         @endif
-                                        <span class="inline-flex items-center gap-1">
-                                            <i class="fas fa-box text-xs text-purple-500"></i>
+                                        <span class="inline-flex items-center gap-1 bg-gray-100 px-2 py-1 rounded-full text-xs">
+                                            <i class="fas fa-box text-[#FAD470]"></i>
                                             Qty: {{ $item->quantity }}
                                         </span>
                                     </p>
@@ -232,7 +237,7 @@
 
                                 {{-- Price --}}
                                 <div class="text-right">
-                                    <p class="font-bold text-purple-600 text-lg">
+                                    <p class="font-bold text-black text-lg">
                                         Rp {{ number_format($product->price * $item->quantity, 0, ',', '.') }}
                                     </p>
                                     @if($product->point_price)
@@ -250,30 +255,30 @@
 
             {{-- Right Column - Order Summary --}}
             <aside class="lg:col-span-1">
-                <div class="bg-white rounded-3xl shadow-xl border border-gray-100 p-8 space-y-6 sticky top-24">
-                    <div>
-                        <h2 class="text-2xl font-bold text-gray-900">Ringkasan Pesanan</h2>
+                <div class="checkout-card shadow-xl p-8 space-y-6 sticky top-24">
+                    <div class="text-center pb-4 border-b-2 border-[#FAD470]">
+                        <h2 class="font-bebas text-3xl text-black">RINGKASAN PESANAN</h2>
                         <p class="text-sm text-gray-500">{{ $cartItems->sum('quantity') }} barang</p>
                     </div>
 
                     <div class="space-y-4">
                         <div class="flex justify-between text-gray-700">
                             <span>Subtotal</span>
-                            <span class="font-semibold">Rp {{ number_format($subtotal, 0, ',', '.') }}</span>
+                            <span class="font-bold text-black">Rp {{ number_format($subtotal, 0, ',', '.') }}</span>
                         </div>
                         
                         <div class="flex justify-between text-gray-700">
                             <span class="flex items-center gap-2">
-                                <i class="fas fa-truck text-purple-500"></i>
+                                <i class="fas fa-truck text-[#FAD470]"></i>
                                 Ongkir
                             </span>
-                            <span class="font-semibold" id="shipping-cost-display">Rp 0</span>
+                            <span class="font-bold text-black" id="shipping-cost-display">Rp 0</span>
                         </div>
 
                         {{-- PRODUCT POINTS REQUIRED --}}
                         @if($totalPointsNeeded > 0)
-                            <div class="pt-4 border-t border-gray-200">
-                                <div class="bg-linear-to-r from-red-50 to-pink-50 rounded-2xl p-4 border-2 border-red-200">
+                            <div class="pt-4 border-t-2 border-gray-100">
+                                <div class="bg-red-50 rounded-2xl p-4 border-2 border-red-200">
                                     <div class="flex items-center justify-between mb-2">
                                         <div>
                                             <p class="text-sm font-bold text-red-700 flex items-center gap-2">
@@ -316,22 +321,22 @@
                             </div>
                         @endif
 
-                        <div class="pt-4 border-t-2 border-gray-200">
+                        <div class="pt-4 border-t-2 border-[#FAD470]">
                             <div class="flex justify-between items-center mb-4">
                                 <span class="text-lg font-bold text-gray-900">Total Bayar</span>
-                                <span class="text-3xl font-bold text-transparent bg-clip-text checkout-primary-gradient" id="total-display">
+                                <span class="text-3xl font-bebas text-black" id="total-display">
                                     Rp {{ number_format($subtotal, 0, ',', '.') }}
                                 </span>
                             </div>
                         </div>
 
                         {{-- Points Reward Info --}}
-                        <div class="bg-linear-to-r from-purple-50 to-pink-50 rounded-2xl p-4 border border-purple-200">
-                            <p class="flex items-center text-sm font-semibold text-purple-700 gap-2">
-                                <i class="fas fa-gift text-pink-500"></i>
+                        <div class="bg-[#FAD470]/20 rounded-2xl p-4 border-2 border-[#FAD470]">
+                            <p class="flex items-center text-sm font-bold text-black gap-2">
+                                <i class="fas fa-gift text-amber-500"></i>
                                 Reward Poin dari Pesanan Ini:
                             </p>
-                            <p class="text-2xl font-bold text-purple-600 mt-1">
+                            <p class="text-2xl font-bold text-amber-600 mt-1">
                                 <i class="fas fa-star text-amber-400"></i>
                                 +{{ number_format($pointsWillEarn, 0, ',', '.') }} Poin
                             </p>
@@ -346,13 +351,13 @@
                         $disableCheckout = !$hasEnoughPoints && $totalPointsNeeded > 0;
                     @endphp
                     {{-- Submit Button --}}
-                        <button type="submit"
-                            @if($disableCheckout) disabled @endif
-                            @class([
-                                'w-full py-4 rounded-full font-bold text-lg shadow-xl transform transition duration-300',
-                                'bg-gray-400 text-gray-700 cursor-not-allowed' => $disableCheckout,
-                                'checkout-primary-gradient text-white hover:shadow-2xl hover:-translate-y-0.5' => ! $disableCheckout,
-                            ])>
+                    <button type="submit"
+                        @if($disableCheckout) disabled @endif
+                        @class([
+                            'w-full py-4 rounded-full font-bold text-lg shadow-xl transform transition duration-300',
+                            'bg-gray-400 text-gray-700 cursor-not-allowed' => $disableCheckout,
+                            'checkout-primary-btn hover:shadow-2xl hover:-translate-y-0.5' => ! $disableCheckout,
+                        ])>
                         <i class="fas fa-lock mr-2"></i>
                         @if($disableCheckout)
                             Poin Tidak Mencukupi
@@ -363,31 +368,31 @@
 
                     {{-- Back to Cart --}}
                     <a href="{{ route('cart.index') }}" 
-                       class="w-full inline-flex items-center justify-center gap-2 border border-purple-100 text-purple-600 font-medium py-3 rounded-full hover:bg-purple-50 transition">
+                       class="w-full inline-flex items-center justify-center gap-2 checkout-secondary-btn font-semibold py-3 rounded-full transition">
                         <i class="fas fa-arrow-left"></i>
                         Kembali ke Keranjang
                     </a>
 
                     {{-- Security Info --}}
                     <div class="space-y-3 text-xs text-gray-600">
-                        <div class="flex items-start gap-3 p-3 bg-green-50 rounded-xl">
+                        <div class="flex items-start gap-3 p-3 bg-green-50 rounded-xl border-2 border-green-100">
                             <i class="fas fa-shield-alt text-green-500 text-lg mt-0.5"></i>
                             <div>
-                                <p class="font-semibold text-green-700">Transaksi Aman</p>
+                                <p class="font-bold text-green-700">Transaksi Aman</p>
                                 <p>Data Anda dilindungi dengan enkripsi SSL</p>
                             </div>
                         </div>
-                        <div class="flex items-start gap-3 p-3 bg-blue-50 rounded-xl">
+                        <div class="flex items-start gap-3 p-3 bg-blue-50 rounded-xl border-2 border-blue-100">
                             <i class="fas fa-truck text-blue-500 text-lg mt-0.5"></i>
                             <div>
-                                <p class="font-semibold text-blue-700">Pengiriman Cepat</p>
+                                <p class="font-bold text-blue-700">Pengiriman Cepat</p>
                                 <p>Estimasi 2-3 hari kerja</p>
                             </div>
                         </div>
-                        <div class="flex items-start gap-3 p-3 bg-purple-50 rounded-xl">
-                            <i class="fas fa-headset text-purple-500 text-lg mt-0.5"></i>
+                        <div class="flex items-start gap-3 p-3 bg-amber-50 rounded-xl border-2 border-amber-100">
+                            <i class="fas fa-headset text-amber-500 text-lg mt-0.5"></i>
                             <div>
-                                <p class="font-semibold text-purple-700">Bantuan 24/7</p>
+                                <p class="font-bold text-amber-700">Bantuan 24/7</p>
                                 <p>Customer service siap membantu</p>
                             </div>
                         </div>

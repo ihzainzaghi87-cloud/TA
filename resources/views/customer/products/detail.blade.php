@@ -379,9 +379,15 @@
 
                 <!-- Price -->
                 <div class="flex items-baseline gap-3">
-                    <span class="text-3xl lg:text-4xl font-bold text-amber-600">
-                        Rp {{ number_format($product->price, 0, ',', '.') }}
-                    </span>
+                    @if($product->point_price > 0)
+                        <span class="text-3xl lg:text-4xl font-bold text-amber-600">
+                            {{ number_format($product->point_price) }} Poin
+                        </span>
+                    @else
+                        <span class="text-3xl lg:text-4xl font-bold text-amber-600">
+                            Rp {{ number_format($product->price, 0, ',', '.') }}
+                        </span>
+                    @endif
                 </div>
 
                 <!-- Stock Status -->
