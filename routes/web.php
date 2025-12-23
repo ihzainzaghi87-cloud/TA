@@ -35,7 +35,7 @@ Route::post('/register', [AuthController::class, 'register'])->name('register.at
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout')->middleware('auth');
 
 // ---------- Dashboard ----------
-Route::get('/admin', DashboardController::class)->name('dashboard')->middleware('auth', 'role:superadmin|admin|staff');
+Route::get('/admin', [DashboardController::class, 'index'])->name('dashboard')->middleware('auth', 'role:superadmin|owner|staff');
 
 // ---------- Admin Page (web) ----------
 Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () {

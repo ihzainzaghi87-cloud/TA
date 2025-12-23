@@ -16,7 +16,7 @@ class RoleSeeder extends Seeder
         // daftar role awal
         $roles = [
             'superadmin',
-            'admin',
+            'owner',
             'staff',
             'user',
         ];

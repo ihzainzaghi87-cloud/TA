@@ -39,7 +39,7 @@ class PermissionAndRoleSeeder extends Seeder
 
         // 2) (opsional) Berikan permissions ke role tertentu, bila ada
         $superadmin = Role::where('name', 'superadmin')->where('guard_name', 'web')->first();
-        $admin      = Role::where('name', 'admin')->where('guard_name', 'web')->first();
+        $owner      = Role::where('name', 'owner')->where('guard_name', 'web')->first();
         $staff      = Role::where('name', 'staff')->where('guard_name', 'web')->first();
         $user       = Role::where('name', 'user')->where('guard_name', 'web')->first();
 
@@ -48,9 +48,9 @@ class PermissionAndRoleSeeder extends Seeder
             $superadmin->syncPermissions($all);
         }
 
-        // admin: mayoritas manajemen + posts full
-        if ($admin) {
-            $admin->syncPermissions([
+        // owner: mayoritas manajemen + posts full
+        if ($owner) {
+            $owner->syncPermissions([
                 'roles.view','roles.create','roles.update','roles.delete','roles.sync-permissions',
                 'permissions.view','permissions.create','permissions.update','permissions.delete',
                 'users.view','users.create','users.update','users.delete','users.assign-roles','users.grant-permissions',
@@ -60,15 +60,18 @@ class PermissionAndRoleSeeder extends Seeder
         // staff: kelola konten + view users
         if ($staff) {
             $staff->syncPermissions([
-                'roles.view',
+                'articles.index', 'articles.view', 'articles.create', 'articles.update', 'articles.delete', 'articles.publish',
+                'banners.index', 'banners.view', 'banners.create', 'banners.update', 'banners.delete',
+                'categories.index', 'categories.view', 'categories.create', 'categories.update', 'categories.delete',
+                'products.index', 'products.view', 'products.create', 'products.update', 'products.delete', 'products.destroy-image',
             ]);
         }
 
         // user: hanya view posts
-        if ($user) {
-            $user->syncPermissions([
-                'roles.view',
-            ]);
-        }
+        // if ($user) {
+        //     $user->syncPermissions([
+        //         'roles.view',
+        //     ]);
+        // }
     }
 }

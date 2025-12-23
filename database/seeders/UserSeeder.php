@@ -16,7 +16,7 @@ class UserSeeder extends Seeder
         app(PermissionRegistrar::class)->forgetCachedPermissions();
 
         // Pastikan roles minimal tersedia (jika RoleSeeder belum/terlewat)
-        foreach (['superadmin','admin','staff','user'] as $r) {
+        foreach (['superadmin','owner','staff','user'] as $r) {
             Role::firstOrCreate(['name' => $r, 'guard_name' => 'web']);
         }
 
@@ -33,12 +33,12 @@ class UserSeeder extends Seeder
                 'roles'        => ['superadmin'],
             ],
             [
-                'name'         => 'Admin Demo',
-                'email'        => 'admin@example.com',
-                'username'     => 'admin',
+                'name'         => 'Owner Demo',
+                'email'        => 'owner@example.com',
+                'username'     => 'owner',
                 'phone_number' => '081222222222',
-                'address'      => '456 Admin Ave, Admin City',
-                'roles'        => ['admin'],
+                'address'      => '456 Owner Ave, Owner City',
+                'roles'        => ['owner'],
             ],
             [
                 'name'         => 'Staff Demo',

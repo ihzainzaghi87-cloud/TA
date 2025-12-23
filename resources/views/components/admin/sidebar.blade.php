@@ -107,6 +107,7 @@
                 <span>System Logs</span>
             </a>
 
+            @canany(['point-transactions.index', 'user-points.index'])
             <!-- Divider -->
             <div class="my-3 border-t border-gray-200 dark:border-gray-700"></div>
             
@@ -170,6 +171,7 @@
                     @endcan
                 </div>
             </div>
+            @endcanany
 
             <!-- Divider -->
             <div class="my-3 border-t border-gray-200 dark:border-gray-700"></div>
@@ -269,6 +271,7 @@
                 </div>
             </div>
 
+            @canany(['banners.index', 'articles.index'])
             <!-- Divider -->
             <div class="my-3 border-t border-gray-200 dark:border-gray-700"></div>
             
@@ -333,7 +336,9 @@
                     @endcan
                 </div>
             </div>
+            @endcanany
 
+            @canany(['users.index', 'roles.index', 'permissions.index'])
             <!-- Divider -->
             <div class="my-3 border-t border-gray-200 dark:border-gray-700"></div>
             
@@ -413,6 +418,7 @@
                     @endcan
                 </div>
             </div>
+            @endcanany
         </div>
     </nav>
 

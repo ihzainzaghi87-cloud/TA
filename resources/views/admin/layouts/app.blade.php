@@ -51,6 +51,8 @@
         }
     </script>
 
+    @stack('styles')
+
     <style>
         [x-cloak] { display: none !important; }
         
@@ -191,5 +193,7 @@
          x-transition:leave-end="opacity-0"
          @click="sidebarOpen = false" 
          class="fixed inset-0 z-40 bg-black bg-opacity-50 lg:hidden"></div>
+    
+    @stack('scripts')
 </body>
 </html>
