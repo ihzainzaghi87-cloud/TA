@@ -7,6 +7,7 @@ use App\Models\Article;
 use App\Models\Banner;
 use App\Models\Category;
 use App\Models\Product;
+use Illuminate\Http\Request;
 
 class PagesController extends Controller
 {
@@ -30,6 +31,38 @@ class PagesController extends Controller
         $banners = Banner::active()->orderBy('created_at', 'desc')->get();
 
         return view('customer.home', compact('categories', 'popularProducts', 'banners'));
+    }
+
+    /**
+     * Display all products listing page.
+     */
+    public function products(Request $request)
+    {
+        return view('customer.products.index');
+    }
+
+    /**
+     * Display the about us page.
+     */
+    public function about()
+    {
+        return view('customer.pages.about');
+    }
+
+    /**
+     * Display the rewards page.
+     */
+    public function rewards()
+    {
+        return view('customer.pages.rewards');
+    }
+
+    /**
+     * Display the blog page.
+     */
+    public function blog()
+    {
+        return view('customer.pages.blog');
     }
 
     /**
@@ -80,7 +113,7 @@ class PagesController extends Controller
             ->orderBy('created_at', 'desc')
             ->paginate(9);
 
-        return view('customer.articles.index', compact('articles'));
+        return view('customer.blog.index', compact('articles'));
     }
 
     /**
@@ -113,7 +146,7 @@ class PagesController extends Controller
             ->orderBy('id', 'asc')
             ->first();
 
-        return view('customer.articles.show', compact(
+        return view('customer.blog.show', compact(
             'article',
             'relatedArticles',
             'previousArticle',

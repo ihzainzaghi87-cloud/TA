@@ -92,40 +92,16 @@
                             </div>
                         </div>
                         <div class="relative">
-                            <!-- Perfume Bottle Illustration -->
-                            <div class="flex justify-center md:justify-end">
-                                <div class="relative">
-                                    <!-- Bottle Shadow -->
+                            <!-- Product Image -->
+                            <div class="flex justify-center md:justify-end md:items-center h-full">
+                                <div class="relative mb-12 md:mb-20 lg:mt-16 lg:mb-16">
+                                    <!-- Image Shadow -->
                                     <div class="absolute inset-0 bg-yellow-200/30 rounded-full blur-xl transform translate-y-4 scale-75"></div>
 
-                                    <!-- Main Bottle -->
-                                    <div class="relative">
-                                        <!-- Bottle Cap -->
-                                        <div class="w-16 h-8 bg-gradient-to-b from-yellow-600 to-yellow-500 rounded-t-full mx-auto"></div>
-                                        <div class="w-12 h-4 bg-yellow-700 mx-auto"></div>
-
-                                        <!-- Bottle Body -->
-                                        <div class="w-32 h-48 bg-gradient-to-b from-yellow-400 to-yellow-500 rounded-lg relative overflow-hidden">
-                                            <!-- Bottle Label -->
-                                            <div class="absolute inset-x-4 top-8 bottom-8 bg-black/90 rounded flex items-center justify-center">
-                                                <div class="text-white text-center p-4">
-                                                    <div class="text-xs font-bold mb-2">PARANOIA</div>
-                                                    <div class="text-xs opacity-75">PREMIUM</div>
-                                                    <div class="text-xs opacity-75">FRAGRANCE</div>
-                                                </div>
-                                            </div>
-
-                                            <!-- Bottle Shine Effect -->
-                                            <div class="absolute top-4 left-4 w-8 h-32 bg-white/20 rounded-full transform rotate-12"></div>
-                                        </div>
-
-                                        <!-- Bottle Base -->
-                                        <div class="w-32 h-2 bg-yellow-600 rounded-lg"></div>
-
-                                        <!-- Spray Top -->
-                                        <div class="absolute -top-6 left-1/2 -translate-x-1/2 w-4 h-4 bg-yellow-600 rounded-full"></div>
-                                        <div class="absolute -top-8 left-1/2 -translate-x-1/2 w-1 h-4 bg-gray-400"></div>
-                                    </div>
+                                    <!-- Main Image Container -->
+                                    <img src="{{ asset('ui/main_1.png') }}"
+                                         alt="The Paranoia - Premium Fashion"
+                                         class="w-full h-auto max-w-xs md:max-w-sm lg:max-w-md object-contain relative z-10">
 
                                     <!-- Floating Elements -->
                                     <div class="absolute -top-8 -right-8 w-16 h-16 bg-yellow-300/20 rounded-full animate-pulse"></div>

@@ -182,6 +182,14 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
 // ---------- Customer Page ----------
 Route::get('/', [PagesController::class, 'index'])->name('home');
 
+// Products Listing Page
+Route::get('/products', [PagesController::class, 'products'])->name('products');
+
+// Static Pages
+Route::get('/about', [PagesController::class, 'about'])->name('about');
+Route::get('/rewards', [PagesController::class, 'rewards'])->name('rewards');
+Route::get('/blog', [PagesController::class, 'blog'])->name('blog');
+
 // Product Detail Page (Customer)
 Route::get('/products/{slug}', [PagesController::class, 'customerShow'])->name('product.detail');
 

@@ -17,21 +17,21 @@
                    class="text-gray-700 hover:text-yellow-600 px-3 py-2 text-sm font-medium transition duration-300 ease-in-out">
                     Home
                 </a>
-                <a href="#products" 
+                <a href="{{ route('products') }}" 
                    class="text-gray-700 hover:text-yellow-600 px-3 py-2 text-sm font-medium transition duration-300 ease-in-out">
                     Product
                 </a>
-                <a href="#about" 
+                <a href="{{ route('about') }}" 
                    class="text-gray-700 hover:text-yellow-600 px-3 py-2 text-sm font-medium transition duration-300 ease-in-out">
                     About Us
                 </a>
-                <a href="#rewards" 
+                <a href="{{ route('rewards') }}" 
                    class="text-gray-700 hover:text-yellow-600 px-3 py-2 text-sm font-medium transition duration-300 ease-in-out">
                     Reward
                 </a>
                 <a href="{{ route('articles.index') }}" 
                    class="text-gray-700 hover:text-yellow-600 px-3 py-2 text-sm font-medium transition duration-300 ease-in-out">
-                    Articles
+                    Blog
                 </a>
                 
                 {{-- Cart Icon with Badge --}}
@@ -141,19 +141,19 @@
                class="block px-3 py-2 text-gray-700 hover:bg-yellow-50 hover:text-yellow-600 rounded-md transition duration-150">
                 Home
             </a>
-            <a href="#about" 
+            <a href="{{ route('about') }}" 
                class="block px-3 py-2 text-gray-700 hover:bg-yellow-50 hover:text-yellow-600 rounded-md transition duration-150">
                 About Us
             </a>
-            <a href="#products" 
+            <a href="{{ route('products') }}" 
                class="block px-3 py-2 text-gray-700 hover:bg-yellow-50 hover:text-yellow-600 rounded-md transition duration-150">
                 Product
             </a>
-            <a href="#rewards" 
+            <a href="{{ route('rewards') }}" 
                class="block px-3 py-2 text-gray-700 hover:bg-yellow-50 hover:text-yellow-600 rounded-md transition duration-150">
                 Reward
             </a>
-            <a href="#blog" 
+            <a href="{{ route('articles.index') }}" 
                class="block px-3 py-2 text-gray-700 hover:bg-yellow-50 hover:text-yellow-600 rounded-md transition duration-150">
                 Blog
             </a>

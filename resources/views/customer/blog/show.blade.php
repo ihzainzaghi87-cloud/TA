@@ -191,7 +191,7 @@
                         </a>
                         <i class="fas fa-chevron-right text-white/50 mx-3 text-xs"></i>
                         <a href="{{ route('articles.index') }}" class="text-white/70 hover:text-white transition-colors">
-                            Articles
+                            Blog
                         </a>
                         <i class="fas fa-chevron-right text-white/50 mx-3 text-xs"></i>
                         <span class="text-white truncate max-w-[200px]">{{ $article->title }}</span>
@@ -224,11 +224,11 @@
     {{-- Article Content --}}
     <section class="py-12">
         <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-            {{-- Back to Articles --}}
+            {{-- Back to Blog --}}
             <a href="{{ route('articles.index') }}" 
                class="inline-flex items-center gap-2 text-gray-600 hover:text-amber-600 transition-colors mb-8">
                 <i class="fas fa-arrow-left"></i>
-                <span>Back to all articles</span>
+                <span>Back to all blog posts</span>
             </a>
 
             {{-- Main Content Card --}}
@@ -300,13 +300,13 @@
         </div>
     </section>
 
-    {{-- More Articles Section --}}
+    {{-- More Blog Posts Section --}}
     @if($relatedArticles->isNotEmpty())
     <section class="py-12 bg-white">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center mb-8">
                 <h2 class="text-2xl md:text-3xl font-bold text-gray-900">
-                    More Articles
+                    More Blog Posts
                 </h2>
                 <a href="{{ route('articles.index') }}" 
                    class="inline-flex items-center text-amber-600 hover:text-amber-700 font-semibold">

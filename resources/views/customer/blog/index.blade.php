@@ -1,6 +1,6 @@
 @extends('customer.layouts.app')
 
-@section('title', 'Articles')
+@section('title', 'Blog')
 
 @push('styles')
 <style>
@@ -71,7 +71,7 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center">
                 <h1 class="text-5xl md:text-7xl font-black text-black mb-4">
-                    ARTICLES
+                    BLOG
                 </h1>
                 <p class="text-lg md:text-xl text-gray-800 max-w-2xl mx-auto">
                     Discover the latest trends, tips, and stories from The Paranoia
@@ -89,7 +89,7 @@
                 <i class="fas fa-home"></i>
             </a>
             <i class="fas fa-chevron-right text-gray-300 mx-3 text-xs"></i>
-            <span class="text-gray-900 font-medium">Articles</span>
+            <span class="text-gray-900 font-medium">Blog</span>
         </nav>
     </div>
 
@@ -146,11 +146,11 @@
     </section>
     @endif
 
-    {{-- Articles Grid --}}
+    {{-- Blog Grid --}}
     <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-16">
         <div class="flex justify-between items-center mb-8">
             <h2 class="text-2xl md:text-3xl font-bold text-gray-900">
-                Latest Articles
+                Latest Blog Posts
             </h2>
             <div class="text-gray-600">
                 {{ $articles->total() }} {{ Str::plural('article', $articles->total()) }} found
@@ -163,7 +163,7 @@
                 <div class="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-6">
                     <i class="fas fa-newspaper text-gray-400 text-4xl"></i>
                 </div>
-                <h3 class="text-xl font-semibold text-gray-900 mb-2">No Articles Yet</h3>
+                <h3 class="text-xl font-semibold text-gray-900 mb-2">No Blog Yet</h3>
                 <p class="text-gray-600 mb-6">Check back later for the latest updates and stories.</p>
                 <a href="{{ route('home') }}" 
                    class="inline-block bg-[#FAD470] text-black px-6 py-3 rounded-full font-semibold hover:bg-yellow-500 transition-colors">
@@ -171,11 +171,11 @@
                 </a>
             </div>
         @else
-            {{-- Articles Grid --}}
+            {{-- Blog Grid --}}
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 @foreach($articles->skip($articles->currentPage() == 1 ? 1 : 0) as $article)
                 <a href="{{ route('articles.show', $article->slug) }}" class="article-card group">
-                    {{-- Article Image --}}
+                    {{-- Blog Image --}}
                     <div class="relative h-48 overflow-hidden">
                         @if($article->trixRichText && $article->trixRichText->first())
                             @php
