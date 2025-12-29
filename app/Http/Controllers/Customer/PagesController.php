@@ -38,7 +38,80 @@ class PagesController extends Controller
      */
     public function products(Request $request)
     {
-        return view('customer.products.index');
+        // Query dasar
+        $query = Product::query()
+            ->where('is_active', true)
+            ->where('is_reward', false)
+            ->with(['category', 'images', 'variations']);
+
+        // Search
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                ->orWhere('description', 'like', "%{$search}%");
+            });
+        }
+
+        // Filter by category
+        if ($request->filled('category')) {
+            $query->where('category_id', $request->category);
+        }
+
+        // Filter by price range
+        if ($request->filled('price_min')) {
+            $query->where('price', '>=', $request->price_min);
+        }
+        if ($request->filled('price_max')) {
+            $query->where('price', '<=', $request->price_max);
+        }
+
+        // Sort/Order by
+        $sortBy = $request->get('sort', 'newest');
+        switch ($sortBy) {
+            case 'newest':
+                $query->orderBy('created_at', 'desc');
+                break;
+            case 'bestseller':
+                // Asumsi ada field 'total_sold' atau join dengan order_items
+                $query->withCount(['orderItems as total_sold' => function($q) {
+                    $q->selectRaw('COALESCE(SUM(quantity), 0)');
+                }])->orderBy('total_sold', 'desc');
+                break;
+            case 'price_low':
+                $query->orderBy('price', 'asc');
+                break;
+            case 'price_high':
+                $query->orderBy('price', 'desc');
+                break;
+            default:
+                $query->orderBy('created_at', 'desc');
+        }
+
+        // Pagination
+        $products = $query->paginate(12)->withQueryString();
+
+        // Get all categories for filter
+        $categories = Category::orderBy('name')->get();
+
+        // Get price range for filter
+        $priceRange = Product::where('is_active', true)
+            ->where('is_reward', false)
+            ->selectRaw('MIN(price) as min_price, MAX(price) as max_price')
+            ->first();
+
+        // Get active category if filter is applied
+        $activeCategory = null;
+        if ($request->filled('category')) {
+            $activeCategory = Category::find($request->category);
+        }
+
+        return view('customer.products.index', compact(
+            'products',
+            'categories',
+            'priceRange',
+            'activeCategory'
+        ));
     }
 
     /**

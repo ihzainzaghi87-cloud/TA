@@ -57,4 +57,12 @@ class Product extends Model
     {
         return $this->hasMany(Variation::class);
     }
+
+    /**
+     * Relasi ke order items untuk menghitung penjualan
+     */
+    public function orderItems()
+    {
+        return $this->hasMany(OrderItem::class);
+    }
 }
