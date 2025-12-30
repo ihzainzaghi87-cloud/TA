@@ -513,7 +513,7 @@ function productFilter() {
                     REWARD
                 </h2>
                 <p class="text-sm md:text-lg text-gray-600 max-w-3xl">
-                   Tukarkan poin Anda dengan produk menarik
+                   Redeem your points for exclusive reward products!
                 </p>
             </div>
             <a href="{{ route('rewards') }}" class="bg-gradient-to-r from-yellow-400 to-yellow-500 text-black px-4 md:px-6 py-2 md:py-3 rounded-full font-semibold hover:from-yellow-500 hover:to-yellow-600 transition duration-300 transform hover:scale-105 shadow-lg text-sm md:text-base">
