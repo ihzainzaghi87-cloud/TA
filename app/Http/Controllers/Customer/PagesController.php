@@ -123,11 +123,121 @@ class PagesController extends Controller
     }
 
     /**
-     * Display the rewards page.
+     * Display rewards products listing page.
      */
-    public function rewards()
+    public function rewards(Request $request)
     {
-        return view('customer.pages.rewards');
+        // Query dasar - hanya produk reward
+        $query = Product::query()
+            ->where('is_active', true)
+            ->where('is_reward', true)  // Hanya produk reward
+            ->with(['category', 'images', 'variations']);
+
+        // Search
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                ->orWhere('description', 'like', "%{$search}%");
+            });
+        }
+
+        // Filter by category
+        if ($request->filled('category')) {
+            $query->where('category_id', $request->category);
+        }
+
+        // Filter by price range (atau bisa juga filter berdasarkan points jika ada)
+        if ($request->filled('price_min')) {
+            $query->where('price', '>=', $request->price_min);
+        }
+        if ($request->filled('price_max')) {
+            $query->where('price', '<=', $request->price_max);
+        }
+
+        // Sort/Order by
+        $sortBy = $request->get('sort', 'newest');
+        switch ($sortBy) {
+            case 'newest':
+                $query->orderBy('created_at', 'desc');
+                break;
+            case 'bestseller':
+                $query->withCount(['orderItems as total_sold' => function($q) {
+                    $q->selectRaw('COALESCE(SUM(quantity), 0)');
+                }])->orderBy('total_sold', 'desc');
+                break;
+            case 'price_low':
+                $query->orderBy('price', 'asc');
+                break;
+            case 'price_high':
+                $query->orderBy('price', 'desc');
+                break;
+            default:
+                $query->orderBy('created_at', 'desc');
+        }
+
+        // Pagination
+        $products = $query->paginate(12)->withQueryString();
+
+        // Get all categories for filter
+        $categories = Category::orderBy('name')->get();
+
+        // Get price range for filter
+        $priceRange = Product::where('is_active', true)
+            ->where('is_reward', true)
+            ->selectRaw('MIN(price) as min_price, MAX(price) as max_price')
+            ->first();
+
+        // Get active category if filter is applied
+        $activeCategory = null;
+        if ($request->filled('category')) {
+            $activeCategory = Category::find($request->category);
+        }
+
+        return view('customer.rewards.index', compact(
+            'products',
+            'categories',
+            'priceRange',
+            'activeCategory'
+        ));
+    }
+
+    /**
+     * Display the specified reward product detail.
+     */
+    public function rewardShow($slug)
+    {
+        $product = Product::with(['category', 'images', 'variations'])
+            ->where('slug', $slug)
+            ->where('is_active', true)
+            ->where('is_reward', true)  // Hanya produk reward
+            ->firstOrFail();
+
+        // Get related reward products
+        $relatedProducts = Product::with(['images'])
+            ->where('category_id', $product->category_id)
+            ->where('id', '!=', $product->id)
+            ->where('is_active', true)
+            ->where('is_reward', true)
+            ->take(4)
+            ->get();
+
+        // Get stock information
+        $totalStock = $product->variations->sum('stock');
+        $availableVariations = $product->variations->where('stock', '>', 0);
+
+        // Get unique colors and sizes
+        $colors = $product->variations->pluck('color')->unique()->filter();
+        $sizes = $product->variations->pluck('size')->unique()->filter();
+
+        return view('customer.rewards.detail', compact(
+            'product',
+            'relatedProducts',
+            'totalStock',
+            'availableVariations',
+            'colors',
+            'sizes'
+        ));
     }
 
     /**
