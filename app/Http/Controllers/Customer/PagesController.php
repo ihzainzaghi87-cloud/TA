@@ -20,17 +20,26 @@ class PagesController extends Controller
             ->orderBy('name')
             ->get();
 
-        // Ambil produk populer (misal: 8 produk terbaru yang aktif)
+        // Ambil produk populer (produk terbaru yang aktif dan bukan reward)
         $popularProducts = Product::where('is_active', true)
+            ->where('is_reward', false)
             ->with(['category', 'images', 'variations'])
             ->orderBy('created_at', 'desc')
-            ->take(8)
+            ->take(10)
+            ->get();
+
+        // Ambil produk reward (produk yang aktif dan adalah reward)
+        $rewardProducts = Product::where('is_active', true)
+            ->where('is_reward', true)
+            ->with(['category', 'images', 'variations'])
+            ->orderBy('created_at', 'desc')
+            ->take(10)
             ->get();
 
         // Ambil banners jika ada
         $banners = Banner::active()->orderBy('created_at', 'desc')->get();
 
-        return view('customer.home', compact('categories', 'popularProducts', 'banners'));
+        return view('customer.home', compact('categories', 'popularProducts', 'rewardProducts', 'banners'));
     }
 
     /**

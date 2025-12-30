@@ -50,14 +50,20 @@
                      alt="{{ $banner->title }}"
                      class="w-full h-full object-cover"
                      loading="eager">
-                <div class="absolute inset-0 bg-gradient-to-r from-white/10 to-transparent flex items-center">
+                <div class="absolute inset-0 bg-gradient-to-r from-black/60 via-black/40 to-transparent flex items-center">
                     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
-                        <div class="max-w-2xl">
-                            <h2 class="text-4xl md:text-6xl font-bold text-white mb-4">
+                        <div class="max-w-xl md:max-w-2xl pl-2 md:pl-0">
+                            <span class="inline-block text-yellow-400 text-xs md:text-sm font-semibold tracking-widest uppercase mb-2 md:mb-4">New Collection</span>
+                            <h2 class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-3 md:mb-4 leading-tight drop-shadow-lg">
                                 {{ $banner->title }}
                             </h2>
+                            @if($banner->description)
+                            <p class="text-white/90 text-sm md:text-base lg:text-lg mb-4 md:mb-6 max-w-md leading-relaxed hidden sm:block">
+                                {{ $banner->description }}
+                            </p>
+                            @endif
                             <a href="{{ route('products') }}"
-                               class="inline-block bg-gradient-to-r from-yellow-400 to-yellow-500 text-black px-8 py-3 rounded-full font-semibold hover:from-yellow-500 hover:to-yellow-600 transition duration-300 transform hover:scale-105 shadow-lg">
+                               class="inline-block bg-gradient-to-r from-yellow-400 to-yellow-500 text-black px-6 md:px-8 py-2.5 md:py-3 rounded-full font-semibold hover:from-yellow-500 hover:to-yellow-600 transition duration-300 transform hover:scale-105 shadow-lg text-sm md:text-base">
                                 Shop Now
                             </a>
                         </div>
@@ -230,416 +236,402 @@
 </section>
 
 {{-- Browse Product Category --}}
-<section id="products" class="py-16 bg-gray-50">
+<section id="products" class="py-12 md:py-16 bg-gray-50">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <!-- Header and Button Container -->
-        <div class="flex justify-between items-center mb-12">
+        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8 md:mb-12">
             <!-- Header Text - Left -->
-            <h2 class="text-3xl md:text-4xl font-bold text-gray-900">
-                Browse Product <br> By Category
+            <h2 class="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900">
+                Browse Product <br class="hidden sm:block"> By Category
             </h2>
 
             <!-- View More Button - Right -->
-            <a href="#categories"
-               class="inline-block bg-gradient-to-r from-yellow-400 to-yellow-500 text-black px-8 py-3 rounded-full font-bold hover:from-yellow-500 hover:to-yellow-600 transition duration-300 transform hover:scale-105 shadow-lg">
-                View More
+            <a href="{{ route('products') }}"
+               class="inline-block bg-gradient-to-r from-yellow-400 to-yellow-500 text-black px-6 md:px-8 py-2.5 md:py-3 rounded-full font-bold hover:from-yellow-500 hover:to-yellow-600 transition duration-300 transform hover:scale-105 shadow-lg text-sm md:text-base">
+                View All
             </a>
         </div>
 
-        <!-- Category Grid - Compact aligned cards -->
-        <div class="flex flex-wrap justify-center gap-2 px-4">
-            <!-- Category 1: Clothes -->
-            <a href="#"
-               class="group border-2 border-solid rounded-3xl shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden flex items-center"
-               style="width: 280px; height: 80px;">
-                <!-- Icon Container -->
-                <div class="w-12 h-12 bg-[#FAD572] ml-4 rounded-full flex items-center justify-center group-hover:bg-blue-600 transition-colors flex-shrink-0">
-                    <i class="fas fa-tshirt text-white text-2xl"></i>
-                </div>
+        <!-- Category Grid - Dynamic from database -->
+        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-4">
+            @php
+                $categoryIcons = [
+                    't-shirt' => 'fa-tshirt',
+                    'tshirt' => 'fa-tshirt',
+                    'kaos' => 'fa-tshirt',
+                    'shirt' => 'fa-tshirt',
+                    'jacket' => 'fa-vest',
+                    'jaket' => 'fa-vest',
+                    'hoodie' => 'fa-vest',
+                    'pants' => 'fa-socks',
+                    'celana' => 'fa-socks',
+                    'jeans' => 'fa-socks',
+                    'hat' => 'fa-hat-cowboy',
+                    'topi' => 'fa-hat-cowboy',
+                    'cap' => 'fa-hat-cowboy',
+                    'bag' => 'fa-shopping-bag',
+                    'tas' => 'fa-shopping-bag',
+                    'accessories' => 'fa-gem',
+                    'aksesoris' => 'fa-gem',
+                    'shoes' => 'fa-shoe-prints',
+                    'sepatu' => 'fa-shoe-prints',
+                ];
+                $hoverColors = ['hover:bg-blue-600', 'hover:bg-gray-700', 'hover:bg-orange-600', 'hover:bg-red-600', 'hover:bg-purple-600', 'hover:bg-green-600', 'hover:bg-pink-600', 'hover:bg-indigo-600'];
+            @endphp
+            
+            @foreach($categories->take(8) as $index => $category)
+                @php
+                    $iconKey = strtolower($category->slug ?? $category->name);
+                    $icon = 'fa-tag';
+                    foreach($categoryIcons as $key => $value) {
+                        if(str_contains($iconKey, $key)) {
+                            $icon = $value;
+                            break;
+                        }
+                    }
+                    $hoverColor = $hoverColors[$index % count($hoverColors)];
+                @endphp
+                <a href="{{ route('products', ['category' => $category->id]) }}"
+                   class="group bg-white border-2 border-gray-100 rounded-2xl md:rounded-3xl shadow-sm hover:shadow-md hover:border-yellow-400 transition-all duration-300 overflow-hidden flex items-center p-3 md:p-4">
+                    <!-- Icon Container -->
+                    <div class="w-10 h-10 md:w-12 md:h-12 bg-[#FAD572] rounded-full flex items-center justify-center {{ $hoverColor }} transition-colors flex-shrink-0">
+                        <i class="fas {{ $icon }} text-white text-lg md:text-xl"></i>
+                    </div>
 
-                <!-- Category Name -->
-                <div class="flex-1 px-6 text-center">
-                    <h3 class="text-sm font-semibold text-gray-900">Clothes</h3>
-                </div>
-            </a>
+                    <!-- Category Info -->
+                    <div class="flex-1 pl-3 md:pl-4 min-w-0">
+                        <h3 class="text-sm md:text-base font-semibold text-gray-900 truncate">{{ $category->name }}</h3>
+                        <p class="text-xs text-gray-500">{{ $category->products_count ?? 0 }} Products</p>
+                    </div>
 
-            <!-- Category 2: Jacket -->
-            <a href="#"
-               class="group border-2 border-solid rounded-3xl shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden flex items-center"
-               style="width: 280px; height: 80px;">
-                <!-- Icon Container -->
-                <div class="w-12 h-12 bg-[#FAD572] ml-4 rounded-full flex items-center justify-center group-hover:bg-gray-700 transition-colors flex-shrink-0">
-                    <i class="fas fa-vest text-white text-2xl"></i>
-                </div>
-
-                <!-- Category Name -->
-                <div class="flex-1 px-6 text-center">
-                    <h3 class="text-sm font-semibold text-gray-900">Jacket</h3>
-                </div>
-            </a>
-
-            <!-- Category 3: Pants -->
-            <a href="#"
-               class="group border-2 border-solid rounded-3xl shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden flex items-center"
-               style="width: 280px; height: 80px;">
-                <!-- Icon Container -->
-                <div class="w-12 h-12 bg-[#FAD572] ml-4 rounded-full flex items-center justify-center group-hover:bg-orange-600 transition-colors flex-shrink-0">
-                    <i class="fas fa-socks text-white text-2xl"></i>
-                </div>
-
-                <!-- Category Name -->
-                <div class="flex-1 px-6 text-center">
-                    <h3 class="text-sm font-semibold text-gray-900">Pants</h3>
-                </div>
-            </a>
-
-            <!-- Category 4: Hats -->
-            <a href="#"
-               class="group border-2 border-solid rounded-3xl shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden flex items-center"
-               style="width: 280px; height: 80px;">
-                <!-- Icon Container -->
-                <div class="w-12 h-12 bg-[#FAD572] ml-4 rounded-full flex items-center justify-center group-hover:bg-red-600 transition-colors flex-shrink-0">
-                    <i class="fas fa-hat-cowboy text-white text-2xl"></i>
-                </div>
-
-                <!-- Category Name -->
-                <div class="flex-1 px-6 text-center">
-                    <h3 class="text-sm font-semibold text-gray-900">Hats</h3>
-                </div>
-            </a>
-        </div>
-    </div>
-</section>
-
-
-{{-- Category Navigation Bar --}}
-<section class="pt-8">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <!-- Product Header -->
-        <div class="mb-8 text-left">
-            <h1 class="text-5xl md:text-6xl font-black text-gray-900 mb-4">PRODUCT</h1>
-            <p class="text-lg md:text-xl text-gray-600 max-w-4xl whitespace-nowrap">
-                Redefine your wardrobe with fashion that's chic, versatile, and uniquely you
-            </p>
-        </div>
-        <!-- Category Navigation -->
-        <div class="flex flex-wrap justify-center gap-40 rounded-3xl bg-[#FAD470] p-2 p-2">
-            <!-- All Tab (Active) -->
-            <a href="#all"
-               class="group px-8 py-3 text-black rounded-full font-semibold hover:text-black hover:bg-white transition-all duration-300 transform">
-                All
-            </a>
-
-            <!-- T-shirt Tab -->
-            <a href="#tshirt"
-               class="group px-8 py-3 text-black rounded-full font-semibold hover:text-black hover:bg-white transition-all duration-300 transform">
-                T-shirt
-            </a>
-
-            <!-- Jacket Tab -->
-            <a href="#jacket"
-               class="group px-8 py-3 text-black rounded-full font-semibold hover:text-black hover:bg-white transition-all duration-300 transform">
-                Jacket
-            </a>
-
-            <!-- Bag Tab -->
-            <a href="#bag"
-                class="group px-8 py-3 text-black rounded-full font-semibold hover:text-black hover:bg-white transition-all duration-300 transform">
-                    Bag
+                    <!-- Arrow Icon -->
+                    <div class="flex-shrink-0 ml-2">
+                        <i class="fas fa-chevron-right text-gray-400 group-hover:text-yellow-500 transition-colors text-sm"></i>
+                    </div>
                 </a>
-
-            <!-- Pants Tab -->
-            <a href="#pants"
-               class="group px-8 py-3 text-black rounded-full font-semibold hover:text-black hover:bg-white transition-all duration-300 transform">
-                Pants
-            </a>
-        </div>
-    </div>
-</section>
-
-{{-- Catalog Section --}}
-<section class="pb-8 pt-5 bg-gray-50">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <?php
-        // Array data produk
-        $catalogProducts = [
-            [
-                'id' => 1,
-                'name' => 'Classic White T-Shirt',
-                'price' => 29.99,
-                'image' => 'ui/catalog/product1.jpg',
-                'category' => 'tshirt',
-                'slug' => 'classic-white-t-shirt'
-            ],
-            [
-                'id' => 2,
-                'name' => 'Denim Jacket Classic',
-                'price' => 89.99,
-                'image' => 'ui/catalog/product2.jpg',
-                'category' => 'jacket',
-                'slug' => 'denim-jacket-classic'
-            ],
-            [
-                'id' => 3,
-                'name' => 'Leather Crossbody Bag',
-                'price' => 129.99,
-                'image' => 'ui/catalog/product3.jpg',
-                'category' => 'bag',
-                'slug' => 'leather-crossbody-bag'
-            ],
-            [
-                'id' => 4,
-                'name' => 'Slim Fit Chino Pants',
-                'price' => 59.99,
-                'image' => 'ui/catalog/product4.jpg',
-                'category' => 'pants',
-                'slug' => 'slim-fit-chino-pants'
-            ],
-            [
-                'id' => 5,
-                'name' => 'Graphic Print Hoodie',
-                'price' => 45.99,
-                'image' => 'ui/catalog/product5.jpg',
-                'category' => 'tshirt',
-                'slug' => 'graphic-print-hoodie'
-            ]
-        ];
-        ?>
-
-        <!-- Product Grid -->
-        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 md:gap-6">
-            @foreach($catalogProducts as $product)
-            <a href="{{ route('product.detail', $product['slug']) }}" class="group rounded-lg hover:shadow-lg transition-all duration-300 overflow-hidden">
-                <!-- Product Image -->
-                <div class="relative aspect-square bg-gray-100 overflow-hidden">
-                    <img src="{{ asset($product['image']) }}"
-                         alt="{{ $product['name'] }}"
-                         class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
-
-                    <!-- Quick Actions Overlay -->
-                    <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-all duration-300 flex items-center justify-center">
-                        <div class="opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex gap-2">
-                            <button class="bg-white p-2 rounded-lg shadow-md hover:bg-gray-100 transition-colors" onclick="event.stopPropagation(); addToWishlist({{ $product['id'] }})">
-                                <i class="fas fa-heart text-gray-700 text-sm"></i>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Product Info -->
-                <div class="p-4">
-                    <h3 class="font-semibold text-gray-900 text-sm mb-2 line-clamp-2">
-                        {{ $product['name'] }}
-                    </h3>
-
-                    <!-- Price -->
-                    <div class="flex items-center justify-between mb-3">
-                        <span class="text-lg font-bold text-gray-900">
-                            ${{ number_format($product['price'], 2) }}
-                        </span>
-                    </div>
-                </div>
-            </a>
             @endforeach
         </div>
     </div>
 </section>
 
-<script>
-// JavaScript functions untuk product actions
-function viewProduct(productSlug) {
-    console.log('View product:', productSlug);
-    // Redirect ke halaman detail product
-    window.location.href = `/product/${productSlug}`;
-}
 
-function addToWishlist(productId) {
-    console.log('Add to wishlist:', productId);
-    // Implementasi wishlist akan ditambahkan di sini
-    alert('Added to wishlist! Product ID: ' + productId);
+{{-- Category Navigation Bar & Catalog Section --}}
+<section class="pt-8 pb-8 bg-gray-50" x-data="productFilter()">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <!-- Product Header -->
+        <div class="mb-6 md:mb-8 text-left">
+            <h1 class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black text-gray-900 mb-2 md:mb-4">PRODUCT</h1>
+            <p class="text-sm sm:text-base md:text-lg lg:text-xl text-gray-600 max-w-4xl">
+                Redefine your wardrobe with fashion that's chic, versatile, and uniquely you
+            </p>
+        </div>
+        <!-- Category Navigation -->
+        <div class="flex flex-wrap justify-center gap-2 sm:gap-4 md:gap-6 lg:gap-10 rounded-2xl md:rounded-3xl bg-[#FAD470] p-2 md:p-3">
+            <!-- All Tab -->
+            <button @click="filterByCategory('all')"
+               :class="activeCategory === 'all' ? 'bg-white text-black' : 'text-black hover:bg-white'"
+               class="px-4 sm:px-6 md:px-8 py-2 md:py-3 rounded-full text-sm md:text-base font-semibold transition-all duration-300 transform">
+                All
+            </button>
+
+            @foreach($categories->take(4) as $category)
+            <button @click="filterByCategory('{{ $category->id }}')"
+               :class="activeCategory === '{{ $category->id }}' ? 'bg-white text-black' : 'text-black hover:bg-white'"
+               class="px-4 sm:px-6 md:px-8 py-2 md:py-3 rounded-full text-sm md:text-base font-semibold transition-all duration-300 transform">
+                {{ $category->name }}
+            </button>
+            @endforeach
+        </div>
+    </div>
+
+    <!-- Catalog Section -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-5">
+        <!-- Loading State -->
+        <div x-show="isLoading" class="flex justify-center py-12">
+            <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-yellow-500"></div>
+        </div>
+
+        <!-- Product Grid -->
+        <div x-show="!isLoading" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 md:gap-4 lg:gap-5">
+            <template x-for="product in filteredProducts" :key="product.id">
+                <div class="group bg-white rounded-xl md:rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden">
+                    <!-- Image Container -->
+                    <div class="relative overflow-hidden">
+                        <template x-if="product.image">
+                            <img :src="product.image"
+                                 :alt="product.name"
+                                 class="w-full h-32 sm:h-36 md:h-40 object-cover group-hover:scale-105 transition-transform duration-500">
+                        </template>
+                        <template x-if="!product.image">
+                            <div class="w-full h-32 sm:h-36 md:h-40 bg-gray-200 flex items-center justify-center">
+                                <i class="fas fa-image text-gray-400 text-2xl"></i>
+                            </div>
+                        </template>
+                    </div>
+                    
+                    <!-- Product Content -->
+                    <div class="p-3 md:p-4">
+                        <div class="mb-2">
+                            <span class="text-xs font-medium text-red-600 bg-red-50 px-1.5 py-0.5 rounded" x-text="product.category_name || 'Product'"></span>
+                        </div>
+                        
+                        <h3 class="text-sm md:text-base font-bold text-gray-900 mb-2 line-clamp-2" x-text="product.name"></h3>
+                        
+                        <p class="text-base md:text-lg font-black text-gray-900 mb-3" x-text="'Rp ' + product.price_formatted"></p>
+                        
+                        <a :href="'/products/' + product.slug" 
+                           class="block w-full bg-[#FAD470] text-black font-semibold py-2 md:py-2.5 rounded-lg hover:bg-[#FAD420] active:scale-95 transition-all duration-200 shadow-md hover:shadow-lg text-center text-xs md:text-sm">
+                            View Details
+                        </a>
+                    </div>
+                </div>
+            </template>
+
+            <!-- Empty State -->
+            <template x-if="filteredProducts.length === 0 && !isLoading">
+                <div class="col-span-full text-center py-12">
+                    <i class="fas fa-box-open text-gray-300 text-5xl mb-4"></i>
+                    <p class="text-gray-500">Belum ada produk tersedia</p>
+                </div>
+            </template>
+        </div>
+
+        <!-- View All Button -->
+        <div class="text-center mt-6 md:mt-8" x-show="filteredProducts.length > 0">
+            <a :href="activeCategory === 'all' ? '{{ route('products') }}' : '{{ route('products') }}?category=' + activeCategory" 
+               class="inline-block bg-gradient-to-r from-yellow-400 to-yellow-500 text-black px-6 md:px-8 py-2.5 md:py-3 rounded-full font-semibold hover:from-yellow-500 hover:to-yellow-600 transition duration-300 transform hover:scale-105 shadow-lg text-sm md:text-base">
+                View All Products
+            </a>
+        </div>
+    </div>
+</section>
+
+@php
+    $productsData = $popularProducts->map(function($product) {
+        return [
+            'id' => $product->id,
+            'name' => $product->name,
+            'slug' => $product->slug,
+            'price' => $product->price,
+            'price_formatted' => number_format($product->price, 0, ',', '.'),
+            'category_id' => $product->category_id,
+            'category_name' => $product->category->name ?? 'Product',
+            'image' => $product->images->count() > 0 ? asset('storage/' . $product->images->first()->image_path) : null,
+        ];
+    })->values();
+@endphp
+
+<script>
+function productFilter() {
+    return {
+        activeCategory: 'all',
+        isLoading: false,
+        allProducts: @json($productsData),
+        
+        get filteredProducts() {
+            if (this.activeCategory === 'all') {
+                return this.allProducts;
+            }
+            return this.allProducts.filter(product => product.category_id == this.activeCategory);
+        },
+        
+        filterByCategory(categoryId) {
+            this.isLoading = true;
+            this.activeCategory = categoryId;
+            
+            // Simulate loading effect
+            setTimeout(() => {
+                this.isLoading = false;
+            }, 200);
+        }
+    }
 }
 </script>
 
 {{-- About Section --}}
-<section id="about" class="py-16 bg-white">
+<section id="about" class="py-12 md:py-16 bg-white">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <!-- Section Header -->
-        <div class="flex justify-between items-start mb-16">
+        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8 md:mb-16">
             <div>
-                <h2 class="text-4xl md:text-5xl font-bold text-gray-900 mb-2">
+                <h2 class="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-900 mb-2">
                     ABOUT OUR BRAND
                 </h2>
-                <p class="text-lg text-gray-600 max-w-3xl">
+                <p class="text-sm md:text-lg text-gray-600 max-w-3xl">
                    About Us: Our Brand Story
                 </p>
             </div>
-            <button class="bg-gradient-to-r from-yellow-400 to-yellow-500 text-black px-6 py-3 rounded-full font-semibold hover:from-yellow-500 hover:to-yellow-600 transition duration-300 transform hover:scale-105 shadow-lg">
-                View More ->
-            </button>
+            <a href="#" class="bg-gradient-to-r from-yellow-400 to-yellow-500 text-black px-4 md:px-6 py-2 md:py-3 rounded-full font-semibold hover:from-yellow-500 hover:to-yellow-600 transition duration-300 transform hover:scale-105 shadow-lg text-sm md:text-base">
+                View More
+            </a>
         </div>
 
         <!-- Main Content -->
-        <div class="relative mb-16 -mx-4 md:-mx-8 lg:-mx-16">
+        <div class="relative mb-8 md:mb-16 -mx-4 md:-mx-8 lg:-mx-16">
             <!-- Background Image Full Width -->
             <img src="{{ asset('about-us.jpg') }}"
                  alt="About Us"
-                 class="w-full max-h-[500px] object-cover">
+                 class="w-full h-[250px] sm:h-[350px] md:h-[400px] lg:max-h-[500px] object-cover">
 
-            <!-- Component Overlay on Right -->
-            <div class="absolute top-8 right-8 md:right-8 lg:right-16 bg-white p-6 rounded-lg shadow-lg max-w-md">
-                <h3 class="text-2xl font-bold text-gray-900 mb-4">
+            <!-- Component Overlay on Right - Hidden on mobile, shown on larger screens -->
+            <div class="hidden md:block absolute top-8 right-8 lg:right-16 bg-white p-4 md:p-6 rounded-lg shadow-lg max-w-sm lg:max-w-md">
+                <h3 class="text-xl md:text-2xl font-bold text-gray-900 mb-3 md:mb-4">
                     Our Story
                 </h3>
-                <p class="text-gray-600 mb-4 leading-relaxed">
+                <p class="text-gray-600 mb-3 md:mb-4 leading-relaxed text-sm md:text-base">
                     Founded with a vision to revolutionize the fashion industry, we started as a small boutique with big dreams. Today, we're proud to be one of the most trusted names in online fashion retail.
                 </p>
-                <p class="text-gray-600 leading-relaxed">
+                <p class="text-gray-600 leading-relaxed text-sm md:text-base">
                     Our commitment to quality, style, and customer satisfaction has helped us build a community of fashion lovers who trust us for their wardrobe needs.
                 </p>
             </div>
+        </div>
+
+        <!-- Mobile Story Content -->
+        <div class="md:hidden bg-white p-4 rounded-lg shadow-sm -mt-4">
+            <h3 class="text-lg font-bold text-gray-900 mb-3">
+                Our Story
+            </h3>
+            <p class="text-gray-600 mb-3 leading-relaxed text-sm">
+                Founded with a vision to revolutionize the fashion industry, we started as a small boutique with big dreams. Today, we're proud to be one of the most trusted names in online fashion retail.
+            </p>
+            <p class="text-gray-600 leading-relaxed text-sm">
+                Our commitment to quality, style, and customer satisfaction has helped us build a community of fashion lovers.
+            </p>
         </div>
 
     </div>
 </section>
 
 {{-- Rewards Section --}}
-<section class="py-16 bg-gray-50">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <!-- Section Header -->
-            <div class="flex justify-between items-start mb-16">
-                <div>
-                    <h2 class="text-4xl md:text-5xl font-bold text-gray-900 mb-2">
-                        REWARD
-                    </h2>
-                    <p class="text-lg text-gray-600 max-w-3xl">
-                       Get Rewards
-                    </p>
-                </div>
-                <button class="bg-gradient-to-r from-yellow-400 to-yellow-500 text-black px-6 py-3 rounded-full font-semibold hover:from-yellow-500 hover:to-yellow-600 transition duration-300 transform hover:scale-105 shadow-lg">
-                    View More ->
-                </button>
-            </div>
-
-            <?php
-            // Array data produk
-            $catalogProducts = [
-                [
-                    'id' => 1,
-                    'name' => 'Classic White T-Shirt',
-                    'price' => 29.99,
-                    'image' => 'ui/catalog/product1.jpg',
-                    'category' => 'tshirt',
-                    'slug' => 'classic-white-t-shirt'
-                ],
-                [
-                    'id' => 2,
-                    'name' => 'Denim Jacket Classic',
-                    'price' => 89.99,
-                    'image' => 'ui/catalog/product2.jpg',
-                    'category' => 'jacket',
-                    'slug' => 'denim-jacket-classic'
-                ],
-                [
-                    'id' => 3,
-                    'name' => 'Leather Crossbody Bag',
-                    'price' => 129.99,
-                    'image' => 'ui/catalog/product3.jpg',
-                    'category' => 'bag',
-                    'slug' => 'leather-crossbody-bag'
-                ],
-                [
-                    'id' => 4,
-                    'name' => 'Slim Fit Chino Pants',
-                    'price' => 59.99,
-                    'image' => 'ui/catalog/product4.jpg',
-                    'category' => 'pants',
-                    'slug' => 'slim-fit-chino-pants'
-                ],
-                [
-                    'id' => 5,
-                    'name' => 'Graphic Print Hoodie',
-                    'price' => 45.99,
-                    'image' => 'ui/catalog/product5.jpg',
-                    'category' => 'tshirt',
-                    'slug' => 'graphic-print-hoodie'
-                ]
-            ];
-            ?>
-
-            <!-- Product Grid -->
-            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 md:gap-6">
-                @foreach($catalogProducts as $product)
-                <a href="{{ route('product.detail', $product['slug']) }}" class="group rounded-lg hover:shadow-lg transition-all duration-300 overflow-hidden">
-                    <!-- Product Image -->
-                    <div class="relative aspect-square bg-gray-100 overflow-hidden">
-                        <img src="{{ asset($product['image']) }}"
-                            alt="{{ $product['name'] }}"
-                            class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
-
-                        <!-- Quick Actions Overlay -->
-                        <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-all duration-300 flex items-center justify-center">
-                            <div class="opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex gap-2">
-                                <button class="bg-white p-2 rounded-lg shadow-md hover:bg-gray-100 transition-colors" onclick="event.stopPropagation(); addToWishlist({{ $product['id'] }})">
-                                    <i class="fas fa-heart text-gray-700 text-sm"></i>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Product Info -->
-                    <div class="p-4">
-                        <h3 class="font-semibold text-gray-900 text-sm mb-2 line-clamp-2">
-                            {{ $product['name'] }}
-                        </h3>
-
-                        <!-- Price -->
-                        <div class="flex items-center justify-between mb-3">
-                            <span class="text-lg font-bold text-gray-900">
-                                ${{ number_format($product['price'], 2) }}
-                            </span>
-                        </div>
-                    </div>
-                </a>
-                @endforeach
-            </div>
-        </div>
-    </section>  
-
-{{-- Collection Section --}}
-<section id="our-collections" class="py-16 bg-gray-50">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8" >
+<section class="py-12 md:py-16 bg-gray-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <!-- Section Header -->
-        <div class="flex justify-between items-start mb-16">
+        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8 md:mb-12">
             <div>
-                <h2 class="text-4xl md:text-5xl font-bold text-gray-900 mb-2">
-                    OUR COLLECTIONS
+                <h2 class="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-900 mb-2">
+                    REWARD
                 </h2>
+                <p class="text-sm md:text-lg text-gray-600 max-w-3xl">
+                   Tukarkan poin Anda dengan produk menarik
+                </p>
             </div>
-            <button class="bg-gradient-to-r from-yellow-400 to-yellow-500 text-black px-6 py-3 rounded-full font-semibold hover:from-yellow-500 hover:to-yellow-600 transition duration-300 transform hover:scale-105 shadow-lg">
-                View More ->
-            </button>
+            <a href="{{ route('rewards') }}" class="bg-gradient-to-r from-yellow-400 to-yellow-500 text-black px-4 md:px-6 py-2 md:py-3 rounded-full font-semibold hover:from-yellow-500 hover:to-yellow-600 transition duration-300 transform hover:scale-105 shadow-lg text-sm md:text-base">
+                View All
+            </a>
         </div>
-        <div class="">
-            <div class="relative overflow-hidden rounded-3xl shadow-lg">
-                <img src="{{ asset('ui/collections/collection-banner.jpg') }}"
-                     alt="Our Collections"
-                     class="w-full h-auto object-cover">
 
-                <!-- Overlay Text -->
-                <div class="absolute inset-0 bg-black bg-opacity-30 flex flex-col items-center justify-center text-center px-4">
-                    <h3 class="text-4xl md:text-5xl font-bold text-white mb-4">
-                        Summer 2024 Collection
+        <!-- Reward Grid -->
+        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 md:gap-4 lg:gap-5">
+            @forelse($rewardProducts as $product)
+            <div class="group bg-white rounded-xl md:rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden">
+                <!-- Image Container -->
+                <div class="relative overflow-hidden">
+                    @if($product->images->count() > 0)
+                        <img src="{{ asset('storage/' . $product->images->first()->image_path) }}"
+                            alt="{{ $product->name }}"
+                            class="w-full h-32 sm:h-36 md:h-40 object-cover group-hover:scale-105 transition-transform duration-500">
+                    @else
+                        <div class="w-full h-32 sm:h-36 md:h-40 bg-gray-200 flex items-center justify-center">
+                            <i class="fas fa-gift text-gray-400 text-2xl"></i>
+                        </div>
+                    @endif
+                    
+                    <!-- Reward Badge -->
+                    <div class="absolute top-2 left-2 bg-yellow-400 text-black font-bold text-xs px-2 py-1 rounded-full">
+                        <i class="fas fa-star mr-1"></i>Reward
+                    </div>
+                </div>
+                
+                <!-- Reward Content -->
+                <div class="p-3 md:p-4">
+                    <div class="mb-2">
+                        <span class="text-xs font-medium text-yellow-600 bg-yellow-50 px-1.5 py-0.5 rounded">
+                            {{ $product->category->name ?? 'Reward' }}
+                        </span>
+                    </div>
+                    
+                    <h3 class="text-sm md:text-base font-bold text-gray-900 mb-2 line-clamp-2">
+                        {{ $product->name }}
                     </h3>
-                    <p class="text-lg md:text-xl text-white max-w-2xl mb-6">
-                        Embrace the season with our vibrant and breezy summer styles
+                    
+                    <p class="text-base md:text-lg font-black text-yellow-600 mb-3">
+                        <i class="fas fa-coins mr-1"></i>{{ number_format($product->point_price ?? 0, 0, ',', '.') }} Poin
                     </p>
-                    <button class="bg-yellow-500 text-black px-6 py-3 rounded-full font-semibold hover:bg-yellow-600 transition duration-300 transform hover:scale-105 shadow-lg">
-                        Shop Now
-                    </button>
+                    
+                    <a href="{{ route('product.detail', $product->slug) }}" 
+                       class="block w-full bg-[#FAD470] text-black font-semibold py-2 md:py-2.5 rounded-lg hover:bg-[#FAD420] text-black font-semibold py-2 md:py-2.5 rounded-lg hover:bg-[#FAD420] active:scale-95 transition-all duration-200 shadow-md hover:shadow-lg text-center text-xs md:text-sm">
+                        View Details
+                    </a>
                 </div>
             </div>
+            @empty
+            <div class="col-span-full text-center py-12">
+                <i class="fas fa-gift text-gray-300 text-5xl mb-4"></i>
+                <p class="text-gray-500">Belum ada produk reward tersedia</p>
+            </div>
+            @endforelse
         </div>
     </div>
-    
+</section>  
+
+{{-- Style Inspiration Section --}}
+<section id="style-inspiration" class="py-12 md:py-16 bg-gray-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <!-- Section Header -->
+        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8 md:mb-12">
+            <div>
+                <h2 class="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-900 mb-2">
+                    STYLE INSPIRATION
+                </h2>
+                <p class="text-gray-600 text-sm md:text-base">Get inspired by our latest fashion lookbook</p>
+            </div>
+            <a href="{{ route('products') }}" class="bg-gradient-to-r from-yellow-400 to-yellow-500 text-black px-6 py-2.5 md:py-3 rounded-full font-semibold hover:from-yellow-500 hover:to-yellow-600 transition duration-300 transform hover:scale-105 shadow-lg text-sm md:text-base">
+                Explore All
+            </a>
+        </div>
+
+        <!-- Style Cards Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
+            <!-- Style Card 1 - Casual Everyday -->
+            <a href="{{ route('products') }}" class="group relative overflow-hidden rounded-2xl md:rounded-3xl shadow-lg aspect-[4/5]">
+                <img src="{{ asset('ui/collections/collection-banner.jpg') }}"
+                     alt="Casual Everyday"
+                     class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent"></div>
+                <div class="absolute bottom-0 left-0 right-0 p-4 md:p-6">
+                    <span class="inline-block bg-yellow-400 text-black text-xs font-bold px-3 py-1 rounded-full mb-2 md:mb-3">TRENDING</span>
+                    <h3 class="text-xl md:text-2xl font-bold text-white mb-1 md:mb-2">Casual Everyday</h3>
+                    <p class="text-white/80 text-xs md:text-sm line-clamp-2">Effortless style for your daily adventures</p>
+                </div>
+            </a>
+
+            <!-- Style Card 2 - Street Style -->
+            <a href="{{ route('products') }}" class="group relative overflow-hidden rounded-2xl md:rounded-3xl shadow-lg aspect-[4/5]">
+                <img src="{{ asset('ui/main1.jpg') }}"
+                     alt="Street Style"
+                     class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent"></div>
+                <div class="absolute bottom-0 left-0 right-0 p-4 md:p-6">
+                    <span class="inline-block bg-white text-black text-xs font-bold px-3 py-1 rounded-full mb-2 md:mb-3">NEW ARRIVAL</span>
+                    <h3 class="text-xl md:text-2xl font-bold text-white mb-1 md:mb-2">Street Style</h3>
+                    <p class="text-white/80 text-xs md:text-sm line-clamp-2">Bold looks that make a statement</p>
+                </div>
+            </a>
+
+            <!-- Style Card 3 - Minimalist Essentials -->
+            <a href="{{ route('products') }}" class="group relative overflow-hidden rounded-2xl md:rounded-3xl shadow-lg aspect-[4/5] md:col-span-2 lg:col-span-1">
+                <img src="{{ asset('ui/main2.jpg') }}"
+                     alt="Minimalist Essentials"
+                     class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent"></div>
+                <div class="absolute bottom-0 left-0 right-0 p-4 md:p-6">
+                    <span class="inline-block bg-gray-800 text-white text-xs font-bold px-3 py-1 rounded-full mb-2 md:mb-3">BESTSELLER</span>
+                    <h3 class="text-xl md:text-2xl font-bold text-white mb-1 md:mb-2">Minimalist Essentials</h3>
+                    <p class="text-white/80 text-xs md:text-sm line-clamp-2">Timeless pieces for a polished look</p>
+                </div>
+            </a>
+        </div>
+    </div>
 </section>
 @endsection
