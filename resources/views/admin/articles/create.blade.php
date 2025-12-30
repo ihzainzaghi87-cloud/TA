@@ -1,6 +1,6 @@
 @extends('admin.layouts.app')
 
-@section('title', 'Create Article')
+@section('title', 'Create Blog')
 
 @section('content')
 <div class="space-y-6">
@@ -10,21 +10,21 @@
         <div class="relative p-6 text-white">
             <div class="flex items-center justify-between">
                 <div>
-                    <h1 class="text-xl font-bold mb-1">Create New Article</h1>
-                    <p class="text-emerald-100 text-sm">Create a new article with rich text editor</p>
+                    <h1 class="text-xl font-bold mb-1">Create New Blog</h1>
+                    <p class="text-emerald-100 text-sm">Create a new blog with rich text editor</p>
                 </div>
                 <a href="{{ route('admin.articles.index') }}" 
                    class="inline-flex items-center gap-2 px-4 py-2 bg-white bg-opacity-20 backdrop-blur-sm border border-white border-opacity-30 rounded-lg text-white hover:bg-opacity-30 transition-all duration-200 text-sm font-medium">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
                     </svg>
-                    Back to Articles
+                    Back to Blogs
                 </a>
             </div>
         </div>
     </div>
 
-    <!-- Create Article Form - Compact -->
+    <!-- Create Blog Form - Compact -->
     <div class="bg-white dark:bg-gray-800 rounded-xl shadow border border-gray-200 dark:border-gray-700">
         <div class="p-5">
             <div class="flex items-center gap-3 mb-6">
@@ -34,8 +34,8 @@
                     </svg>
                 </div>
                 <div>
-                    <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Article Information</h3>
-                    <p class="text-sm text-gray-600 dark:text-gray-400">Enter the details of the article</p>
+                    <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Blog Information</h3>
+                    <p class="text-sm text-gray-600 dark:text-gray-400">Enter the details of the blog</p>
                 </div>
             </div>
             
@@ -103,7 +103,7 @@
                         </label>
                     </div>
                     <p class="mt-1 ml-6 text-xs text-gray-500 dark:text-gray-400">
-                        If checked, the article will be published immediately. Otherwise, it will be saved as draft.
+                        If checked, the blog will be published immediately. Otherwise, it will be saved as draft.
                     </p>
                 </div>
 
@@ -119,7 +119,7 @@
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
                             </svg>
-                            Create Article
+                            Create Blog
                         </span>
                     </button>
                 </div>

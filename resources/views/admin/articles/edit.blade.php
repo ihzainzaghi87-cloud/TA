@@ -1,6 +1,6 @@
 @extends('admin.layouts.app')
 
-@section('title', 'Edit Article')
+@section('title', 'Edit Blog')
 
 @section('content')
 <div class="space-y-6">
@@ -10,15 +10,15 @@
         <div class="relative p-6 text-white">
             <div class="flex items-center justify-between">
                 <div>
-                    <h1 class="text-xl font-bold mb-1">Edit Article</h1>
-                    <p class="text-emerald-100 text-sm">Update article information and content</p>
+                    <h1 class="text-xl font-bold mb-1">Edit Blog</h1>
+                    <p class="text-emerald-100 text-sm">Update blog information and content</p>
                 </div>
                 <a href="{{ route('admin.articles.index') }}" 
                    class="inline-flex items-center gap-2 px-4 py-2 bg-white bg-opacity-20 backdrop-blur-sm border border-white border-opacity-30 rounded-lg text-white hover:bg-opacity-30 transition-all duration-200 text-sm font-medium">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
                     </svg>
-                    Back to Articles
+                    Back to Blogs
                 </a>
             </div>
         </div>
@@ -34,8 +34,8 @@
                     </svg>
                 </div>
                 <div>
-                    <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Article Information</h3>
-                    <p class="text-sm text-gray-600 dark:text-gray-400">Update the details of the article</p>
+                    <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Blog Information</h3>
+                    <p class="text-sm text-gray-600 dark:text-gray-400">Update the details of the blog</p>
                 </div>
             </div>
             
@@ -43,9 +43,9 @@
                 @csrf
                 @method('PUT')
                 
-                <!-- Article Title -->
+                <!-- Blog Title -->
                 <div>
-                    <label for="title" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Article Title</label>
+                    <label for="title" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Blog Title</label>
                     <input type="text" 
                            name="title" 
                            id="title" 
@@ -89,11 +89,11 @@
                                {{ old('is_published', $article->is_published) ? 'checked' : '' }}
                                class="w-4 h-4 text-emerald-600 bg-gray-100 border-gray-300 rounded focus:ring-emerald-500 dark:focus:ring-emerald-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
                         <label for="is_published" class="ml-2 text-sm font-medium text-gray-700 dark:text-gray-300">
-                            Publish article
+                            Publish blog
                         </label>
                     </div>
                     <p class="mt-1 ml-6 text-xs text-gray-500 dark:text-gray-400">
-                        If checked, the article will be visible to public. Otherwise, it will be saved as draft.
+                        If checked, the blog will be visible to public. Otherwise, it will be saved as draft.
                     </p>
                 </div>
 
@@ -109,7 +109,7 @@
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
                             </svg>
-                            Update Article
+                            Update Blog
                         </span>
                     </button>
                 </div>

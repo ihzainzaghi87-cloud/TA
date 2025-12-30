@@ -11,7 +11,7 @@
             <div class="flex items-center justify-between">
                 <div>
                     <h1 class="text-xl font-bold mb-1">Content Analytics</h1>
-                    <p class="text-indigo-100 text-sm">Articles and banners performance</p>
+                    <p class="text-indigo-100 text-sm">Blogs and banners performance</p>
                 </div>
                 <div class="flex items-center space-x-3">
                     <!-- Period Filter -->
@@ -49,7 +49,7 @@
                     </svg>
                 </div>
             </div>
-            <p class="text-xs text-gray-600 dark:text-gray-400 mb-1">Total Articles</p>
+            <p class="text-xs text-gray-600 dark:text-gray-400 mb-1">Total Blogs</p>
             <p class="text-xl font-bold text-gray-900 dark:text-white">
                 {{ number_format($article_stats['total_articles']) }}
             </p>
@@ -79,7 +79,7 @@
                     </svg>
                 </div>
             </div>
-            <p class="text-xs text-gray-600 dark:text-gray-400 mb-1">Draft Articles</p>
+            <p class="text-xs text-gray-600 dark:text-gray-400 mb-1">Draft Blogs</p>
             <p class="text-xl font-bold text-gray-900 dark:text-white">
                 {{ number_format($article_stats['draft_articles']) }}
             </p>
@@ -156,11 +156,11 @@
         </div>
     </div>
 
-    <!-- Recent Articles -->
+    <!-- Recent Blogs -->
     <div class="bg-white dark:bg-gray-800 shadow rounded-xl border border-gray-200 dark:border-gray-700 overflow-hidden">
         <div class="px-4 py-3 border-b border-gray-200 dark:border-gray-700">
             <div class="flex items-center justify-between">
-                <h3 class="text-sm font-semibold text-gray-900 dark:text-white">Recent Articles</h3>
+                <h3 class="text-sm font-semibold text-gray-900 dark:text-white">Recent Blogs</h3>
                 <a href="{{ route('admin.articles.index') }}" class="text-xs text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 font-medium">
                     View All →
                 </a>
@@ -227,8 +227,8 @@
                                 <svg class="mx-auto h-8 w-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
                                 </svg>
-                                <h3 class="mt-2 text-sm font-medium text-gray-900 dark:text-white">No articles yet</h3>
-                                <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Start creating articles for your store.</p>
+                                <h3 class="mt-2 text-sm font-medium text-gray-900 dark:text-white">No blogs yet</h3>
+                                <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Start creating blogs for your store.</p>
                             </div>
                         </td>
                     </tr>
