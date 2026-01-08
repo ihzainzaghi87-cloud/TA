@@ -1,4 +1,4 @@
-import './bootstrap';
+// filepath: c:\Data Data\Project\TheParanoia\public\js\app.js
 
 let deferredPrompt;
 

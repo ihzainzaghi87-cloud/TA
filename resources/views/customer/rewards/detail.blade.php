@@ -89,7 +89,7 @@
                 <!-- Price -->
                 <div class="mb-6">
                     <p class="text-5xl font-black text-gray-900">
-                        {{ number_format($product->price, 0, ',', '.') }} Points
+                        {{ number_format($product->point_price, 0, ',', '.') }} Points
                     </p>
                 </div>
 

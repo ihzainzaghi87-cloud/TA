@@ -99,10 +99,10 @@
                     onchange="document.getElementById('sortForm').submit()"
                     class="px-6 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                 >
-                    <option value="newest" {{ request('sort') == 'newest' ? 'selected' : '' }}>Terbaru</option>
-                    <option value="bestseller" {{ request('sort') == 'bestseller' ? 'selected' : '' }}>Terlaris</option>
-                    <option value="price_low" {{ request('sort') == 'price_low' ? 'selected' : '' }}>Points Termurah</option>
-                    <option value="price_high" {{ request('sort') == 'price_high' ? 'selected' : '' }}>Points Termahal</option>
+                    <option value="newest" {{ request('sort') == 'newest' ? 'selected' : '' }}>Newest</option>
+                    <option value="bestseller" {{ request('sort') == 'bestseller' ? 'selected' : '' }}>Best Seller</option>
+                    <option value="price_low" {{ request('sort') == 'price_low' ? 'selected' : '' }}>Lowest Points</option>
+                    <option value="price_high" {{ request('sort') == 'price_high' ? 'selected' : '' }}>Highest Points</option>
                 </select>
             </form>
         </div>
@@ -195,22 +195,71 @@
                         </h3>
                         
                         <p class="text-2xl font-black text-gray-900 mb-6">
-                            {{ number_format($product->price, 0, ',', '.') }} Points
+                            {{ number_format($product->point_price, 0, ',', '.') }} Points
                         </p>
                         
                         <a href="{{ route('reward.detail', $product->slug) }}" 
                            class="block w-full bg-gradient-to-r from-red-600 to-orange-500 text-white font-bold py-3 rounded-xl hover:from-red-700 hover:to-orange-600 active:scale-95 transition-all duration-200 shadow-lg hover:shadow-xl text-center">
-                            View Details
+                            Buy Now
                         </a>
                     </div>
                 </div>
             @endforeach
         </div>
 
-        <!-- Pagination -->
-        <div class="mt-8">
-            {{ $products->links() }}
+        <!-- Simple Clean Pagination -->
+        @if($products->hasPages())
+        <div class="mt-8 flex flex-col items-center gap-4">
+            {{-- Page Numbers --}}
+            <div class="flex items-center gap-2">
+                {{-- Previous --}}
+                @if ($products->onFirstPage())
+                    <span class="w-10 h-10 flex items-center justify-center rounded-full bg-gray-100 text-gray-400 cursor-not-allowed">
+                        <i class="fas fa-chevron-left text-sm"></i>
+                    </span>
+                @else
+                    <a href="{{ $products->previousPageUrl() }}" 
+                    class="w-10 h-10 flex items-center justify-center rounded-full bg-white border-2 border-gray-200 text-gray-700 hover:border-amber-500 hover:text-amber-600 hover:shadow-md transition-all duration-200">
+                        <i class="fas fa-chevron-left text-sm"></i>
+                    </a>
+                @endif
+
+                {{-- Page Numbers --}}
+                @foreach (range(1, $products->lastPage()) as $page)
+                    @if ($page == $products->currentPage())
+                        <span class="w-10 h-10 flex items-center justify-center rounded-full bg-gradient-to-r from-amber-500 to-yellow-500 text-white font-bold shadow-lg">
+                            {{ $page }}
+                        </span>
+                    @else
+                        <a href="{{ $products->url($page) }}" 
+                        class="w-10 h-10 flex items-center justify-center rounded-full bg-white border-2 border-gray-200 text-gray-700 hover:border-amber-500 hover:text-amber-600 hover:shadow-md transition-all duration-200 font-medium">
+                            {{ $page }}
+                        </a>
+                    @endif
+                @endforeach
+
+                {{-- Next --}}
+                @if ($products->hasMorePages())
+                    <a href="{{ $products->nextPageUrl() }}" 
+                    class="w-10 h-10 flex items-center justify-center rounded-full bg-white border-2 border-gray-200 text-gray-700 hover:border-amber-500 hover:text-amber-600 hover:shadow-md transition-all duration-200">
+                        <i class="fas fa-chevron-right text-sm"></i>
+                    </a>
+                @else
+                    <span class="w-10 h-10 flex items-center justify-center rounded-full bg-gray-100 text-gray-400 cursor-not-allowed">
+                        <i class="fas fa-chevron-right text-sm"></i>
+                    </span>
+                @endif
+            </div>
+
+            {{-- Info Text --}}
+            <p class="text-sm text-gray-600">
+                Page <span class="font-semibold text-amber-600">{{ $products->currentPage() }}</span> 
+                of 
+                <span class="font-semibold text-gray-900">{{ $products->lastPage() }}</span>
+                ({{ $products->total() }} products)
+            </p>
         </div>
+        @endif
     @else
         <div class="text-center py-16">
             <svg class="mx-auto h-24 w-24 text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">

@@ -72,9 +72,14 @@
         transition: all 0.2s ease;
     }
 
-    .qty-btn:hover {
+    .qty-btn:hover:not(:disabled) {
         border-color: #FAD470;
         background: #fffbeb;
+    }
+
+    .qty-btn:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
     }
 
     .qty-input {
@@ -329,13 +334,13 @@
                              class="w-full h-full object-cover">
                         <div class="zoom-hint">
                             <i class="fas fa-search-plus"></i>
-                            <span>Klik untuk perbesar</span>
+                            <span>Click to enlarge</span>
                         </div>
                     @else
                         <div class="w-full h-full image-placeholder flex items-center justify-center" onclick="event.stopPropagation()">
                             <div class="text-center">
                                 <i class="fas fa-image text-6xl text-gray-300 mb-4"></i>
-                                <p class="text-gray-400 text-sm">Tidak ada gambar</p>
+                                <p class="text-gray-400 text-sm">No images available</p>
                             </div>
                         </div>
                     @endif
@@ -364,8 +369,148 @@
                 @endif
             </div>
 
-            <!-- Product Information -->
-            <div class="space-y-6">
+            @php
+                // Extract unique colors
+                $colors = $product->variations
+                    ->pluck('color')
+                    ->filter()
+                    ->unique()
+                    ->values();
+                
+                // Extract unique sizes
+                $sizes = $product->variations
+                    ->pluck('size')
+                    ->filter()
+                    ->unique()
+                    ->values();
+                
+                // Convert variations to JSON for Alpine.js
+                $variationsData = $product->variations->map(function($v) {
+                    return [
+                        'id' => $v->id,
+                        'color' => $v->color,
+                        'size' => $v->size,
+                        'stock' => $v->stock,
+                    ];
+                });
+            @endphp
+
+            <!-- Product Information with Alpine.js -->
+            <div x-data="{
+                selectedColor: '{{ request('color') ?? '' }}',
+                selectedSize: '{{ request('size') ?? '' }}',
+                selectedVariation: null,
+                quantity: 1,
+                errorMessage: '',
+                variations: {{ $variationsData->toJson() }},
+                
+                get currentStock() {
+                    return this.selectedVariation ? this.selectedVariation.stock : {{ $totalStock }};
+                },
+                
+                get hasSelection() {
+                    return this.selectedColor || this.selectedSize;
+                },
+                
+                get hasBothSelections() {
+                    return this.selectedColor && this.selectedSize;
+                },
+                
+                selectColor(color) {
+                    this.selectedColor = color;
+                    this.updateVariation();
+                },
+                
+                selectSize(size) {
+                    this.selectedSize = size;
+                    this.updateVariation();
+                },
+                
+                updateVariation() {
+                    const match = this.variations.find(v => {
+                        const colorMatch = this.selectedColor ? v.color === this.selectedColor : true;
+                        const sizeMatch = this.selectedSize ? v.size === this.selectedSize : true;
+                        return colorMatch && sizeMatch;
+                    });
+                    
+                    if (match) {
+                        this.selectedVariation = match;
+                        this.errorMessage = '';
+                        
+                        // Update hidden input
+                        document.getElementById('variation_id').value = match.id;
+                        
+                        // Adjust quantity if exceeds new stock
+                        if (this.quantity > match.stock) {
+                            this.quantity = Math.max(1, match.stock);
+                        }
+                    } else {
+                        this.selectedVariation = null;
+                        document.getElementById('variation_id').value = '';
+                        
+                        if (this.selectedColor && this.selectedSize) {
+                            this.errorMessage = 'Kombinasi warna dan ukuran tidak tersedia';
+                        }
+                    }
+                },
+                
+                incrementQuantity() {
+                    if (this.currentStock > 0 && this.quantity < this.currentStock) {
+                        this.quantity++;
+                    }
+                },
+                
+                decrementQuantity() {
+                    if (this.quantity > 1) {
+                        this.quantity--;
+                    }
+                },
+                
+                validateForm() {
+                    this.errorMessage = '';
+                    
+                    const hasVariations = {{ $product->variations->count() }} > 0;
+                    
+                    if (hasVariations) {
+                        if (!this.selectedColor) {
+                            this.errorMessage = 'Silakan pilih warna';
+                            return false;
+                        }
+                        
+                        if (!this.selectedSize) {
+                            this.errorMessage = 'Silakan pilih ukuran';
+                            return false;
+                        }
+                        
+                        if (!this.selectedVariation) {
+                            this.errorMessage = 'Kombinasi tidak tersedia';
+                            return false;
+                        }
+                    }
+                    
+                    if (this.currentStock <= 0) {
+                        this.errorMessage = 'Stok habis';
+                        return false;
+                    }
+                    
+                    if (this.quantity < 1 || this.quantity > this.currentStock) {
+                        this.errorMessage = 'Jumlah tidak valid';
+                        return false;
+                    }
+                    
+                    return true;
+                },
+                
+                init() {
+                    // Initialize variation if color/size already selected from URL
+                    if (this.selectedColor || this.selectedSize) {
+                        this.updateVariation();
+                    }
+                }
+            }" 
+            x-init="init()"
+            class="space-y-6">
+                
                 <!-- Category Badge -->
                 <div>
                     <span class="inline-flex items-center px-4 py-1.5 rounded-full text-xs font-semibold bg-amber-100 text-amber-800 border border-amber-200">
@@ -381,7 +526,7 @@
                 <div class="flex items-baseline gap-3">
                     @if($product->point_price > 0)
                         <span class="text-3xl lg:text-4xl font-bold text-amber-600">
-                            {{ number_format($product->point_price) }} Poin
+                            {{ number_format($product->point_price) }} Point
                         </span>
                     @else
                         <span class="text-3xl lg:text-4xl font-bold text-amber-600">
@@ -390,35 +535,78 @@
                     @endif
                 </div>
 
-                <!-- Stock Status -->
+                <!-- Dynamic Stock Status -->
                 <div class="flex items-center gap-3">
-                    @if($totalStock > 0)
-                        <div class="flex items-center gap-2 px-3 py-1.5 bg-green-100 rounded-full">
-                            <div class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-                            <span class="font-semibold text-green-700 text-sm">Stok Tersedia</span>
+                    <template x-if="!hasSelection">
+                        <!-- Show total stock when no variation selected -->
+                        @if($totalStock > 0)
+                            <div class="flex items-center gap-3">
+                                <div class="flex items-center gap-2 px-3 py-1.5 bg-green-100 rounded-full">
+                                    <div class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                                    <span class="font-semibold text-green-700 text-sm">Stock Available</span>
+                                </div>
+                                <span class="text-gray-500 text-sm">({{ $totalStock }} available)</span>
+                            </div>
+                        @else
+                            <div class="flex items-center gap-2 px-3 py-1.5 bg-red-100 rounded-full">
+                                <div class="w-2 h-2 bg-red-500 rounded-full"></div>
+                                <span class="font-semibold text-red-700 text-sm">Out of Stock</span>
+                            </div>
+                        @endif
+                    </template>
+                    
+                    <template x-if="hasSelection">
+                        <!-- Show dynamic stock based on selected variation -->
+                        <div class="flex items-center gap-3">
+                            <template x-if="currentStock > 0">
+                                <div class="flex items-center gap-3">
+                                    <div class="flex items-center gap-2 px-3 py-1.5 bg-green-100 rounded-full">
+                                        <div class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                                        <span class="font-semibold text-green-700 text-sm">Stock Available</span>
+                                    </div>
+                                    <span class="text-gray-500 text-sm" x-text="'(' + currentStock + ' available)'"></span>
+                                </div>
+                            </template>
+                            
+                            <template x-if="currentStock <= 0">
+                                <div class="flex items-center gap-2 px-3 py-1.5 bg-red-100 rounded-full">
+                                    <div class="w-2 h-2 bg-red-500 rounded-full"></div>
+                                    <span class="font-semibold text-red-700 text-sm">Out of Stock</span>
+                                </div>
+                            </template>
                         </div>
-                        <span class="text-gray-500 text-sm">({{ $totalStock }} tersedia)</span>
-                    @else
-                        <div class="flex items-center gap-2 px-3 py-1.5 bg-red-100 rounded-full">
-                            <div class="w-2 h-2 bg-red-500 rounded-full"></div>
-                            <span class="font-semibold text-red-700 text-sm">Stok Habis</span>
-                        </div>
-                    @endif
+                    </template>
                 </div>
 
                 <!-- Product Description -->
                 <div class="info-card p-5">
                     <h3 class="text-sm font-bold text-gray-900 mb-3 flex items-center gap-2">
                         <i class="fas fa-info-circle text-amber-500"></i>
-                        Deskripsi Produk
+                        Product Description
                     </h3>
                     <p class="text-gray-600 leading-relaxed text-sm">
-                        {{ $product->description ?? 'Tidak ada deskripsi untuk produk ini.' }}
+                        {{ $product->description ?? 'No description available for this product.' }}
                     </p>
                 </div>
 
+                <!-- Error Message Display -->
+                <div x-show="errorMessage" 
+                     x-cloak
+                     class="p-3 bg-red-50 border border-red-200 text-red-800 rounded-lg text-sm"
+                     x-transition:enter="transition ease-out duration-200"
+                     x-transition:enter-start="opacity-0 transform scale-95"
+                     x-transition:enter-end="opacity-100 transform scale-100">
+                    <div class="flex items-start">
+                        <i class="fas fa-exclamation-circle text-red-500 mt-0.5 mr-2"></i>
+                        <span x-text="errorMessage"></span>
+                    </div>
+                </div>
+
                 <!-- Add to Cart Form -->
-                <form action="{{ route('cart.store') }}" method="POST" id="addToCartForm">
+                <form action="{{ route('cart.store') }}" 
+                      method="POST" 
+                      id="addToCartForm"
+                      @submit.prevent="if(validateForm()) $el.submit()">
                     @csrf
                     
                     <!-- Hidden input for variation_id -->
@@ -432,13 +620,14 @@
                         <div>
                             <label class="block text-sm font-bold text-gray-900 mb-3">
                                 <i class="fas fa-palette mr-2 text-amber-500"></i>
-                                Pilih Warna
+                                Select Color <span class="text-red-500">*</span>
                             </label>
                             <div class="flex flex-wrap gap-2">
                                 @foreach($colors as $color)
                                 <button type="button"
-                                        class="variation-btn px-5 py-2.5 rounded-xl text-sm font-medium {{ request('color') == $color ? 'selected' : '' }}"
-                                        onclick="selectVariation('color', '{{ $color }}', this)">
+                                        @click.prevent="selectColor('{{ $color }}')"
+                                        :class="selectedColor === '{{ $color }}' ? 'selected' : ''"
+                                        class="variation-btn px-5 py-2.5 rounded-xl text-sm font-medium capitalize">
                                     {{ $color }}
                                 </button>
                                 @endforeach
@@ -451,51 +640,97 @@
                         <div>
                             <label class="block text-sm font-bold text-gray-900 mb-3">
                                 <i class="fas fa-ruler mr-2 text-amber-500"></i>
-                                Pilih Ukuran
+                                Select Size <span class="text-red-500">*</span>
                             </label>
-                            <div class="flex flex-wrap gap-2 mb-3">
+                            <div class="flex flex-wrap gap-2">
                                 @foreach($sizes as $size)
                                 <button type="button"
-                                        class="variation-btn px-5 py-2.5 rounded-xl text-sm font-medium {{ request('size') == $size ? 'selected' : '' }}"
-                                        onclick="selectVariation('size', '{{ $size }}', this)">
+                                        @click.prevent="selectSize('{{ $size }}')"
+                                        :class="selectedSize === '{{ $size }}' ? 'selected' : ''"
+                                        class="variation-btn px-5 py-2.5 rounded-xl text-sm font-medium uppercase">
                                     {{ $size }}
                                 </button>
                                 @endforeach
                             </div>
                         </div>
                         @endif
+
+                        <!-- Variation Info Card (shows when both color and size selected) -->
+                        <div x-show="hasBothSelections" 
+                             x-cloak
+                             x-transition:enter="transition ease-out duration-200"
+                             x-transition:enter-start="opacity-0 transform scale-95"
+                             x-transition:enter-end="opacity-100 transform scale-100"
+                             class="p-4 bg-gradient-to-r from-amber-50 to-yellow-50 border border-amber-200 rounded-lg">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <p class="text-sm font-medium text-gray-700 mb-1">Selected Variation:</p>
+                                    <p class="text-sm text-amber-800">
+                                        <span class="capitalize" x-text="selectedColor"></span>
+                                        <span class="mx-1">•</span>
+                                        <span class="uppercase" x-text="selectedSize"></span>
+                                    </p>
+                                </div>
+                                <div class="text-right">
+                                    <p class="text-sm font-medium text-gray-700 mb-1">Stock:</p>
+                                    <p class="text-xl font-bold" 
+                                       :class="currentStock > 0 ? 'text-green-600' : 'text-red-600'"
+                                       x-text="currentStock + ' unit'">
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     @endif
 
                     <!-- Quantity and Add to Cart -->
-                    <div class="space-y-5 pt-5 border-t border-gray-200">
+                    <div class="space-y-5 pt-5 border-t border-gray-200 mt-5">
                         <!-- Quantity -->
                         <div class="flex items-center gap-4">
                             <label class="text-sm font-bold text-gray-900">
                                 <i class="fas fa-boxes mr-2 text-amber-500"></i>
-                                Jumlah
+                                Quantity <span class="text-red-500">*</span>
                             </label>
                             <div class="flex items-center">
-                                <button type="button" class="qty-btn w-11 h-11 rounded-l-xl flex items-center justify-center" onclick="updateQuantity(-1)">
+                                <button type="button" 
+                                        @click.prevent="decrementQuantity()"
+                                        :disabled="quantity <= 1"
+                                        :class="quantity <= 1 ? 'opacity-50 cursor-not-allowed' : ''"
+                                        class="qty-btn w-11 h-11 rounded-l-xl flex items-center justify-center">
                                     <i class="fas fa-minus text-sm"></i>
                                 </button>
-                                <input type="number" name="quantity" id="quantity" value="1" min="1" max="{{ $totalStock }}"
+                                <input type="number" 
+                                       name="quantity" 
+                                       id="quantity" 
+                                       x-model="quantity"
+                                       :max="currentStock"
+                                       min="1"
                                        class="qty-input w-16 h-11 text-center text-sm font-bold"
-                                       onchange="validateQuantity(this)">
-                                <button type="button" class="qty-btn w-11 h-11 rounded-r-xl flex items-center justify-center" onclick="updateQuantity(1)">
+                                       readonly>
+                                <button type="button" 
+                                        @click.prevent="incrementQuantity()"
+                                        :disabled="quantity >= currentStock || currentStock <= 0"
+                                        :class="quantity >= currentStock || currentStock <= 0 ? 'opacity-50 cursor-not-allowed' : ''"
+                                        class="qty-btn w-11 h-11 rounded-r-xl flex items-center justify-center">
                                     <i class="fas fa-plus text-sm"></i>
                                 </button>
                             </div>
+                            <span class="text-sm text-gray-600" 
+                                  x-show="hasSelection"
+                                  x-cloak>
+                                (Max: <span x-text="currentStock"></span>)
+                            </span>
                         </div>
 
                         <!-- Action Buttons -->
                         <div class="flex flex-col sm:flex-row gap-3">
                             <button type="submit"
                                     id="addToCartBtn"
-                                    class="flex-1 bg-gradient-to-r from-amber-500 to-yellow-500 hover:from-amber-600 hover:to-yellow-600 text-white px-6 py-4 rounded-xl font-bold text-sm transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg hover:shadow-xl transform hover:scale-[1.02] flex items-center justify-center gap-2"
-                                    {{ $totalStock == 0 ? 'disabled' : '' }}>
+                                    :disabled="currentStock <= 0 || ({{ $product->variations->count() }} > 0 && (!selectedColor || !selectedSize))"
+                                    :class="currentStock <= 0 || ({{ $product->variations->count() }} > 0 && (!selectedColor || !selectedSize)) ? 'opacity-50 cursor-not-allowed' : 'hover:from-amber-600 hover:to-yellow-600 hover:scale-[1.02]'"
+                                    class="flex-1 bg-gradient-to-r from-amber-500 to-yellow-500 text-white px-6 py-4 rounded-xl font-bold text-sm transition-all duration-300 shadow-lg hover:shadow-xl transform flex items-center justify-center gap-2">
                                 <i class="fas fa-shopping-cart"></i>
-                                {{ $totalStock > 0 ? 'Tambah ke Keranjang' : 'Stok Habis' }}
+                                <span x-text="currentStock > 0 ? 'Add to Cart' : 'Out of Stock'"></span>
                             </button>
                         </div>
                     </div>
@@ -505,11 +740,11 @@
                 <div class="grid grid-cols-3 gap-3 pt-5">
                     <div class="feature-card rounded-xl p-4 text-center">
                         <i class="fas fa-truck text-amber-600 text-xl mb-2"></i>
-                        <p class="text-xs font-medium text-amber-800">Pengiriman Cepat</p>
+                        <p class="text-xs font-medium text-amber-800">Fast Delivery</p>
                     </div>
                     <div class="feature-card rounded-xl p-4 text-center">
                         <i class="fas fa-shield-alt text-amber-600 text-xl mb-2"></i>
-                        <p class="text-xs font-medium text-amber-800">Produk Original</p>
+                        <p class="text-xs font-medium text-amber-800">Original Product</p>
                     </div>
                     <div class="feature-card rounded-xl p-4 text-center">
                         <i class="fas fa-headset text-amber-600 text-xl mb-2"></i>
@@ -525,26 +760,26 @@
                 <div class="w-10 h-10 bg-amber-100 rounded-xl flex items-center justify-center">
                     <i class="fas fa-list-alt text-amber-600"></i>
                 </div>
-                Spesifikasi Produk
+                Product Specifications
             </h2>
             
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div class="flex items-center justify-between p-4 bg-gray-50 rounded-xl">
-                    <span class="text-gray-500 text-sm">Kategori</span>
+                    <span class="text-gray-500 text-sm">Category</span>
                     <span class="text-gray-900 font-semibold">{{ $product->category->name }}</span>
                 </div>
                 <div class="flex items-center justify-between p-4 bg-gray-50 rounded-xl">
-                    <span class="text-gray-500 text-sm">Berat</span>
+                    <span class="text-gray-500 text-sm">Weight</span>
                     <span class="text-gray-900 font-semibold">{{ $product->weight }}g</span>
                 </div>
                 @if($product->variations->count() > 0)
                 <div class="flex items-center justify-between p-4 bg-gray-50 rounded-xl">
-                    <span class="text-gray-500 text-sm">Variasi Tersedia</span>
-                    <span class="text-gray-900 font-semibold">{{ $product->variations->count() }} pilihan</span>
+                    <span class="text-gray-500 text-sm">Available Variations</span>
+                    <span class="text-gray-900 font-semibold">{{ $product->variations->count() }} options</span>
                 </div>
                 <div class="flex items-center justify-between p-4 bg-gray-50 rounded-xl">
-                    <span class="text-gray-500 text-sm">Total Stok</span>
-                    <span class="text-gray-900 font-semibold">{{ $totalStock }} item</span>
+                    <span class="text-gray-500 text-sm">Total Stock</span>
+                    <span class="text-gray-900 font-semibold">{{ $totalStock }} items</span>
                 </div>
                 @endif
             </div>
@@ -558,10 +793,10 @@
                     <div class="w-10 h-10 bg-amber-100 rounded-xl flex items-center justify-center">
                         <i class="fas fa-th-large text-amber-600"></i>
                     </div>
-                    Produk Terkait
+                    Related Products
                 </h2>
-                <a href="{{ route('home') }}#products" class="text-amber-600 hover:text-amber-700 text-sm font-semibold flex items-center gap-2 transition-colors">
-                    Lihat Semua
+                <a href="{{ route('products') }}" class="text-amber-600 hover:text-amber-700 text-sm font-semibold flex items-center gap-2 transition-colors">
+                    View All
                     <i class="fas fa-arrow-right"></i>
                 </a>
             </div>
@@ -636,10 +871,6 @@
 
 @push('scripts')
 <script>
-let selectedColor = '{{ request('color') ?? '' }}';
-let selectedSize = '{{ request('size') ?? '' }}';
-let maxQuantity = {{ $totalStock }};
-
 // Image gallery data
 const productImages = @json($product->images->pluck('image')->map(fn($img) => asset('storage/products/' . $img)));
 let currentImageIndex = 0;
@@ -734,91 +965,8 @@ document.addEventListener('keydown', function(e) {
     }
 });
 
-// Update quantity
-function updateQuantity(change) {
-    const quantityInput = document.getElementById('quantity');
-    let newValue = parseInt(quantityInput.value) + change;
-
-    if (newValue >= 1 && newValue <= maxQuantity) {
-        quantityInput.value = newValue;
-    }
-}
-
-// Validate quantity input
-function validateQuantity(input) {
-    let value = parseInt(input.value);
-
-    if (isNaN(value) || value < 1) {
-        input.value = 1;
-    } else if (value > maxQuantity) {
-        input.value = maxQuantity;
-    }
-}
-
-// Select variation
-function selectVariation(type, value, element) {
-    if (type === 'color') {
-        selectedColor = value;
-    } else if (type === 'size') {
-        selectedSize = value;
-    }
-
-    // Update UI - remove selected from siblings only
-    const siblings = element.parentElement.querySelectorAll('.variation-btn');
-    siblings.forEach(btn => btn.classList.remove('selected'));
-    element.classList.add('selected');
-
-    // Check if selected combination is available
-    checkVariationAvailability();
-}
-
-// Check if selected variation is available
-function checkVariationAvailability() {
-    const variations = @json($availableVariations);
-    const selectedVariation = variations.find(v =>
-        v.color === selectedColor && v.size === selectedSize
-    );
-
-    const addToCartBtn = document.getElementById('addToCartBtn');
-    const variationIdInput = document.getElementById('variation_id');
-    
-    if (selectedVariation && selectedVariation.stock > 0) {
-        addToCartBtn.disabled = false;
-        addToCartBtn.innerHTML = '<i class="fas fa-shopping-cart"></i> Tambah ke Keranjang';
-        maxQuantity = selectedVariation.stock;
-        document.getElementById('quantity').max = maxQuantity;
-        
-        // Set variation_id to hidden input
-        variationIdInput.value = selectedVariation.id;
-    } else if (selectedColor || selectedSize) {
-        addToCartBtn.disabled = true;
-        addToCartBtn.innerHTML = '<i class="fas fa-times"></i> Tidak Tersedia';
-        variationIdInput.value = '';
-    }
-}
-
-// Add to wishlist function
-function addToWishlist() {
-    alert('Fitur wishlist akan segera hadir!');
-}
-
-// Form validation before submit
-document.getElementById('addToCartForm').addEventListener('submit', function(e) {
-    const variationId = document.getElementById('variation_id').value;
-    const hasVariations = {{ $product->variations->count() }} > 0;
-    
-    if (hasVariations && !variationId) {
-        e.preventDefault();
-        alert('Silakan pilih variasi produk (warna dan ukuran)');
-        return false;
-    }
-});
-
-// Initialize on page load
+// Auto-hide success/error messages after 5 seconds
 document.addEventListener('DOMContentLoaded', function() {
-    checkVariationAvailability();
-    
-    // Auto-hide success/error messages after 5 seconds
     setTimeout(function() {
         const alerts = document.querySelectorAll('.bg-green-100, .bg-red-100');
         alerts.forEach(alert => {
