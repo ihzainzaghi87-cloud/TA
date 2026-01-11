@@ -277,8 +277,8 @@
 
     /* Partner Logo */
     .partner-logo {
-        filter: grayscale(100%);
-        opacity: 0.5;
+        filter: grayscale(0%);
+        opacity: 0.7;
         transition: all 0.4s ease;
     }
 
@@ -960,23 +960,23 @@
     <section class="py-20 bg-white">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center mb-12">
-                <h3 class="text-lg text-gray-500 font-medium">Trusted by Leading Brands</h3>
+                <h3 class="text-lg text-gray-500 font-medium">Officially Available on Trusted Marketplaces</h3>
             </div>
             <div class="flex flex-wrap justify-center items-center gap-12 md:gap-16">
                 <div class="partner-logo">
-                    <img src="https://via.placeholder.com/150x50/f3f4f6/9ca3af?text=Brand+1" alt="Partner Brand" class="h-10">
+                    <img src="{{ asset('ui/marketplace/shopee.png') }}" alt="Shopee" class="h-10">
                 </div>
                 <div class="partner-logo">
-                    <img src="https://via.placeholder.com/150x50/f3f4f6/9ca3af?text=Brand+2" alt="Partner Brand" class="h-10">
+                    <img src="{{ asset('ui/marketplace/tokopedia.png') }}" alt="Tokopedia" class="h-10">
                 </div>
                 <div class="partner-logo">
-                    <img src="https://via.placeholder.com/150x50/f3f4f6/9ca3af?text=Brand+3" alt="Partner Brand" class="h-10">
+                    <img src="{{ asset('ui/marketplace/blibli.png') }}" alt="Blibli" class="h-10">
                 </div>
                 <div class="partner-logo">
-                    <img src="https://via.placeholder.com/150x50/f3f4f6/9ca3af?text=Brand+4" alt="Partner Brand" class="h-10">
+                    <img src="{{ asset('ui/marketplace/tiktok-shop.png') }}" alt="TikTok Shop" class="h-10">
                 </div>
                 <div class="partner-logo">
-                    <img src="https://via.placeholder.com/150x50/f3f4f6/9ca3af?text=Brand+5" alt="Partner Brand" class="h-10">
+                    <img src="{{ asset('ui/marketplace/lazada.png') }}" alt="Lazada" class="h-10">
                 </div>
             </div>
         </div>
