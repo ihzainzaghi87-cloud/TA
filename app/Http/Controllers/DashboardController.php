@@ -54,10 +54,13 @@ class DashboardController extends Controller
                 ->sum('total');
         }
 
-        // Chart: Users by Role (Bar Chart)
-        $usersByRole = Role::withCount('users')
-            ->get()
-            ->pluck('users_count', 'name')
+        // Chart: Users with Most Orders (Top 10 Bar Chart)
+        $usersWithMostOrders = User::select('users.id', 'users.name', DB::raw('COUNT(orders.id) as order_count'))
+            ->join('orders', 'users.id', '=', 'orders.user_id')
+            ->groupBy('users.id', 'users.name')
+            ->orderByDesc('order_count')
+            ->take(10)
+            ->pluck('order_count', 'name')
             ->toArray();
 
         return [
@@ -91,7 +94,7 @@ class DashboardController extends Controller
             // Chart Data
             'ordersByStatus' => $ordersByStatus,
             'revenueLast7Days' => $revenueLast7Days,
-            'usersByRole' => $usersByRole,
+            'usersWithMostOrders' => $usersWithMostOrders,
         ];
     }
 
