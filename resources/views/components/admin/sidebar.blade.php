@@ -97,7 +97,7 @@
             @endcan
 
             <!-- System Logs -->
-            <a href="#" 
+            <!-- <a href="#" 
                class="group flex items-center px-3 py-2.5 text-sm font-medium rounded-lg transition-all duration-200 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">
                 <div class="flex items-center justify-center w-7 h-7 rounded-lg bg-gray-100 dark:bg-gray-700 group-hover:bg-red-100 dark:group-hover:bg-red-900 mr-3 transition-colors duration-200">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -105,7 +105,7 @@
                     </svg>
                 </div>
                 <span>System Logs</span>
-            </a>
+            </a> -->
 
             @canany(['point-transactions.index', 'user-points.index'])
             <!-- Divider -->
