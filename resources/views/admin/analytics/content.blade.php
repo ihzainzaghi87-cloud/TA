@@ -199,7 +199,7 @@
                             </div>
                         </td>
                         <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-700 dark:text-gray-300">
-                            {{ $article->author ?? 'Admin' }}
+                            {{ $article->author ?? 'Staff' }}
                         </td>
                         <td class="px-4 py-3 whitespace-nowrap">
                             <span class="inline-flex items-center px-2 py-1 rounded-md text-xs font-medium 
