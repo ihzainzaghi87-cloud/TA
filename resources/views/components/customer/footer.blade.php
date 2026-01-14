@@ -15,12 +15,12 @@
                     <div>
                         <h3 class="text-gray-500 text-xs mb-3 uppercase tracking-wider">Information</h3>
                         <div class="space-y-2">
-                            <div><a href="#" class="text-black text-xs hover:text-yellow-600">Privacy</a></div>
-                            <div><a href="#" class="text-black text-xs hover:text-yellow-600">FAQ</a></div>
-                            <div><a href="#" class="text-black text-xs hover:text-yellow-600">Shipping & Payment</a></div>
-                            <div><a href="#" class="text-black text-xs hover:text-yellow-600">Partners</a></div>
-                            <div><a href="#" class="text-black text-xs hover:text-yellow-600">Blog</a></div>
-                            <div><a href="#" class="text-black text-xs hover:text-yellow-600">Contacts</a></div>
+                            <div><a href="{{ route('about') }}" class="text-black text-xs hover:text-yellow-600">About Us</a></div>
+                            <div><a href="#" class="text-black text-xs hover:text-yellow-600">Privacy Policy</a></div>
+                            <div><a href="#" class="text-black text-xs hover:text-yellow-600">Terms & Conditions</a></div>
+                            <div><a href="#" class="text-black text-xs hover:text-yellow-600">Shipping Info</a></div>
+                            <div><a href="#" class="text-black text-xs hover:text-yellow-600">Return Policy</a></div>
+                            <div><a href="#" class="text-black text-xs hover:text-yellow-600">Contact Us</a></div>
                         </div>
                     </div>
 
@@ -28,21 +28,20 @@
                     <div>
                         <h3 class="text-gray-500 text-xs mb-3 uppercase tracking-wider">Menu</h3>
                         <div class="space-y-2">
-                            <div><a href="#" class="text-black text-xs hover:text-yellow-600">For a couple</a></div>
-                            <div><a href="#" class="text-black text-xs hover:text-yellow-600">For him</a></div>
-                            <div><a href="#" class="text-black text-xs hover:text-yellow-600">For her</a></div>
+                            <div><a href="{{ route('home') }}" class="text-black text-xs hover:text-yellow-600">Home</a></div>
+                            <div><a href="{{ route('products') }}" class="text-black text-xs hover:text-yellow-600">Products</a></div>
+                            <div><a href="{{ route('rewards') }}" class="text-black text-xs hover:text-yellow-600">Rewards</a></div>
+                            <div><a href="{{ route('articles.index') }}" class="text-black text-xs hover:text-yellow-600">Blog</a></div>
+                            <div><a href="{{ route('cart.index') }}" class="text-black text-xs hover:text-yellow-600">Cart</a></div>
                         </div>
                     </div>
                 </div>
 
                 <!-- Contact Info -->
                 <div class="text-center border-t border-gray-200 pt-4">
-                    <!-- <button class="bg-gray-800 hover:bg-black text-white font-medium text-xs px-4 py-2 rounded-lg mb-3 transition duration-300">
-                        Request a call
-                    </button> -->
                     <div class="space-y-1">
                         <p class="text-xs text-gray-700">+1 (999) 999-99-99</p>
-                        <p class="text-xs text-gray-600">info@logoipsum.com</p>
+                        <p class="text-xs text-gray-600">info@theparanoia.com</p>
                     </div>
                 </div>
             </div>
@@ -59,39 +58,33 @@
                     <td class="align-top w-1/6 px-2 border-l border-gray-200">
                         <h3 class="text-gray-500" style="font-size: 10px; margin-bottom: 8px;">INFORMATION</h3>
                         
-                        <!-- Privacy Group -->
                         <div class="mb-4">
-                                <div><span class="text-black text-xs">Privacy</span></div>
-                                <div><span class="text-black text-xs">FAQ</span></div>
-                                <div><span class="text-black text-xs">Shipping and payment</span></div>
-                                <div><span class="text-black text-xs">Partners</span></div>
-                                <div><span class="text-black text-xs">Blog</span></div>
-                                <div><span class="text-black text-xs">Contacts</span></div>
+                            <div><a href="{{ route('about') }}" class="text-black text-xs hover:text-yellow-600">About Us</a></div>
+                            <div><a href="#" class="text-black text-xs hover:text-yellow-600">Privacy Policy</a></div>
+                            <div><a href="#" class="text-black text-xs hover:text-yellow-600">Terms & Conditions</a></div>
+                            <div><a href="#" class="text-black text-xs hover:text-yellow-600">Shipping Info</a></div>
+                            <div><a href="#" class="text-black text-xs hover:text-yellow-600">Return Policy</a></div>
+                            <div><a href="#" class="text-black text-xs hover:text-yellow-600">Contact Us</a></div>
                         </div>
                     </td>
 
                     <td class="align-top w-1/6 px-2 border-l border-gray-200">
                         <h3 class="text-gray-500" style="font-size: 10px; margin-bottom: 8px;">MENU</h3>
                         
-                        <!-- Privacy Group -->
                         <div class="mb-4">
-                                <div><span class="text-black text-xs">For a couple</span></div>
-                                <div><span class="text-black text-xs">For him</span></div>
-                                <div><span class="text-black text-xs">For her</span></div>
+                            <div><a href="{{ route('home') }}" class="text-black text-xs hover:text-yellow-600">Home</a></div>
+                            <div><a href="{{ route('products') }}" class="text-black text-xs hover:text-yellow-600">Products</a></div>
+                            <div><a href="{{ route('rewards') }}" class="text-black text-xs hover:text-yellow-600">Rewards</a></div>
+                            <div><a href="{{ route('articles.index') }}" class="text-black text-xs hover:text-yellow-600">Blog</a></div>
+                            <div><a href="{{ route('cart.index') }}" class="text-black text-xs hover:text-yellow-600">Cart</a></div>
                         </div>
                     </td>
                     
-                 
-                    <!-- Kolom 4: Request a call -->
+                    <!-- Kolom 4: Contact Info -->
                     <td class="align-top text-right w-1/4 pl-6 border-l border-gray-200">
-                        <!-- Tombol Request a call -->
-                        <!-- <button class="bg-gray-800 hover:bg-black text-white font-medium text-xs px-4 py-2 rounded-lg mb-4 transition duration-300">
-                            Request a call
-                        </button> -->
-
                         <div class="space-y-1">
                             <p style="font-size: 11px;" class="text-gray-700">+1 (999) 999-99-99</p>
-                            <p style="font-size: 11px;" class="text-gray-600">info@logoipsum.com</p>
+                            <p style="font-size: 11px;" class="text-gray-600">info@theparanoia.com</p>
                         </div>
                     </td>
                 </tr>
