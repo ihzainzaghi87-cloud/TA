@@ -15,7 +15,7 @@
 
     <!-- Name -->
     <div>
-        <label for="name" class="block text-sm font-semibold text-gray-700 mb-2">Full Name</label>
+        <label for="name" class="block text-sm font-semibold text-gray-700 mb-2">Full Name <span class="text-red-500">*</span></label>
         <div class="relative">
             <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                 <i class="fas fa-user text-gray-400"></i>
@@ -38,7 +38,7 @@
 
     <!-- Email -->
     <div>
-        <label for="email" class="block text-sm font-semibold text-gray-700 mb-2">Email Address</label>
+        <label for="email" class="block text-sm font-semibold text-gray-700 mb-2">Email Address <span class="text-red-500">*</span></label>
         <div class="relative">
             <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                 <i class="fas fa-envelope text-gray-400"></i>
@@ -77,7 +77,7 @@
         </div>
 
         <div>
-            <label for="phone_number" class="block text-sm font-semibold text-gray-700 mb-2">Phone</label>
+            <label for="phone_number" class="block text-sm font-semibold text-gray-700 mb-2">Phone <span class="text-red-500">*</span></label>
             <div class="relative">
                 <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                     <i class="fas fa-phone text-gray-400"></i>
@@ -95,7 +95,7 @@
 
     <!-- Address -->
     <div>
-        <label for="address" class="block text-sm font-semibold text-gray-700 mb-2">Address</label>
+        <label for="address" class="block text-sm font-semibold text-gray-700 mb-2">Address <span class="text-red-500">*</span></label>
         <div class="relative">
             <div class="absolute top-3.5 left-4 flex items-start pointer-events-none">
                 <i class="fas fa-map-marker-alt text-gray-400"></i>
@@ -118,7 +118,7 @@
     <!-- Password Fields -->
     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4" x-data="{ showPassword: false, showConfirmPassword: false }">
         <div>
-            <label for="password" class="block text-sm font-semibold text-gray-700 mb-2">Password</label>
+            <label for="password" class="block text-sm font-semibold text-gray-700 mb-2">Password <span class="text-red-500">*</span></label>
             <div class="relative">
                 <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                     <i class="fas fa-lock text-gray-400"></i>
@@ -139,7 +139,7 @@
         </div>
 
         <div>
-            <label for="password_confirmation" class="block text-sm font-semibold text-gray-700 mb-2">Confirm Password</label>
+            <label for="password_confirmation" class="block text-sm font-semibold text-gray-700 mb-2">Confirm Password <span class="text-red-500">*</span></label>
             <div class="relative">
                 <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                     <i class="fas fa-check-circle text-gray-400"></i>
