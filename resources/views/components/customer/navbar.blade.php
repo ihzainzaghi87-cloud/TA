@@ -1,5 +1,26 @@
-<nav x-data="{ mobileMenuOpen: false, userMenuOpen: false }"
-     class="fixed w-full top-0 z-50">
+<nav x-data="{
+        mobileMenuOpen: false,
+        userMenuOpen: false,
+        showNavbar: true,
+        lastScrollTop: 0,
+        scrollThreshold: 100
+    }" 
+    x-init="
+        window.addEventListener('scroll', () => {
+            let scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+            
+            if (scrollTop > lastScrollTop && scrollTop > scrollThreshold) {
+                // Scrolling down
+                showNavbar = false;
+            } else {
+                // Scrolling up
+                showNavbar = true;
+            }
+            lastScrollTop = scrollTop <= 0 ? 0 : scrollTop;
+        });
+    "
+    :class="showNavbar ? 'translate-y-0' : '-translate-y-full'"
+    class="fixed w-full top-0 z-50 transition-transform duration-300 ease-in-out">
     <div class="max-w-full mx-auto px-4 sm:px-6 lg:px-8 pt-5 pb-5">
         <div class=" bg-white flex justify-between items-center h-16 border-[#FFC736] rounded-[20px] border-[2px] pr-5 pl-5 ">
             {{-- Logo/Brand --}}

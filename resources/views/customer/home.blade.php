@@ -91,7 +91,7 @@
                                    class="inline-block bg-black text-[#FAD470] px-8 py-4 rounded-[2vw] font-semibold hover:bg-gray-800 transition duration-300 transform hover:scale-105 shadow-lg">
                                     Explore Collection
                                 </a>
-                                <a href="{{ route('products') }}"
+                                <a href="{{ route('articles.index') }}"
                                    class="inline-block bg-white text-black px-8 py-4 rounded-[2vw] font-semibold hover:bg-black hover:text-white transition duration-300">
                                     Discover More
                                 </a>
