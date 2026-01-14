@@ -25,7 +25,7 @@ class PagesController extends Controller
             ->where('is_reward', false)
             ->with(['category', 'images', 'variations'])
             ->orderBy('created_at', 'desc')
-            ->take(5)
+            ->take(4)
             ->get();
 
         // Ambil produk reward (produk yang aktif dan adalah reward)
@@ -33,7 +33,7 @@ class PagesController extends Controller
             ->where('is_reward', true)
             ->with(['category', 'images', 'variations'])
             ->orderBy('created_at', 'desc')
-            ->take(5)
+            ->take(4)
             ->get();
 
         // Ambil banners jika ada

@@ -352,7 +352,7 @@
         </div>
 
         <!-- Product Grid -->
-        <div x-show="!isLoading" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 md:gap-4 lg:gap-5">
+        <div x-show="!isLoading" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 gap-3 md:gap-4 lg:gap-5">
             <template x-for="product in filteredProducts" :key="product.id">
                 <div class="group bg-white rounded-xl md:rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden">
                     <!-- Image Container -->
@@ -522,7 +522,7 @@ function productFilter() {
         </div>
 
         <!-- Reward Grid -->
-        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 md:gap-4 lg:gap-5">
+        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 gap-3 md:gap-4 lg:gap-5">
             @forelse($rewardProducts as $product)
             <div class="group bg-white rounded-xl md:rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden">
                 <!-- Image Container -->
