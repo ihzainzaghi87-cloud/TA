@@ -206,6 +206,19 @@
                         </div>
                     </div>
 
+                    {{-- TAMBAHKAN INI: Points Reward Info --}}
+                    <div class="bg-[#FAD470]/20 rounded-2xl p-4 border-2 border-[#FAD470]">
+                        <p class="flex items-center text-sm font-bold text-black gap-2">
+                            <i class="fas fa-gift text-amber-500"></i> Reward Poin dari Pesanan Ini
+                        </p>
+                        <p class="text-2xl font-bold text-amber-600 mt-1" id="reward-points-display">
+                            <i class="fas fa-star text-amber-400"></i> 0 Poin
+                        </p>
+                        <p class="text-xs text-gray-600 mt-2 flex items-center gap-1">
+                            <i class="fas fa-info-circle"></i> Rp 10.000 = 1 Poin
+                        </p>
+                    </div>
+
                     <div class="pt-4 border-t-2 border-[#FAD470] text-center">
                         <p class="text-xs text-gray-400 mb-4">Total mengikuti produk yang Anda centang</p>
                     </div>
@@ -269,11 +282,13 @@ document.addEventListener('DOMContentLoaded', function () {
     const itemCheckboxes = document.querySelectorAll('.item-checkbox');
     const totalPriceEl = document.getElementById('selected-total-price');
     const totalPointEl = document.getElementById('selected-total-point');
+    const rewardPointsEl = document.getElementById('reward-points-display'); // TAMBAH INI
 
     function formatRupiah(number) {
         return new Intl.NumberFormat('id-ID').format(number);
     }
 
+    // MODIFIKASI FUNGSI INI
     function recalcSelectedTotals() {
         let totalPrice = 0;
         let totalPoint = 0;
@@ -285,8 +300,14 @@ document.addEventListener('DOMContentLoaded', function () {
                 totalPoint += linePoint;
             }
         });
+        
+        // Update total harga dan poin
         totalPriceEl.textContent = 'Rp ' + formatRupiah(totalPrice);
         totalPointEl.textContent = formatRupiah(totalPoint) + ' poin';
+        
+        // TAMBAH INI: Hitung reward points (1 poin per Rp 10.000)
+        const rewardPoints = Math.floor(totalPrice / 10000);
+        rewardPointsEl.innerHTML = '<i class="fas fa-star text-amber-400"></i> ' + formatRupiah(rewardPoints) + ' Poin';
     }
 
     if (selectAllCheckbox) {
@@ -296,6 +317,7 @@ document.addEventListener('DOMContentLoaded', function () {
             recalcSelectedTotals();
         });
     }
+    
     itemCheckboxes.forEach(cb => {
         cb.addEventListener('change', function () {
             const allChecked = Array.from(itemCheckboxes).every(c => c.checked);
