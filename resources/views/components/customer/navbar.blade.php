@@ -58,7 +58,7 @@
                 @guest
                     <a href="{{ route('login') }}"
                        class="px-4 py-2  text-black rounded-2xl text-sm font-bold hover:bg-gray-50 transition-colors duration-200 bg-[#FAD470]">
-                        Sign In
+                        Login
                     </a>
                     <a href="{{ route('register') }}"
                        class="px-4 py-2  text-black rounded-2xl text-sm font-bold hover:bg-gray-50 transition-colors duration-200 bg-[#FAD470]">
@@ -184,7 +184,7 @@
                     <div class="space-y-2">
                         <a href="{{ route('login') }}"
                            class="block w-full text-center px-4 py-2 border border-gray-300 text-gray-700 rounded-lg font-medium hover:bg-gray-50 transition-colors duration-200">
-                            Sign In
+                            Login
                         </a>
                         <a href="{{ route('register') }}"
                            class="block w-full text-center text-white px-4 py-2 rounded-lg font-medium hover:opacity-90 transition-opacity duration-200" style="background: linear-gradient(135deg, #FAD470 0%, #F8B500 100%);">
