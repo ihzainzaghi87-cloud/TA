@@ -4,11 +4,11 @@
         showNavbar: true,
         lastScrollTop: 0,
         scrollThreshold: 100
-    }" 
+    }"
     x-init="
         window.addEventListener('scroll', () => {
             let scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-            
+
             if (scrollTop > lastScrollTop && scrollTop > scrollThreshold) {
                 // Scrolling down
                 showNavbar = false;
@@ -22,7 +22,7 @@
     :class="showNavbar ? 'translate-y-0' : '-translate-y-full'"
     class="fixed w-full top-0 z-50 transition-transform duration-300 ease-in-out">
     <div class="max-w-full mx-auto px-4 sm:px-6 lg:px-8 pt-5 pb-5">
-        <div class=" bg-white flex justify-between items-center h-16 border-[#FFC736] rounded-[20px] border-[2px] pr-5 pl-5 ">
+        <div class=" bg-white flex justify-between items-center h-16 border-[#1A1A1D] rounded-[20px] border-[2px] pr-5 pl-5 ">
             {{-- Logo/Brand --}}
             <div class="flex items-center">
                 <a href="{{ route('home') }}" class="flex items-center space-x-3">
@@ -34,30 +34,30 @@
             </div>
             {{-- Desktop Navigation Menu --}}
             <div class="hidden md:flex md:items-center md:space-x-8">
-                <a href="{{ route('home') }}" 
+                <a href="{{ route('home') }}"
                    class="text-gray-700 hover:text-yellow-600 px-3 py-2 text-sm font-medium transition duration-300 ease-in-out">
                     Home
                 </a>
-                <a href="{{ route('products') }}" 
+                <a href="{{ route('products') }}"
                    class="text-gray-700 hover:text-yellow-600 px-3 py-2 text-sm font-medium transition duration-300 ease-in-out">
                     Product
                 </a>
-                <a href="{{ route('about') }}" 
+                <a href="{{ route('about') }}"
                    class="text-gray-700 hover:text-yellow-600 px-3 py-2 text-sm font-medium transition duration-300 ease-in-out">
                     About Us
                 </a>
-                <a href="{{ route('rewards') }}" 
+                <a href="{{ route('rewards') }}"
                    class="text-gray-700 hover:text-yellow-600 px-3 py-2 text-sm font-medium transition duration-300 ease-in-out">
                     Reward
                 </a>
-                <a href="{{ route('articles.index') }}" 
+                <a href="{{ route('articles.index') }}"
                    class="text-gray-700 hover:text-yellow-600 px-3 py-2 text-sm font-medium transition duration-300 ease-in-out">
                     Blog
                 </a>
-                
+
                 {{-- Cart Icon with Badge --}}
                 @auth
-                <a href="{{ route('cart.index') }}" 
+                <a href="{{ route('cart.index') }}"
                    class="text-gray-700 hover:text-yellow-600 px-3 py-2 text-sm font-medium transition duration-300 ease-in-out relative">
                     <i class="fas fa-shopping-cart text-lg"></i>
                     @if($cartCount > 0)
@@ -67,7 +67,7 @@
                     @endif
                 </a>
                 @else
-                <a href="{{ route('login') }}" 
+                <a href="{{ route('login') }}"
                    class="text-gray-700 hover:text-yellow-600 px-3 py-2 text-sm font-medium transition duration-300 ease-in-out relative">
                     <i class="fas fa-shopping-cart text-lg"></i>
                 </a>
@@ -98,7 +98,7 @@
                         </button>
 
                         {{-- Dropdown Menu --}}
-                        <div x-show="userMenuOpen" 
+                        <div x-show="userMenuOpen"
                              x-transition:enter="transition ease-out duration-200"
                              x-transition:enter-start="opacity-0 transform scale-95"
                              x-transition:enter-end="opacity-100 transform scale-100"
@@ -107,15 +107,15 @@
                              x-transition:leave-end="opacity-0 transform scale-95"
                              class="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-xl py-2 border border-gray-200"
                              style="display: none;">
-                            <a href="{{ route('customer.index') }}" 
+                            <a href="{{ route('customer.index') }}"
                                class="block px-4 py-2 text-sm text-gray-700 hover:bg-yellow-50 hover:text-yellow-600 transition duration-150">
                                 <i class="fas fa-user mr-2"></i> Profil Saya
                             </a>
-                            <a href="{{ route('customer.orders') }}" 
+                            <a href="{{ route('customer.orders') }}"
                                class="block px-4 py-2 text-sm text-gray-700 hover:bg-yellow-50 hover:text-yellow-600 transition duration-150">
                                 <i class="fas fa-box mr-2"></i> Pesanan Saya
                             </a>
-                            <a href="{{ route('cart.index') }}" 
+                            <a href="{{ route('cart.index') }}"
                                class="block px-4 py-2 text-sm text-gray-700 hover:bg-yellow-50 hover:text-yellow-600 transition duration-150">
                                 <i class="fas fa-shopping-cart mr-2"></i> Keranjang
                                 @if($cartCount > 0)
@@ -125,7 +125,7 @@
                             <div class="border-t border-gray-100 my-1"></div>
                             <form method="POST" action="{{ route('logout') }}">
                                 @csrf
-                                <button type="submit" 
+                                <button type="submit"
                                         class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-red-50 hover:text-red-600 transition duration-150">
                                     <i class="fas fa-sign-out-alt mr-2"></i> Logout
                                 </button>
@@ -137,8 +137,8 @@
 
             {{-- Mobile Menu Button --}}
             <div class="md:hidden">
-                <button @click="mobileMenuOpen = !mobileMenuOpen" 
-                        type="button" 
+                <button @click="mobileMenuOpen = !mobileMenuOpen"
+                        type="button"
                         class="text-gray-700 hover:text-yellow-600 focus:outline-none focus:text-yellow-600">
                     <i class="fas fa-bars text-xl" x-show="!mobileMenuOpen"></i>
                     <i class="fas fa-times text-xl" x-show="mobileMenuOpen" style="display: none;"></i>
@@ -148,7 +148,7 @@
     </div>
 
     {{-- Mobile Menu --}}
-    <div x-show="mobileMenuOpen" 
+    <div x-show="mobileMenuOpen"
          x-transition:enter="transition ease-out duration-200"
          x-transition:enter-start="opacity-0 transform -translate-y-4"
          x-transition:enter-end="opacity-100 transform translate-y-0"
@@ -158,32 +158,32 @@
          class="md:hidden bg-white border-t border-gray-200 shadow-lg"
          style="display: none;">
         <div class="px-4 pt-2 pb-4 space-y-2">
-            <a href="{{ route('home') }}" 
+            <a href="{{ route('home') }}"
                class="block px-3 py-2 text-gray-700 hover:bg-yellow-50 hover:text-yellow-600 rounded-md transition duration-150">
                 Home
             </a>
-            <a href="{{ route('about') }}" 
+            <a href="{{ route('about') }}"
                class="block px-3 py-2 text-gray-700 hover:bg-yellow-50 hover:text-yellow-600 rounded-md transition duration-150">
                 About Us
             </a>
-            <a href="{{ route('products') }}" 
+            <a href="{{ route('products') }}"
                class="block px-3 py-2 text-gray-700 hover:bg-yellow-50 hover:text-yellow-600 rounded-md transition duration-150">
                 Product
             </a>
-            <a href="{{ route('rewards') }}" 
+            <a href="{{ route('rewards') }}"
                class="block px-3 py-2 text-gray-700 hover:bg-yellow-50 hover:text-yellow-600 rounded-md transition duration-150">
                 Reward
             </a>
-            <a href="{{ route('articles.index') }}" 
+            <a href="{{ route('articles.index') }}"
                class="block px-3 py-2 text-gray-700 hover:bg-yellow-50 hover:text-yellow-600 rounded-md transition duration-150">
                 Blog
             </a>
-            
+
             {{-- Mobile Cart Link --}}
             @auth
-            <a href="{{ route('cart.index') }}" 
+            <a href="{{ route('cart.index') }}"
                class="block px-3 py-2 text-gray-700 hover:bg-yellow-50 hover:text-yellow-600 rounded-md transition duration-150">
-                <i class="fas fa-shopping-cart mr-2"></i> Cart 
+                <i class="fas fa-shopping-cart mr-2"></i> Cart
                 @if($cartCount > 0)
                 <span class="text-white text-xs font-bold px-2 py-0.5 rounded-full" style="background: linear-gradient(135deg, #FAD470 0%, #F8B500 100%);">
                     {{ $cartCount }}
@@ -193,7 +193,7 @@
                 @endif
             </a>
             @else
-            <a href="{{ route('login') }}" 
+            <a href="{{ route('login') }}"
                class="block px-3 py-2 text-gray-700 hover:bg-yellow-50 hover:text-yellow-600 rounded-md transition duration-150">
                 <i class="fas fa-shopping-cart mr-2"></i> Cart
             </a>
@@ -217,17 +217,17 @@
                         <div class="px-3 py-2 text-sm text-gray-500 font-medium">
                             Logged in as {{ Auth::user()->name }}
                         </div>
-                        <a href="{{ route('customer.index') }}" 
+                        <a href="{{ route('customer.index') }}"
                            class="block px-3 py-2 text-gray-700 hover:bg-yellow-50 hover:text-yellow-600 rounded-md transition duration-150">
                             <i class="fas fa-user mr-2"></i> Profil Saya
                         </a>
-                        <a href="{{ route('customer.orders') }}" 
+                        <a href="{{ route('customer.orders') }}"
                            class="block px-3 py-2 text-gray-700 hover:bg-yellow-50 hover:text-yellow-600 rounded-md transition duration-150">
                             <i class="fas fa-box mr-2"></i> Pesanan Saya
                         </a>
                         <form method="POST" action="{{ route('logout') }}">
                             @csrf
-                            <button type="submit" 
+                            <button type="submit"
                                     class="w-full text-left px-3 py-2 text-gray-700 hover:bg-red-50 hover:text-red-600 rounded-md transition duration-150">
                                 <i class="fas fa-sign-out-alt mr-2"></i> Logout
                             </button>

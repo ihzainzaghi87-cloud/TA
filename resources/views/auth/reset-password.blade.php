@@ -23,10 +23,10 @@
             <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                 <i class="fas fa-envelope text-gray-400"></i>
             </div>
-            <input id="email" 
-                   name="email" 
-                   type="email" 
-                   required 
+            <input id="email"
+                   name="email"
+                   type="email"
+                   required
                    readonly
                    value="{{ old('email', $email) }}"
                    class="block w-full pl-11 pr-4 py-3 border-2 border-gray-200 rounded-xl bg-gray-100 text-gray-900 cursor-not-allowed">
@@ -46,13 +46,13 @@
             <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                 <i class="fas fa-lock text-gray-400"></i>
             </div>
-            <input id="password" 
-                   name="password" 
-                   :type="showPassword ? 'text' : 'password'" 
+            <input id="password"
+                   name="password"
+                   :type="showPassword ? 'text' : 'password'"
                    required
                    class="block w-full pl-11 pr-12 py-3 border-2 border-gray-200 rounded-xl bg-gray-50 text-gray-900 placeholder-gray-400 focus:outline-none focus:border-[#FAD470] focus:bg-white transition-all duration-200"
                    placeholder="Enter new password">
-            <button type="button" 
+            <button type="button"
                     @click="showPassword = !showPassword"
                     class="absolute inset-y-0 right-0 pr-4 flex items-center text-gray-400 hover:text-gray-600">
                 <i x-show="!showPassword" class="fas fa-eye"></i>
@@ -74,13 +74,13 @@
             <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                 <i class="fas fa-shield-alt text-gray-400"></i>
             </div>
-            <input id="password_confirmation" 
-                   name="password_confirmation" 
-                   :type="showConfirmPassword ? 'text' : 'password'" 
+            <input id="password_confirmation"
+                   name="password_confirmation"
+                   :type="showConfirmPassword ? 'text' : 'password'"
                    required
                    class="block w-full pl-11 pr-12 py-3 border-2 border-gray-200 rounded-xl bg-gray-50 text-gray-900 placeholder-gray-400 focus:outline-none focus:border-[#FAD470] focus:bg-white transition-all duration-200"
                    placeholder="Confirm new password">
-            <button type="button" 
+            <button type="button"
                     @click="showConfirmPassword = !showConfirmPassword"
                     class="absolute inset-y-0 right-0 pr-4 flex items-center text-gray-400 hover:text-gray-600">
                 <i x-show="!showConfirmPassword" class="fas fa-eye"></i>
@@ -122,7 +122,7 @@
     </div>
 
     <!-- Submit Button -->
-    <button type="submit" 
+    <button type="submit"
             class="w-full flex justify-center items-center gap-2 py-3.5 px-4 bg-[#FAD470] hover:bg-[#E5C060] text-black font-semibold rounded-xl focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#FAD470] transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-[1.02]">
         <i class="fas fa-key"></i>
         Reset Password
