@@ -3,206 +3,178 @@
 @section('title', 'Register')
 
 @section('content')
-<div class="text-center mb-6">
-    <h2 class="text-2xl font-bold text-gray-900 mb-2">Create Account</h2>
-    <p class="text-gray-500">
-        Join us and start shopping
-    </p>
+
+<div class="bg-white p-8 sm:p-14 rounded-[35px] shadow-[0_30px_60px_-15px_rgba(0,0,0,0.1)] border border-gray-100 w-full max-w-[650px] mx-auto relative">
+
+    <div class="flex flex-col items-center justify-center mb-8">
+        <div class="flex items-center gap-4">
+            <img src="{{ asset('ui/logo.png') }}" alt="Logo" class="w-12 h-12 object-contain">
+            <h1 class="text-[28px] font-extrabold text-black tracking-tight font-['Poppins']">The Paranoia</h1>
+        </div>
+    </div>
+
+    <div class="mb-8">
+        <h2 class="text-[30px] font-bold text-black font-['Poppins']">Sign Up</h2>
+        <p class="text-gray-500 mt-1 text-sm">Create your account to get started.</p>
+    </div>
+
+    <form method="POST" action="{{ route('register.attempt') }}" class="space-y-5">
+        @csrf
+
+        <div>
+            <div class="relative group">
+                <div class="absolute inset-y-0 left-0 pl-6 flex items-center pointer-events-none">
+                    <i class="fas fa-user text-black text-lg group-focus-within:text-black transition-colors"></i>
+                </div>
+                <input id="name"
+                       name="name"
+                       type="text"
+                       required
+                       value="{{ old('name') }}"
+                       class="block w-full pl-14 pr-6 py-4 border border-gray-200 rounded-full bg-white text-gray-900 placeholder-gray-400 font-medium focus:outline-none focus:border-black focus:ring-4 focus:ring-black/5 transition-all duration-300"
+                       placeholder="Full Name">
+            </div>
+            @error('name')
+                <p class="mt-2 text-sm text-red-600 pl-4 font-medium">{{ $message }}</p>
+            @enderror
+        </div>
+
+        <div>
+            <div class="relative group">
+                <div class="absolute inset-y-0 left-0 pl-6 flex items-center pointer-events-none">
+                    <i class="fas fa-envelope text-black text-lg group-focus-within:text-black transition-colors"></i>
+                </div>
+                <input id="email"
+                       name="email"
+                       type="email"
+                       required
+                       value="{{ old('email') }}"
+                       class="block w-full pl-14 pr-6 py-4 border border-gray-200 rounded-full bg-white text-gray-900 placeholder-gray-400 font-medium focus:outline-none focus:border-black focus:ring-4 focus:ring-black/5 transition-all duration-300"
+                       placeholder="Email Address">
+            </div>
+            @error('email')
+                <p class="mt-2 text-sm text-red-600 pl-4 font-medium">{{ $message }}</p>
+            @enderror
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+            <div>
+                <div class="relative group">
+                    <div class="absolute inset-y-0 left-0 pl-6 flex items-center pointer-events-none">
+                        <i class="fas fa-at text-black text-lg group-focus-within:text-black transition-colors"></i>
+                    </div>
+                    <input id="username"
+                           name="username"
+                           type="text"
+                           value="{{ old('username') }}"
+                           class="block w-full pl-14 pr-6 py-4 border border-gray-200 rounded-full bg-white text-gray-900 placeholder-gray-400 font-medium focus:outline-none focus:border-black focus:ring-4 focus:ring-black/5 transition-all duration-300"
+                           placeholder="Username (Opt)">
+                </div>
+            </div>
+
+            <div>
+                <div class="relative group">
+                    <div class="absolute inset-y-0 left-0 pl-6 flex items-center pointer-events-none">
+                        <i class="fas fa-phone text-black text-lg group-focus-within:text-black transition-colors"></i>
+                    </div>
+                    <input id="phone_number"
+                           name="phone_number"
+                           type="tel"
+                           required
+                           value="{{ old('phone_number') }}"
+                           class="block w-full pl-14 pr-6 py-4 border border-gray-200 rounded-full bg-white text-gray-900 placeholder-gray-400 font-medium focus:outline-none focus:border-black focus:ring-4 focus:ring-black/5 transition-all duration-300"
+                           placeholder="Phone Number">
+                </div>
+            </div>
+        </div>
+
+        <div>
+            <div class="relative group">
+                <div class="absolute top-4 left-6 flex items-start pointer-events-none">
+                    <i class="fas fa-map-marker-alt text-black text-lg group-focus-within:text-black transition-colors"></i>
+                </div>
+                <textarea id="address"
+                        name="address"
+                        required
+                        rows="2"
+                        class="block w-full pl-14 pr-6 py-4 border border-gray-200 rounded-[25px] bg-white text-gray-900 placeholder-gray-400 font-medium focus:outline-none focus:border-black focus:ring-4 focus:ring-black/5 transition-all duration-300 resize-none"
+                        placeholder="Full Address">{{ old('address') }}</textarea>
+            </div>
+            @error('address')
+                <p class="mt-2 text-sm text-red-600 pl-4 font-medium">{{ $message }}</p>
+            @enderror
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-5" x-data="{ showPassword: false, showConfirmPassword: false }">
+            <div>
+                <div class="relative group">
+                    <div class="absolute inset-y-0 left-0 pl-6 flex items-center pointer-events-none">
+                        <i class="fas fa-lock text-black text-lg group-focus-within:text-black transition-colors"></i>
+                    </div>
+                    <input id="password"
+                           name="password"
+                           :type="showPassword ? 'text' : 'password'"
+                           required
+                           class="block w-full pl-14 pr-12 py-4 border border-gray-200 rounded-full bg-white text-gray-900 placeholder-gray-400 font-medium focus:outline-none focus:border-black focus:ring-4 focus:ring-black/5 transition-all duration-300"
+                           placeholder="Password">
+                    <button type="button"
+                            @click="showPassword = !showPassword"
+                            class="absolute inset-y-0 right-0 pr-5 flex items-center text-gray-400 hover:text-black transition-colors cursor-pointer outline-none">
+                        <i class="far fa-eye" x-show="!showPassword"></i>
+                        <i class="far fa-eye-slash" x-show="showPassword" x-cloak></i>
+                    </button>
+                </div>
+            </div>
+
+            <div>
+                <div class="relative group">
+                    <div class="absolute inset-y-0 left-0 pl-6 flex items-center pointer-events-none">
+                        <i class="fas fa-check-circle text-black text-lg group-focus-within:text-black transition-colors"></i>
+                    </div>
+                    <input id="password_confirmation"
+                           name="password_confirmation"
+                           :type="showConfirmPassword ? 'text' : 'password'"
+                           required
+                           class="block w-full pl-14 pr-12 py-4 border border-gray-200 rounded-full bg-white text-gray-900 placeholder-gray-400 font-medium focus:outline-none focus:border-black focus:ring-4 focus:ring-black/5 transition-all duration-300"
+                           placeholder="Confirm Pass">
+                    <button type="button"
+                            @click="showConfirmPassword = !showConfirmPassword"
+                            class="absolute inset-y-0 right-0 pr-5 flex items-center text-gray-400 hover:text-black transition-colors cursor-pointer outline-none">
+                        <i class="far fa-eye" x-show="!showConfirmPassword"></i>
+                        <i class="far fa-eye-slash" x-show="showConfirmPassword" x-cloak></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        @if ($errors->any())
+             <div class="p-4 bg-red-50 border border-red-100 rounded-2xl animate-fade-in-down">
+                <div class="flex items-start gap-3">
+                    <i class="fas fa-exclamation-triangle text-red-600 mt-1"></i>
+                    <div>
+                        <h4 class="text-sm font-bold text-red-800 mb-1">Please fix errors:</h4>
+                        <ul class="text-sm text-red-700 list-disc list-inside">
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        @endif
+
+        <button type="submit"
+                class="w-full py-4 bg-black hover:bg-gray-800 text-white font-bold text-[17px] rounded-full shadow-[0_10px_30px_-10px_rgba(0,0,0,0.5)] hover:shadow-[0_15px_35px_-10px_rgba(0,0,0,0.6)] transition-all duration-300 transform hover:-translate-y-0.5 active:translate-y-0 mt-4">
+            Sign Up to My Account
+        </button>
+    </form>
+
+    <div class="mt-6">
+        <a href="{{ route('login') }}"
+           class="w-full flex justify-center items-center py-4 bg-white border border-gray-200 hover:bg-gray-50 hover:border-black text-black font-bold text-[17px] rounded-full transition-all duration-300">
+            Sign In
+        </a>
+    </div>
+
 </div>
-
-<form method="POST" action="{{ route('register.attempt') }}" class="space-y-4">
-    @csrf
-
-    <!-- Name -->
-    <div>
-        <label for="name" class="block text-sm font-semibold text-gray-700 mb-2">Full Name <span class="text-red-500">*</span></label>
-        <div class="relative">
-            <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                <i class="fas fa-user text-gray-400"></i>
-            </div>
-            <input id="name" 
-                   name="name" 
-                   type="text" 
-                   required 
-                   value="{{ old('name') }}"
-                   class="block w-full pl-11 pr-4 py-3 border-2 border-gray-200 rounded-xl bg-gray-50 text-gray-900 placeholder-gray-400 focus:outline-none focus:border-[#FAD470] focus:bg-white transition-all duration-200"
-                   placeholder="Enter your full name">
-        </div>
-        @error('name')
-            <p class="mt-2 text-sm text-red-600 flex items-center">
-                <i class="fas fa-exclamation-circle mr-1"></i>
-                {{ $message }}
-            </p>
-        @enderror
-    </div>
-
-    <!-- Email -->
-    <div>
-        <label for="email" class="block text-sm font-semibold text-gray-700 mb-2">Email Address <span class="text-red-500">*</span></label>
-        <div class="relative">
-            <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                <i class="fas fa-envelope text-gray-400"></i>
-            </div>
-            <input id="email" 
-                   name="email" 
-                   type="email" 
-                   required 
-                   value="{{ old('email') }}"
-                   class="block w-full pl-11 pr-4 py-3 border-2 border-gray-200 rounded-xl bg-gray-50 text-gray-900 placeholder-gray-400 focus:outline-none focus:border-[#FAD470] focus:bg-white transition-all duration-200"
-                   placeholder="Enter your email">
-        </div>
-        @error('email')
-            <p class="mt-2 text-sm text-red-600 flex items-center">
-                <i class="fas fa-exclamation-circle mr-1"></i>
-                {{ $message }}
-            </p>
-        @enderror
-    </div>
-
-    <!-- Username & Phone -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <div>
-            <label for="username" class="block text-sm font-semibold text-gray-700 mb-2">Username <span class="text-gray-400 font-normal">(optional)</span></label>
-            <div class="relative">
-                <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                    <i class="fas fa-at text-gray-400"></i>
-                </div>
-                <input id="username" 
-                       name="username" 
-                       type="text" 
-                       value="{{ old('username') }}"
-                       class="block w-full pl-11 pr-4 py-3 border-2 border-gray-200 rounded-xl bg-gray-50 text-gray-900 placeholder-gray-400 focus:outline-none focus:border-[#FAD470] focus:bg-white transition-all duration-200"
-                       placeholder="Username">
-            </div>
-        </div>
-
-        <div>
-            <label for="phone_number" class="block text-sm font-semibold text-gray-700 mb-2">Phone <span class="text-red-500">*</span></label>
-            <div class="relative">
-                <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                    <i class="fas fa-phone text-gray-400"></i>
-                </div>
-                <input id="phone_number" 
-                       name="phone_number" 
-                       type="tel" 
-                       required
-                       value="{{ old('phone_number') }}"
-                       class="block w-full pl-11 pr-4 py-3 border-2 border-gray-200 rounded-xl bg-gray-50 text-gray-900 placeholder-gray-400 focus:outline-none focus:border-[#FAD470] focus:bg-white transition-all duration-200"
-                       placeholder="+62 812 3456 7890">
-            </div>
-        </div>
-    </div>
-
-    <!-- Address -->
-    <div>
-        <label for="address" class="block text-sm font-semibold text-gray-700 mb-2">Address <span class="text-red-500">*</span></label>
-        <div class="relative">
-            <div class="absolute top-3.5 left-4 flex items-start pointer-events-none">
-                <i class="fas fa-map-marker-alt text-gray-400"></i>
-            </div>
-            <textarea id="address" 
-                    name="address" 
-                    required 
-                    rows="2"
-                    class="block w-full pl-11 pr-4 py-3 border-2 border-gray-200 rounded-xl bg-gray-50 text-gray-900 placeholder-gray-400 focus:outline-none focus:border-[#FAD470] focus:bg-white transition-all duration-200 resize-none"
-                    placeholder="Enter your address">{{ old('address') }}</textarea>
-        </div>
-        @error('address')
-            <p class="mt-2 text-sm text-red-600 flex items-center">
-                <i class="fas fa-exclamation-circle mr-1"></i>
-                {{ $message }}
-            </p>
-        @enderror
-    </div>
-
-    <!-- Password Fields -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4" x-data="{ showPassword: false, showConfirmPassword: false }">
-        <div>
-            <label for="password" class="block text-sm font-semibold text-gray-700 mb-2">Password <span class="text-red-500">*</span></label>
-            <div class="relative">
-                <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                    <i class="fas fa-lock text-gray-400"></i>
-                </div>
-                <input id="password" 
-                       name="password" 
-                       :type="showPassword ? 'text' : 'password'" 
-                       required
-                       class="block w-full pl-11 pr-12 py-3 border-2 border-gray-200 rounded-xl bg-gray-50 text-gray-900 placeholder-gray-400 focus:outline-none focus:border-[#FAD470] focus:bg-white transition-all duration-200"
-                       placeholder="Password">
-                <button type="button" 
-                        @click="showPassword = !showPassword"
-                        class="absolute inset-y-0 right-0 pr-4 flex items-center text-gray-400 hover:text-gray-600 transition-colors">
-                    <i x-show="!showPassword" class="fas fa-eye"></i>
-                    <i x-show="showPassword" class="fas fa-eye-slash" x-cloak></i>
-                </button>
-            </div>
-        </div>
-
-        <div>
-            <label for="password_confirmation" class="block text-sm font-semibold text-gray-700 mb-2">Confirm Password <span class="text-red-500">*</span></label>
-            <div class="relative">
-                <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                    <i class="fas fa-check-circle text-gray-400"></i>
-                </div>
-                <input id="password_confirmation" 
-                       name="password_confirmation" 
-                       :type="showConfirmPassword ? 'text' : 'password'" 
-                       required
-                       class="block w-full pl-11 pr-12 py-3 border-2 border-gray-200 rounded-xl bg-gray-50 text-gray-900 placeholder-gray-400 focus:outline-none focus:border-[#FAD470] focus:bg-white transition-all duration-200"
-                       placeholder="Confirm password">
-                <button type="button" 
-                        @click="showConfirmPassword = !showConfirmPassword"
-                        class="absolute inset-y-0 right-0 pr-4 flex items-center text-gray-400 hover:text-gray-600 transition-colors">
-                    <i x-show="!showConfirmPassword" class="fas fa-eye"></i>
-                    <i x-show="showConfirmPassword" class="fas fa-eye-slash" x-cloak></i>
-                </button>
-            </div>
-        </div>
-    </div>
-
-    @if ($errors->any())
-        <div class="p-4 bg-red-50 border border-red-200 rounded-xl">
-            <div class="flex items-start">
-                <div class="w-8 h-8 bg-red-100 rounded-full flex items-center justify-center mr-3 flex-shrink-0">
-                    <i class="fas fa-exclamation text-red-600"></i>
-                </div>
-                <div>
-                    <h4 class="text-sm font-semibold text-red-800 mb-1">Please fix the following errors:</h4>
-                    <ul class="text-sm text-red-700 space-y-1">
-                        @foreach ($errors->all() as $error)
-                            <li>• {{ $error }}</li>
-                        @endforeach
-                    </ul>
-                </div>
-            </div>
-        </div>
-    @endif
-
-    <!-- Submit Button -->
-    <button type="submit" 
-            class="w-full flex justify-center items-center gap-2 py-3.5 px-4 bg-[#FAD470] hover:bg-[#E5C060] text-black font-semibold rounded-xl focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#FAD470] transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-[1.02]">
-        <i class="fas fa-user-plus"></i>
-        Create Account
-    </button>
-
-    <!-- Divider -->
-    <div class="relative my-4">
-        <div class="absolute inset-0 flex items-center">
-            <div class="w-full border-t border-gray-200"></div>
-        </div>
-        <div class="relative flex justify-center text-sm">
-            <span class="px-4 bg-white text-gray-500">or</span>
-        </div>
-    </div>
-
-    <!-- Login Link -->
-    <div class="text-center">
-        <p class="text-gray-600">
-            Already have an account? 
-            <a href="{{ route('login') }}" class="font-semibold text-black hover:text-[#D4A84B] transition-colors">
-                Sign in here
-            </a>
-        </p>
-    </div>
-</form>
 @endsection
