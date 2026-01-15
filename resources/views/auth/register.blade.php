@@ -88,23 +88,6 @@
             </div>
         </div>
 
-        <div>
-            <div class="relative group">
-                <div class="absolute top-4 left-6 flex items-start pointer-events-none">
-                    <i class="fas fa-map-marker-alt text-black text-lg group-focus-within:text-black transition-colors"></i>
-                </div>
-                <textarea id="address"
-                        name="address"
-                        required
-                        rows="2"
-                        class="block w-full pl-14 pr-6 py-4 border border-gray-200 rounded-[25px] bg-white text-gray-900 placeholder-gray-400 font-medium focus:outline-none focus:border-black focus:ring-4 focus:ring-black/5 transition-all duration-300 resize-none"
-                        placeholder="Full Address">{{ old('address') }}</textarea>
-            </div>
-            @error('address')
-                <p class="mt-2 text-sm text-red-600 pl-4 font-medium">{{ $message }}</p>
-            @enderror
-        </div>
-
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-5" x-data="{ showPassword: false, showConfirmPassword: false }">
             <div>
                 <div class="relative group">
