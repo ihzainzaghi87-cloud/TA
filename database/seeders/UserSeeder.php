@@ -29,7 +29,6 @@ class UserSeeder extends Seeder
                 'email'        => 'root@example.com',
                 'username'     => 'root',
                 'phone_number' => '081111111111',
-                'address'      => '123 Root St, Root City',
                 'roles'        => ['superadmin'],
             ],
             [
@@ -37,7 +36,6 @@ class UserSeeder extends Seeder
                 'email'        => 'owner@example.com',
                 'username'     => 'owner',
                 'phone_number' => '081222222222',
-                'address'      => '456 Owner Ave, Owner City',
                 'roles'        => ['owner'],
             ],
             [
@@ -45,7 +43,6 @@ class UserSeeder extends Seeder
                 'email'        => 'staff@example.com',
                 'username'     => 'staff',
                 'phone_number' => '081333333333',
-                'address'      => '789 Staff Rd, Staff Town',
                 'roles'        => ['staff'],
             ],
             [
@@ -53,7 +50,6 @@ class UserSeeder extends Seeder
                 'email'        => 'user@example.com',
                 'username'     => 'userdemo',
                 'phone_number' => '081444444444',
-                'address'      => '101 User Ln, User Village',
                 'roles'        => ['user'],
             ],
         ];
