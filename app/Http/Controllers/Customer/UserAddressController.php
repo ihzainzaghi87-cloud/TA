@@ -59,8 +59,14 @@ class UserAddressController extends Controller
             'is_primary' => 'nullable|boolean'
         ]);
         
+        // Cek apakah user sudah memiliki alamat
+        $hasExistingAddress = UserAddress::where('user_id', Auth::id())->exists();
+        
+        // Jika belum punya alamat, otomatis jadikan primary
+        $isPrimary = !$hasExistingAddress ? true : ($request->has('is_primary') && $request->is_primary);
+        
         // If this address is set as primary, unset other primary addresses
-        if ($request->has('is_primary') && $request->is_primary) {
+        if ($isPrimary) {
             UserAddress::where('user_id', Auth::id())
                 ->update(['is_primary' => false]);
         }
@@ -78,11 +84,20 @@ class UserAddressController extends Controller
             'postal_code' => $validated['postal_code'],
             'address' => $validated['address'],
             'note' => $validated['note'] ?? null,
-            'is_primary' => $request->has('is_primary') ? true : false
+            'is_primary' => $isPrimary
         ]);
         
         return redirect()->route('addresses.index')
             ->with('success', 'Alamat berhasil ditambahkan');
+    }
+    
+    public function show($id)
+    {
+        $address = UserAddress::where('id', $id)
+            ->where('user_id', Auth::id())
+            ->firstOrFail();
+            
+        return view('customer.addresses.show', compact('address'));
     }
     
     public function edit($id)
@@ -126,8 +141,14 @@ class UserAddressController extends Controller
             'is_primary' => 'nullable|boolean'
         ]);
         
+        // Cek apakah ini satu-satunya alamat user
+        $totalAddresses = UserAddress::where('user_id', Auth::id())->count();
+        
+        // Jika hanya punya 1 alamat, paksa jadi primary
+        $isPrimary = $totalAddresses === 1 ? true : ($request->has('is_primary') && $request->is_primary);
+        
         // If this address is set as primary, unset other primary addresses
-        if ($request->has('is_primary') && $request->is_primary) {
+        if ($isPrimary) {
             UserAddress::where('user_id', Auth::id())
                 ->where('id', '!=', $id)
                 ->update(['is_primary' => false]);
@@ -144,7 +165,7 @@ class UserAddressController extends Controller
             'postal_code' => $validated['postal_code'],
             'address' => $validated['address'],
             'note' => $validated['note'] ?? null,
-            'is_primary' => $request->has('is_primary') ? true : false
+            'is_primary' => $isPrimary
         ]);
         
         return redirect()->route('addresses.index')
@@ -174,7 +195,19 @@ class UserAddressController extends Controller
             ->where('user_id', Auth::id())
             ->firstOrFail();
             
+        $wasPrimary = $address->is_primary;
         $address->delete();
+        
+        // Jika alamat yang dihapus adalah primary, set alamat pertama yang tersisa sebagai primary
+        if ($wasPrimary) {
+            $firstAddress = UserAddress::where('user_id', Auth::id())
+                ->orderBy('created_at', 'asc')
+                ->first();
+                
+            if ($firstAddress) {
+                $firstAddress->update(['is_primary' => true]);
+            }
+        }
         
         return redirect()->route('addresses.index')
             ->with('success', 'Alamat berhasil dihapus');

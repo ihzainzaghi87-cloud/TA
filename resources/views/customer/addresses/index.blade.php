@@ -234,6 +234,12 @@
 
                                 <!-- Actions -->
                                 <div class="flex flex-row md:flex-col items-center gap-2">
+                                    <a href="{{ route('addresses.show', $address->id) }}" 
+                                       class="w-10 h-10 bg-yellow-100 hover:bg-yellow-200 rounded-lg flex items-center justify-center text-yellow-600 hover:text-yellow-700 transition-colors"
+                                       title="Lihat Detail">
+                                        <i class="fas fa-eye"></i>
+                                    </a>
+                                    
                                     <a href="{{ route('addresses.edit', $address->id) }}" 
                                        class="w-10 h-10 bg-gray-100 hover:bg-amber-100 rounded-lg flex items-center justify-center text-gray-600 hover:text-amber-600 transition-colors"
                                        title="Edit">
@@ -249,18 +255,18 @@
                                                 <i class="fas fa-star"></i>
                                             </button>
                                         </form>
-
-                                        <form action="{{ route('addresses.destroy', $address->id) }}" method="POST" 
-                                              onsubmit="return confirm('Yakin ingin menghapus alamat ini?');">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" 
-                                                    class="w-10 h-10 bg-gray-100 hover:bg-red-100 rounded-lg flex items-center justify-center text-gray-600 hover:text-red-600 transition-colors"
-                                                    title="Hapus">
-                                                <i class="fas fa-trash"></i>
-                                            </button>
-                                        </form>
                                     @endif
+
+                                    <form action="{{ route('addresses.destroy', $address->id) }}" method="POST" 
+                                          onsubmit="return confirm('Yakin ingin menghapus alamat ini?');">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" 
+                                                class="w-10 h-10 bg-gray-100 hover:bg-red-100 rounded-lg flex items-center justify-center text-gray-600 hover:text-red-600 transition-colors"
+                                                title="Hapus">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </form>
                                 </div>
                             </div>
                         </div>

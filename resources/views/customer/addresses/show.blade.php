@@ -228,18 +228,18 @@
                                     Jadikan Utama
                                 </button>
                             </form>
-
-                            <form action="{{ route('addresses.destroy', $address->id) }}" method="POST" class="flex-1"
-                                  onsubmit="return confirm('Yakin ingin menghapus alamat ini?');">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" 
-                                        class="w-full flex items-center justify-center gap-2 px-6 py-3 bg-red-50 text-red-600 rounded-xl font-semibold hover:bg-red-100 transition">
-                                    <i class="fas fa-trash"></i>
-                                    Hapus Alamat
-                                </button>
-                            </form>
                         @endif
+
+                        <form action="{{ route('addresses.destroy', $address->id) }}" method="POST" class="flex-1"
+                              onsubmit="return confirm('Yakin ingin menghapus alamat ini?');">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" 
+                                    class="w-full flex items-center justify-center gap-2 px-6 py-3 bg-red-50 text-red-600 rounded-xl font-semibold hover:bg-red-100 transition">
+                                <i class="fas fa-trash"></i>
+                                Hapus Alamat
+                            </button>
+                        </form>
                     </div>
                 </div>
             </div>
