@@ -71,9 +71,11 @@
     }
 }" x-init="setTimeout(() => animateStats(), 500)">
 
-    <section class="bg-[#222831] min-h-[600px] flex items-stretch pt-16 pb-0 overflow-hidden font-sans">
-        <div class="container mx-auto px-6 lg:px-12 flex flex-col justify-center">
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 h-full">
+    <section class="w-full px-4 md:px-8 font-sans">
+    <div class="bg-[#1A1A1D] rounded-[2.5rem] overflow-hidden min-h-[600px] flex items-stretch pt-16 pb-0 my-8 md:my-12 relative w-full">
+
+        <div class="container mx-auto px-6 lg:px-12 flex flex-col justify-center h-full relative z-10">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 h-full items-center">
 
                 <div class="text-white space-y-6 self-center pb-16 lg:pb-0">
                     <h1 class="text-5xl lg:text-7xl font-bold leading-tight">
@@ -90,12 +92,14 @@
                     </div>
                 </div>
 
-                <div class="relative flex justify-center lg:justify-end mt-12 lg:mt-0 self-end">
+                <div class="relative h-full flex items-end justify-center lg:justify-end mt-12 lg:mt-0 self-end">
                     <div class="relative w-full max-w-[450px]">
+
                         <img src="{{ asset('ui/hero.png') }}"
                              alt="Model Fashion"
-                             class="w-full h-auto object-cover relative z-10"
+                             class="w-full h-auto object-cover relative z-10 block"
                         >
+
                         <div class="absolute top-10 -left-4 lg:-left-20 z-20 bg-white p-3 pr-6 rounded-2xl shadow-xl flex items-center gap-4 animate-bounce-slow">
                             <div class="w-12 h-12 bg-black rounded-full flex items-center justify-center text-white flex-shrink-0">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -108,7 +112,7 @@
                             </div>
                         </div>
 
-                        <div class="absolute bottom-4 -right-2 lg:-right-10 z-20 bg-white p-5 rounded-3xl shadow-xl flex flex-col items-center gap-2 text-center w-32">
+                        <div class="absolute bottom-12 -right-2 lg:-right-10 z-20 bg-white p-5 rounded-3xl shadow-xl flex flex-col items-center gap-2 text-center w-32">
                             <div class="w-12 h-12 bg-black rounded-full flex items-center justify-center text-white mb-1">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
@@ -118,11 +122,14 @@
                                 Include<br>Warranty
                             </div>
                         </div>
+
                     </div>
                 </div>
+
             </div>
         </div>
-    </section>
+    </div>
+</section>
 
     <section class="bg-white py-20 lg:py-28 overflow-hidden font-sans">
         <div class="container mx-auto px-6 lg:px-12">
