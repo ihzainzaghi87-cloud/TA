@@ -53,13 +53,13 @@
     }
 
     .article-content a {
-        color: #F59E0B;
+        color: #4B5563;
         text-decoration: underline;
         transition: color 0.2s ease;
     }
 
     .article-content a:hover {
-        color: #D97706;
+        color: #374151;
     }
 
     .article-content ul,
@@ -81,12 +81,12 @@
     }
 
     .article-content blockquote {
-        border-left: 4px solid #FAD470;
+        border-left: 4px solid #000000;
         padding-left: 1.5rem;
         margin: 2rem 0;
         font-style: italic;
         color: #6B7280;
-        background: #FFFBEB;
+        background: #F9FAFB;
         padding: 1.5rem;
         border-radius: 0 16px 16px 0;
     }
@@ -130,7 +130,7 @@
     }
 
     .related-card:hover {
-        border-color: #FAD470;
+        border-color: #E5E7EB;
         transform: translateY(-4px);
         box-shadow: 0 12px 40px rgba(0, 0, 0, 0.1);
     }
@@ -171,12 +171,12 @@
                          class="w-full h-full object-cover">
                     <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent"></div>
                 @else
-                    <div class="w-full h-full bg-gradient-to-br from-yellow-400 to-yellow-600">
+                    <div class="w-full h-full bg-[#E5DECC]">
                         <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
                     </div>
                 @endif
             @else
-                <div class="w-full h-full bg-gradient-to-br from-yellow-400 to-yellow-600">
+                <div class="w-full h-full bg-[#E5DECC]">
                     <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
                 </div>
             @endif
@@ -199,7 +199,7 @@
 
                     {{-- Article Meta --}}
                     <div class="flex flex-wrap items-center gap-4 mb-4">
-                        <span class="bg-[#FAD470] text-black px-4 py-1 rounded-full text-sm font-semibold">
+                        <span class="bg-gray-200 text-black px-4 py-1 rounded-full text-sm font-semibold">
                             Article
                         </span>
                         <span class="text-white/80 text-sm flex items-center gap-2">
@@ -226,7 +226,7 @@
         <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
             {{-- Back to Blog --}}
             <a href="{{ route('articles.index') }}" 
-               class="inline-flex items-center gap-2 text-gray-600 hover:text-amber-600 transition-colors mb-8">
+               class="inline-flex items-center gap-2 text-gray-600 hover:text-gray-600 transition-colors mb-8">
                 <i class="fas fa-arrow-left"></i>
                 <span>Back to all blog posts</span>
             </a>
@@ -269,8 +269,8 @@
                     <div class="flex flex-col sm:flex-row justify-between gap-4">
                         @if($previousArticle)
                         <a href="{{ route('articles.show', $previousArticle->slug) }}" 
-                           class="flex items-center gap-3 text-gray-600 hover:text-amber-600 transition-colors group">
-                            <div class="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center group-hover:bg-amber-100 transition-colors">
+                           class="flex items-center gap-3 text-gray-600 hover:text-gray-600 transition-colors group">
+                            <div class="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center group-hover:bg-gray-100 transition-colors">
                                 <i class="fas fa-arrow-left"></i>
                             </div>
                             <div>
@@ -284,12 +284,12 @@
 
                         @if($nextArticle)
                         <a href="{{ route('articles.show', $nextArticle->slug) }}" 
-                           class="flex items-center gap-3 text-gray-600 hover:text-amber-600 transition-colors group text-right">
+                           class="flex items-center gap-3 text-gray-600 hover:text-gray-600 transition-colors group text-right">
                             <div>
                                 <span class="text-sm text-gray-400">Next</span>
                                 <p class="font-semibold line-clamp-1">{{ Str::limit($nextArticle->title, 30) }}</p>
                             </div>
-                            <div class="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center group-hover:bg-amber-100 transition-colors">
+                            <div class="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center group-hover:bg-gray-100 transition-colors">
                                 <i class="fas fa-arrow-right"></i>
                             </div>
                         </a>
@@ -309,7 +309,7 @@
                     More Blog Posts
                 </h2>
                 <a href="{{ route('articles.index') }}" 
-                   class="inline-flex items-center text-amber-600 hover:text-amber-700 font-semibold">
+                   class="inline-flex items-center text-gray-600 hover:text-gray-700 font-semibold">
                     View All <i class="fas fa-arrow-right ml-2"></i>
                 </a>
             </div>
@@ -346,7 +346,7 @@
                             <i class="far fa-calendar-alt mr-1"></i>
                             {{ $related->published_at ? $related->published_at->format('M d, Y') : $related->created_at->format('M d, Y') }}
                         </div>
-                        <h3 class="font-bold text-gray-900 line-clamp-2 group-hover:text-amber-600 transition-colors">
+                        <h3 class="font-bold text-gray-900 line-clamp-2 group-hover:text-gray-600 transition-colors">
                             {{ $related->title }}
                         </h3>
                     </div>
