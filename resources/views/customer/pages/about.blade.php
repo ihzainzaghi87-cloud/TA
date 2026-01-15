@@ -3,35 +3,29 @@
 @section('title', 'About Us')
 
 @push('styles')
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&family=Bebas+Neue&display=swap" rel="stylesheet">
 <style>
     [x-cloak] { display: none !important; }
-
-    /* Hero Section */
-    .hero-section {
-        background: linear-gradient(135deg, #1f2937 0%, #111827 100%);
-        position: relative;
-        overflow: hidden;
+    @keyframes marquee-left {
+        0% { transform: translateX(0); }
+        100% { transform: translateX(-50%); }
+    }
+    @keyframes marquee-right {
+        0% { transform: translateX(-50%); }
+        100% { transform: translateX(0); }
     }
 
-    .hero-section::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background: url('https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=1920&q=80') center/cover;
-        opacity: 0.15;
+    .animate-marquee-left {
+        animation: marquee-left 30s linear infinite;
+    }
+    .animate-marquee-right {
+        animation: marquee-right 30s linear infinite;
     }
 
-    .hero-pattern {
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background-image: radial-gradient(rgba(250, 212, 112, 0.1) 1px, transparent 1px);
-        background-size: 40px 40px;
+    /* Pause animasi saat di-hover agar user bisa lihat detail */
+    .hover-pause:hover .animate-marquee-left,
+    .hover-pause:hover .animate-marquee-right {
+        animation-play-state: paused;
     }
 
     /* Floating Elements */
@@ -371,23 +365,23 @@
 @endpush
 
 @section('content')
-<div class="min-h-screen" x-data="{ 
+<div class="min-h-screen" x-data="{
     stats: { customers: 0, products: 0, brands: 0, rating: 0 },
     animateStats() {
         const duration = 2000;
         const targets = { customers: 10000, products: 500, brands: 50, rating: 4.8 };
         const startTime = Date.now();
-        
+
         const animate = () => {
             const elapsed = Date.now() - startTime;
             const progress = Math.min(elapsed / duration, 1);
             const eased = 1 - Math.pow(1 - progress, 3);
-            
+
             this.stats.customers = Math.floor(targets.customers * eased);
             this.stats.products = Math.floor(targets.products * eased);
             this.stats.brands = Math.floor(targets.brands * eased);
             this.stats.rating = (targets.rating * eased).toFixed(1);
-            
+
             if (progress < 1) requestAnimationFrame(animate);
         };
         animate();
@@ -395,592 +389,490 @@
 }" x-init="setTimeout(() => animateStats(), 500)">
 
     <!-- Hero Section -->
-    <section class="hero-section min-h-[90vh] flex items-center relative">
-        <div class="hero-pattern"></div>
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 relative z-10">
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-                <!-- Left Content -->
-                <div class="text-center lg:text-left">
-                    <div class="inline-flex items-center px-4 py-2 bg-amber-500/10 rounded-full mb-6 border border-amber-500/20">
-                        <span class="w-2 h-2 bg-amber-500 rounded-full mr-2 animate-pulse"></span>
-                        <span class="text-amber-400 text-sm font-medium">Established 2024</span>
-                    </div>
-                    
-                    <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6 leading-tight">
-                        We Are
-                        <span class="gradient-text block">The Paranoia</span>
-                    </h1>
-                    
-                    <p class="text-lg text-gray-400 mb-8 leading-relaxed max-w-xl">
-                        More than just fashion — we're a movement. Empowering individuals to express their unique identity through carefully curated, high-quality apparel that tells a story.
-                    </p>
-                    
-                    <div class="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
-                        <a href="{{ route('products') }}" 
-                           class="inline-flex items-center justify-center px-8 py-4 bg-gradient-to-r from-amber-500 to-yellow-500 text-gray-900 font-bold rounded-xl hover:from-amber-400 hover:to-yellow-400 transition-all duration-300 shadow-lg shadow-amber-500/25 hover:shadow-amber-500/40 hover:scale-105">
-                            <i class="fas fa-shopping-bag mr-2"></i>
-                            Explore Collection
-                        </a>
-                        <a href="#our-story" 
-                           class="inline-flex items-center justify-center px-8 py-4 border-2 border-gray-600 text-gray-300 font-semibold rounded-xl hover:border-amber-500 hover:text-amber-500 transition-all duration-300">
-                            <i class="fas fa-play-circle mr-2"></i>
-                            Our Story
-                        </a>
-                    </div>
-                </div>
+    <section class="bg-[#FCD364] min-h-[600px] flex items-stretch pt-16 pb-0 overflow-hidden font-sans">
+    <div class="container mx-auto px-6 lg:px-12 flex flex-col justify-center">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 h-full">
 
-                <!-- Right - Image Collage -->
-                <div class="relative hidden lg:block">
-                    <div class="gallery-grid">
-                        <div class="gallery-item float-element">
-                            <img src="https://images.unsplash.com/photo-1441984904996-e0b6ba687e04?w=600&q=80" alt="Fashion Store">
-                        </div>
-                        <div class="gallery-item float-element-delayed">
-                            <img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&q=80" alt="Fashion">
-                        </div>
-                        <div class="gallery-item float-element">
-                            <img src="https://images.unsplash.com/photo-1483985988355-763728e1935b?w=400&q=80" alt="Shopping">
-                        </div>
-                        <div class="gallery-item float-element-delayed">
-                            <img src="https://images.unsplash.com/photo-1445205170230-053b83016050?w=400&q=80" alt="Style">
-                        </div>
-                        <div class="gallery-item float-element">
-                            <img src="https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=400&q=80" alt="Fashion Items">
-                        </div>
-                    </div>
-                    
-                    <!-- Floating Badge -->
-                    <div class="absolute -bottom-6 -left-6 bg-white rounded-2xl p-4 shadow-xl float-element">
-                        <div class="flex items-center gap-3">
-                            <div class="w-12 h-12 bg-gradient-to-br from-amber-400 to-yellow-500 rounded-xl flex items-center justify-center">
-                                <i class="fas fa-award text-white text-xl"></i>
-                            </div>
-                            <div>
-                                <div class="text-sm text-gray-500">Trusted by</div>
-                                <div class="font-bold text-gray-900">10,000+ Customers</div>
-                            </div>
-                        </div>
-                    </div>
+            <div class="text-white space-y-6 self-center pb-16 lg:pb-0">
+                <h1 class="text-5xl lg:text-7xl font-bold leading-tight">
+                    Tentang Kami
+                </h1>
+                <p class="text-lg lg:text-xl font-medium leading-relaxed opacity-90 max-w-lg">
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus hendrerit suscipit
+                    egestas. Nunc eget congue ante. Vivamus ut sapien et ex volutpat tincidunt eget at felis
+                    vivamus hendrerit.
+                </p>
+                <div class="pt-4">
+                    <a href="#" class="inline-block bg-black text-white text-lg font-semibold px-10 py-4 rounded-full shadow-lg hover:bg-gray-800 transition duration-300 transform hover:scale-105">
+                        Learn More
+                    </a>
                 </div>
             </div>
 
-            <!-- Stats Section -->
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-20">
-                <div class="stat-card rounded-2xl p-6 text-center">
-                    <div class="text-3xl md:text-4xl font-bold text-amber-400 mb-1" x-text="stats.customers.toLocaleString() + '+'">0+</div>
-                    <div class="text-gray-400 text-sm">Happy Customers</div>
-                </div>
-                <div class="stat-card rounded-2xl p-6 text-center">
-                    <div class="text-3xl md:text-4xl font-bold text-amber-400 mb-1" x-text="stats.products + '+'">0+</div>
-                    <div class="text-gray-400 text-sm">Products</div>
-                </div>
-                <div class="stat-card rounded-2xl p-6 text-center">
-                    <div class="text-3xl md:text-4xl font-bold text-amber-400 mb-1" x-text="stats.brands + '+'">0+</div>
-                    <div class="text-gray-400 text-sm">Partner Brands</div>
-                </div>
-                <div class="stat-card rounded-2xl p-6 text-center">
-                    <div class="text-3xl md:text-4xl font-bold text-amber-400 mb-1" x-text="stats.rating + '★'">0★</div>
-                    <div class="text-gray-400 text-sm">Average Rating</div>
+            <div class="relative flex justify-center lg:justify-end mt-12 lg:mt-0 self-end">
+
+                <div class="relative w-full max-w-[450px]">
+
+                    <img src="{{ asset('ui/hero.png') }}"
+                         alt="Model Fashion"
+                         class="w-full h-auto object-cover relative z-10"
+                    >
+                    <div class="absolute top-10 -left-4 lg:-left-20 z-20 bg-white p-3 pr-6 rounded-2xl shadow-xl flex items-center gap-4 animate-bounce-slow">
+                        <div class="w-12 h-12 bg-[#FCD364] rounded-full flex items-center justify-center text-black flex-shrink-0">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
+                            </svg>
+                        </div>
+                        <div class="flex flex-col text-sm font-bold text-gray-800 leading-tight">
+                            <span>Bonus Mac OS</span>
+                            <span>Capitan Pro</span>
+                        </div>
+                    </div>
+
+                    <div class="absolute bottom-4 -right-2 lg:-right-10 z-20 bg-white p-5 rounded-3xl shadow-xl flex flex-col items-center gap-2 text-center w-32">
+                        <div class="w-12 h-12 bg-[#FCD364] rounded-full flex items-center justify-center text-black mb-1">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
+                            </svg>
+                        </div>
+                        <div class="text-xs font-bold text-gray-800 leading-tight">
+                            Include<br>Warranty
+                        </div>
+                    </div>
+
                 </div>
             </div>
         </div>
-
-        <!-- Scroll Indicator -->
-        <div class="absolute bottom-8 left-1/2 transform -translate-x-1/2">
-            <a href="#our-story" class="flex flex-col items-center text-gray-500 hover:text-amber-500 transition-colors">
-                <span class="text-sm mb-2">Scroll Down</span>
-                <i class="fas fa-chevron-down animate-bounce"></i>
-            </a>
-        </div>
-    </section>
+    </div>
+</section>
 
     <!-- Our Story Section -->
-    <section id="our-story" class="py-24 bg-white">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-                <!-- Image -->
-                <div class="story-image order-2 lg:order-1">
-                    <img src="https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=800&q=80" 
-                         alt="Our Store" 
-                         class="w-full h-[500px] object-cover">
-                    
-                    <!-- Floating Card -->
-                    <div class="absolute -bottom-3 -right-3 bg-white rounded-2xl p-6 shadow-xl max-w-xs hidden md:block">
-                        <div class="flex items-center gap-4 mb-3">
-                            <div class="w-14 h-14 bg-gradient-to-br from-amber-400 to-yellow-500 rounded-xl flex items-center justify-center">
-                                <i class="fas fa-rocket text-white text-xl"></i>
-                            </div>
-                            <div>
-                                <div class="font-bold text-gray-900">Since 2024</div>
-                                <div class="text-sm text-gray-500">Growing Strong</div>
-                            </div>
-                        </div>
-                        <p class="text-sm text-gray-600">Started from passion, now serving thousands of fashion enthusiasts.</p>
-                    </div>
-                </div>
+    <section class="bg-white py-20 lg:py-28 overflow-hidden font-sans">
+    <div class="container mx-auto px-6 lg:px-12">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
 
-                <!-- Content -->
-                <div class="order-1 lg:order-2">
-                    <div class="inline-flex items-center px-4 py-2 bg-amber-100 rounded-full mb-6">
-                        <i class="fas fa-book-open text-amber-600 mr-2"></i>
-                        <span class="text-amber-700 text-sm font-medium">Our Journey</span>
-                    </div>
-                    
-                    <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-6 leading-tight">
-                        From a Dream to a<br>
-                        <span class="text-amber-600">Fashion Movement</span>
-                    </h2>
-                    
-                    <p class="text-gray-600 text-lg mb-6 leading-relaxed">
-                        The Paranoia was born from a simple observation: quality fashion shouldn't be exclusive. Our founder, a passionate fashion enthusiast, set out to create a platform where style meets accessibility.
-                    </p>
-                    
-                    <p class="text-gray-600 mb-8 leading-relaxed">
-                        What started in 2024 as a small online boutique has evolved into a thriving community of fashion-forward individuals who believe that great style is a form of self-expression. Every piece in our collection is carefully curated to help you tell your unique story.
-                    </p>
+            <div>
+                <h2 class="text-5xl lg:text-7xl font-bold text-black mb-6 leading-tight">
+                    Belanja
+                </h2>
 
-                    <!-- Features -->
-                    <div class="grid grid-cols-2 gap-6">
-                        <div class="flex items-start gap-4">
-                            <div class="w-12 h-12 bg-amber-100 rounded-xl flex items-center justify-center flex-shrink-0">
-                                <i class="fas fa-gem text-amber-600"></i>
-                            </div>
-                            <div>
-                                <h4 class="font-semibold text-gray-900 mb-1">Premium Quality</h4>
-                                <p class="text-sm text-gray-500">Only the finest materials</p>
-                            </div>
+                <p class="text-gray-500 text-lg leading-relaxed mb-12 max-w-lg">
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus hendrerit
+                    suscipit egestas. Nunc eget congue ante. Vivamus ut sapien et ex volutpat
+                    tincidunt eget at felis vivamus hendrerit.
+                </p>
+
+                <div class="grid grid-cols-2 gap-6">
+
+                    <div class="bg-white p-8 rounded-[30px] shadow-[0_10px_40px_-10px_rgba(0,0,0,0.08)] text-center border border-gray-50 hover:-translate-y-2 transition duration-300">
+                        <div class="flex justify-center items-start gap-1">
+                            <span class="text-4xl font-bold text-black">13</span>
+                            <span class="text-[#FCD364] text-2xl font-bold mt-1">+</span>
                         </div>
-                        <div class="flex items-start gap-4">
-                            <div class="w-12 h-12 bg-amber-100 rounded-xl flex items-center justify-center flex-shrink-0">
-                                <i class="fas fa-hand-holding-heart text-amber-600"></i>
-                            </div>
-                            <div>
-                                <h4 class="font-semibold text-gray-900 mb-1">Customer First</h4>
-                                <p class="text-sm text-gray-500">Your satisfaction matters</p>
-                            </div>
-                        </div>
-                        <div class="flex items-start gap-4">
-                            <div class="w-12 h-12 bg-amber-100 rounded-xl flex items-center justify-center flex-shrink-0">
-                                <i class="fas fa-leaf text-amber-600"></i>
-                            </div>
-                            <div>
-                                <h4 class="font-semibold text-gray-900 mb-1">Sustainable</h4>
-                                <p class="text-sm text-gray-500">Eco-friendly practices</p>
-                            </div>
-                        </div>
-                        <div class="flex items-start gap-4">
-                            <div class="w-12 h-12 bg-amber-100 rounded-xl flex items-center justify-center flex-shrink-0">
-                                <i class="fas fa-truck text-amber-600"></i>
-                            </div>
-                            <div>
-                                <h4 class="font-semibold text-gray-900 mb-1">Fast Delivery</h4>
-                                <p class="text-sm text-gray-500">Nationwide shipping</p>
-                            </div>
-                        </div>
+                        <p class="text-gray-500 text-sm mt-2 font-medium">Years Experience</p>
                     </div>
+
+                    <div class="bg-white p-8 rounded-[30px] shadow-[0_10px_40px_-10px_rgba(0,0,0,0.08)] text-center border border-gray-50 hover:-translate-y-2 transition duration-300">
+                        <div class="flex justify-center items-start gap-1">
+                            <span class="text-4xl font-bold text-black">100K</span>
+                            <span class="text-[#FCD364] text-2xl font-bold mt-1">+</span>
+                        </div>
+                        <p class="text-gray-500 text-sm mt-2 font-medium">Fashion And Brand</p>
+                    </div>
+
+                    <div class="bg-white p-8 rounded-[30px] shadow-[0_10px_40px_-10px_rgba(0,0,0,0.08)] text-center border border-gray-50 hover:-translate-y-2 transition duration-300">
+                        <div class="flex justify-center items-start gap-1">
+                            <span class="text-4xl font-bold text-black">6K</span>
+                            <span class="text-[#FCD364] text-2xl font-bold mt-1">+</span>
+                        </div>
+                        <p class="text-gray-500 text-sm mt-2 font-medium">Order completed</p>
+                    </div>
+
+                    <div class="bg-white p-8 rounded-[30px] shadow-[0_10px_40px_-10px_rgba(0,0,0,0.08)] text-center border border-gray-50 hover:-translate-y-2 transition duration-300">
+                        <div class="flex justify-center items-start gap-1">
+                            <span class="text-4xl font-bold text-black">99</span>
+                            <span class="text-[#FCD364] text-2xl font-bold mt-1">+</span>
+                        </div>
+                        <p class="text-gray-500 text-sm mt-2 font-medium">Partners</p>
+                    </div>
+
                 </div>
             </div>
-        </div>
-    </section>
 
-    <!-- Timeline Section -->
-    <section class="py-24 bg-gray-50">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center mb-16">
-                <div class="inline-flex items-center px-4 py-2 bg-amber-100 rounded-full mb-6">
-                    <i class="fas fa-history text-amber-600 mr-2"></i>
-                    <span class="text-amber-700 text-sm font-medium">Our Milestones</span>
+            <div class="relative mt-12 lg:mt-0 h-[500px] lg:h-[600px] w-full">
+
+                <div class="absolute top-0 right-0 w-3/4 h-64 lg:h-80 rounded-3xl overflow-hidden z-0">
+                    <img src="https://images.unsplash.com/photo-1553413077-190dd305871c?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"
+                         alt="Factory Background"
+                         class="w-full h-full object-cover opacity-90 hover:scale-110 transition duration-700">
                 </div>
-                <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-                    The Journey So Far
+
+                <div class="absolute top-20 lg:top-32 left-0 lg:left-8 w-2/3 h-96 lg:h-[450px] rounded-3xl overflow-hidden z-10 shadow-2xl">
+                    <img src="https://images.unsplash.com/photo-1512413914633-b5043f4041ea?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80"
+                         alt="Sewing Machine Detail"
+                         class="w-full h-full object-cover hover:scale-105 transition duration-500">
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</section>
+
+    <!-- Offering Section -->
+    <section class="bg-white py-20 lg:py-28 font-sans overflow-hidden">
+    <div class="container mx-auto px-6 lg:px-12">
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-20 items-start">
+
+            <div class="lg:col-span-4 space-y-8 sticky top-10">
+                <h2 class="text-5xl lg:text-6xl font-bold text-black leading-tight">
+                    What can our <br>
+                    <span class="text-[#FCD364]">Belanja <br> Offers?</span>
                 </h2>
-                <p class="text-gray-600 max-w-2xl mx-auto">
-                    From humble beginnings to becoming a trusted fashion destination, here's how we've grown.
+
+                <div class="space-y-6 text-gray-500 text-lg leading-relaxed">
+                    <p>
+                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus hendrerit
+                        suscipit egestas. Nunc eget congue ante. Vivamus ut sapien et ex volutpat
+                        tincidunt eget at felis vivamus hendrerit.
+                    </p>
+                    <p>
+                        Phasellus pellentesque, quam sed tempus tempus, dui magna semper urna,
+                        placerat tristique diam augue ut nunc.
+                    </p>
+                </div>
+            </div>
+
+            <div class="lg:col-span-8">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+
+                    <div class="aspect-square flex flex-col justify-center items-center bg-[#FCD364] p-8 rounded-[30px] shadow-xl text-center text-white transform hover:-translate-y-2 transition duration-300">
+                        <div class="mb-6">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 stroke-current" fill="none" viewBox="0 0 24 24" stroke-width="1.5">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+                            </svg>
+                        </div>
+                        <h3 class="text-2xl font-bold mb-3">Get many product</h3>
+                        <p class="text-white/90 leading-relaxed text-sm px-2">
+                            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ut diam sapien.
+                        </p>
+                    </div>
+
+                    <div class="aspect-square flex flex-col justify-center items-center bg-white p-8 rounded-[30px] shadow-[0_20px_50px_rgba(0,0,0,0.05)] text-center border border-gray-100 transform hover:-translate-y-2 transition duration-300">
+                        <div class="mb-6 text-[#FCD364]">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 stroke-current" fill="none" viewBox="0 0 24 24" stroke-width="1.5">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
+                            </svg>
+                        </div>
+                        <h3 class="text-2xl font-bold text-gray-900 mb-3">Tukarkan Point!</h3>
+                        <p class="text-gray-500 leading-relaxed text-sm px-2">
+                            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ut diam sapien.
+                        </p>
+                    </div>
+
+                    <div class="aspect-square flex flex-col justify-center items-center bg-white p-8 rounded-[30px] shadow-[0_20px_50px_rgba(0,0,0,0.05)] text-center border border-gray-100 transform hover:-translate-y-2 transition duration-300">
+                        <div class="mb-6 text-[#FCD364]">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 stroke-current" fill="none" viewBox="0 0 24 24" stroke-width="1.5">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                        </div>
+                        <h3 class="text-2xl font-bold text-gray-900 mb-3">Pengantaran Cepat</h3>
+                        <p class="text-gray-500 leading-relaxed text-sm px-2">
+                            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ut diam sapien.
+                        </p>
+                    </div>
+
+                    <div class="aspect-square flex flex-col justify-center items-center bg-white p-8 rounded-[30px] shadow-[0_20px_50px_rgba(0,0,0,0.05)] text-center border border-gray-100 transform hover:-translate-y-2 transition duration-300">
+                        <div class="mb-6 text-[#FCD364]">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 stroke-current" fill="none" viewBox="0 0 24 24" stroke-width="1.5">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                            </svg>
+                        </div>
+                        <h3 class="text-2xl font-bold text-gray-900 mb-3">Terpercaya</h3>
+                        <p class="text-gray-500 leading-relaxed text-sm px-2">
+                            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ut diam sapien.
+                        </p>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+    <!-- Ordering Section -->
+    <section class="bg-white py-20 lg:py-28 font-sans">
+    <div class="container mx-auto px-6 lg:px-12">
+
+        <div class="text-center max-w-3xl mx-auto mb-16 lg:mb-24">
+            <h2 class="text-4xl lg:text-6xl font-bold text-black leading-tight mb-6">
+                How the <span class="text-[#FCD364]">Ordering</span><br>
+                The Product??
+            </h2>
+            <p class="text-gray-500 text-lg leading-relaxed">
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus hendrerit suscipit egestas.
+                Nunc eget congue ante. Vivamus ut sapien et ex volutpat tincidunt eget at felis.
+            </p>
+        </div>
+
+        <div class="flex flex-col lg:flex-row items-start justify-between gap-12 lg:gap-8 relative">
+
+            <div class="flex flex-col items-center text-center flex-1 w-full">
+                <div class="w-24 h-24 rounded-full bg-[#FCD364] flex items-center justify-center text-white text-4xl font-bold mb-8 shadow-[0_10px_30px_rgba(252,211,100,0.4)] transition hover:scale-110 duration-300">
+                    1
+                </div>
+                <h3 class="text-2xl font-bold text-black mb-4">Select your product</h3>
+                <p class="text-gray-500 leading-relaxed px-4">
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ut diam sapien. Phasellus pellentesque, quam sed tempus tempus.
                 </p>
             </div>
 
-            <div class="relative">
-                <div class="timeline-line hidden md:block"></div>
-                
-                <div class="space-y-12">
-                    <!-- Timeline Item 1 -->
-                    <div class="relative grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
-                        <div class="md:text-right md:pr-16">
-                            <div class="bg-white rounded-2xl p-6 shadow-lg border border-gray-100 inline-block">
-                                <span class="text-amber-600 font-bold text-lg">January 2024</span>
-                                <h3 class="text-xl font-bold text-gray-900 mt-2 mb-3">The Beginning</h3>
-                                <p class="text-gray-600">Launched The Paranoia with just 50 products and a vision to revolutionize online fashion shopping in Indonesia.</p>
-                            </div>
-                        </div>
-                        <div class="hidden md:flex justify-start pl-16">
-                            <div class="timeline-dot"></div>
-                        </div>
-                        <div class="md:hidden absolute left-0 top-0">
-                            <div class="timeline-dot"></div>
-                        </div>
-                    </div>
-
-                    <!-- Timeline Item 2 -->
-                    <div class="relative grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
-                        <div class="hidden md:flex justify-end pr-16">
-                            <div class="timeline-dot"></div>
-                        </div>
-                        <div class="md:pl-16">
-                            <div class="bg-white rounded-2xl p-6 shadow-lg border border-gray-100 inline-block">
-                                <span class="text-amber-600 font-bold text-lg">June 2024</span>
-                                <h3 class="text-xl font-bold text-gray-900 mt-2 mb-3">1,000 Customers</h3>
-                                <p class="text-gray-600">Reached our first major milestone of 1,000 happy customers and expanded our product range to 200+ items.</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Timeline Item 3 -->
-                    <div class="relative grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
-                        <div class="md:text-right md:pr-16">
-                            <div class="bg-white rounded-2xl p-6 shadow-lg border border-gray-100 inline-block">
-                                <span class="text-amber-600 font-bold text-lg">December 2024</span>
-                                <h3 class="text-xl font-bold text-gray-900 mt-2 mb-3">Partnership Growth</h3>
-                                <p class="text-gray-600">Partnered with 30+ local and international brands to bring diverse fashion choices to our customers.</p>
-                            </div>
-                        </div>
-                        <div class="hidden md:flex justify-start pl-16">
-                            <div class="timeline-dot"></div>
-                        </div>
-                    </div>
-
-                    <!-- Timeline Item 4 -->
-                    <div class="relative grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
-                        <div class="hidden md:flex justify-end pr-16">
-                            <div class="timeline-dot"></div>
-                        </div>
-                        <div class="md:pl-16">
-                            <div class="bg-white rounded-2xl p-6 shadow-lg border border-gray-100 inline-block">
-                                <span class="text-amber-600 font-bold text-lg">2025 & Beyond</span>
-                                <h3 class="text-xl font-bold text-gray-900 mt-2 mb-3">The Future</h3>
-                                <p class="text-gray-600">Continuing to grow with 10,000+ customers, 500+ products, and a commitment to sustainable fashion.</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+            <div class="hidden lg:block text-[#FCD364] mt-9 opacity-50">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                </svg>
             </div>
-        </div>
-    </section>
 
-    <!-- Mission & Vision Section -->
-    <section class="py-24 bg-white">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                <!-- Mission Card -->
-                <div class="relative rounded-3xl overflow-hidden group">
-                    <img src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=800&q=80" 
-                         alt="Our Mission" 
-                         class="w-full h-[400px] object-cover transition-transform duration-700 group-hover:scale-110">
-                    <div class="absolute inset-0 bg-gradient-to-t from-gray-900 via-gray-900/50 to-transparent"></div>
-                    <div class="absolute bottom-0 left-0 right-0 p-8">
-                        <div class="flex items-center gap-3 mb-4">
-                            <div class="w-12 h-12 bg-amber-500 rounded-xl flex items-center justify-center">
-                                <i class="fas fa-bullseye text-white text-xl"></i>
-                            </div>
-                            <h3 class="text-2xl font-bold text-white">Our Mission</h3>
-                        </div>
-                        <p class="text-gray-200 leading-relaxed">
-                            To empower individuals to express their authentic selves through carefully curated, high-quality fashion that's accessible to everyone. We believe style should never be a barrier to self-expression.
-                        </p>
-                    </div>
+            <div class="flex flex-col items-center text-center flex-1 w-full">
+                <div class="w-24 h-24 rounded-full bg-[#FCD364] flex items-center justify-center text-white text-4xl font-bold mb-8 shadow-[0_10px_30px_rgba(252,211,100,0.4)] transition hover:scale-110 duration-300">
+                    2
                 </div>
-
-                <!-- Vision Card -->
-                <div class="relative rounded-3xl overflow-hidden group">
-                    <img src="https://images.unsplash.com/photo-1555529771-7888783a18d3?w=800&q=80" 
-                         alt="Our Vision" 
-                         class="w-full h-[400px] object-cover transition-transform duration-700 group-hover:scale-110">
-                    <div class="absolute inset-0 bg-gradient-to-t from-gray-900 via-gray-900/50 to-transparent"></div>
-                    <div class="absolute bottom-0 left-0 right-0 p-8">
-                        <div class="flex items-center gap-3 mb-4">
-                            <div class="w-12 h-12 bg-amber-500 rounded-xl flex items-center justify-center">
-                                <i class="fas fa-eye text-white text-xl"></i>
-                            </div>
-                            <h3 class="text-2xl font-bold text-white">Our Vision</h3>
-                        </div>
-                        <p class="text-gray-200 leading-relaxed">
-                            To become Indonesia's most trusted and innovative fashion platform, setting new standards for quality, sustainability, and customer experience in the digital fashion industry.
-                        </p>
-                    </div>
-                </div>
+                <h3 class="text-2xl font-bold text-black mb-4">Payment</h3>
+                <p class="text-gray-500 leading-relaxed px-4">
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ut diam sapien. Phasellus pellentesque, quam sed tempus tempus.
+                </p>
             </div>
+
+            <div class="hidden lg:block text-[#FCD364] mt-9 opacity-50">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                </svg>
+            </div>
+
+            <div class="flex flex-col items-center text-center flex-1 w-full">
+                <div class="w-24 h-24 rounded-full bg-[#FCD364] flex items-center justify-center text-white text-4xl font-bold mb-8 shadow-[0_10px_30px_rgba(252,211,100,0.4)] transition hover:scale-110 duration-300">
+                    3
+                </div>
+                <h3 class="text-2xl font-bold text-black mb-4">Delivery & Confirmation</h3>
+                <p class="text-gray-500 leading-relaxed px-4">
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ut diam sapien. Phasellus pellentesque, quam sed tempus tempus.
+                </p>
+            </div>
+
         </div>
-    </section>
+    </div>
+</section>
 
     <!-- Core Values Section -->
-    <section class="py-24 bg-gray-50">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center mb-16">
-                <div class="inline-flex items-center px-4 py-2 bg-amber-100 rounded-full mb-6">
-                    <i class="fas fa-star text-amber-600 mr-2"></i>
-                    <span class="text-amber-700 text-sm font-medium">What We Believe</span>
-                </div>
-                <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-                    Our Core Values
-                </h2>
-                <p class="text-gray-600 max-w-2xl mx-auto">
-                    These principles guide every decision we make and every interaction we have.
-                </p>
-            </div>
+    <section class="bg-white py-20 lg:py-28 font-sans overflow-hidden hover-pause">
 
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-                <!-- Value 1 -->
-                <div class="value-card p-8 text-center">
-                    <div class="value-icon">
-                        <i class="fas fa-heart text-amber-600 text-3xl"></i>
+    <div class="container mx-auto px-6 lg:px-12 text-center mb-16">
+        <h2 class="text-4xl lg:text-6xl font-bold text-black leading-tight mb-6">
+            Trusted by 500+ <span class="text-[#FCD364]">startups</span><br>
+            and agencies
+        </h2>
+        <p class="text-gray-500 text-lg leading-relaxed max-w-3xl mx-auto">
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus hendrerit suscipit egestas.
+            Nunc eget congue ante. Vivamus ut sapien et ex volutpat tincidunt eget.
+        </p>
+    </div>
+
+    <div class="flex flex-col gap-10">
+
+        <div class="relative w-full overflow-hidden fade-mask">
+            <div class="flex w-max animate-marquee-left gap-8" style="animation-duration: 40s;">
+
+                <div class="flex gap-8">
+                    <div class="min-w-[380px] bg-white rounded-[20px] shadow-[0_8px_30px_rgba(0,0,0,0.06)] p-6 flex items-center gap-5 hover:shadow-[0_15px_35px_rgba(0,0,0,0.1)] transition-shadow duration-300">
+                        <div class="w-16 h-16 bg-[#666666] rounded-xl shrink-0 flex items-center justify-center text-white">
+                            <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M4 4a2 2 0 012-2h8a2 2 0 012 2v12a1 1 0 110 2h-3a1 1 0 01-1-1v-2a1 1 0 00-1-1H9a1 1 0 00-1 1v2a1 1 0 01-1 1H4a1 1 0 110-2V4zm3 1h2v2H7V5zm2 4H7v2h2V9zm2-4h2v2h-2V5zm2 4h-2v2h2V9z" clip-rule="evenodd"/></svg>
+                        </div>
+                        <div class="text-left">
+                            <h1 class="font-bold text-gray-600 text-xl uppercase tracking-wide">BADIE LLC</h4>
+                            <p class="text-sm text-gray-400 font-medium mt-1">Is Golden</p>
+                        </div>
                     </div>
-                    <h3 class="text-xl font-bold text-gray-900 mb-3">Passion</h3>
-                    <p class="text-gray-600">
-                        Fashion is not just our business—it's our passion. We pour love into every product we curate and every customer we serve.
-                    </p>
+                    <div class="min-w-[380px] bg-white rounded-[20px] shadow-[0_8px_30px_rgba(0,0,0,0.06)] p-6 flex items-center gap-5 hover:shadow-[0_15px_35px_rgba(0,0,0,0.1)] transition-shadow duration-300">
+                        <div class="w-16 h-16 bg-[#666666] rounded-xl shrink-0 flex items-center justify-center text-white">
+                            <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 20 20"><path d="M10 3.5a1.5 1.5 0 013 0V4a1 1 0 001 1h3a1 1 0 011 1v3a1 1 0 01-1 1h-.5a1.5 1.5 0 000 3h.5a1 1 0 011 1v3a1 1 0 01-1 1h-3a1 1 0 01-1-1v-.5a1.5 1.5 0 00-3 0v.5a1 1 0 01-1 1H6a1 1 0 01-1-1v-3a1 1 0 00-1-1h-.5a1.5 1.5 0 010-3H4a1 1 0 001-1V6a1 1 0 011-1h3a1 1 0 001-1v-.5z"/></svg>
+                        </div>
+                        <div class="text-left">
+                            <h1 class="font-bold text-gray-600 text-xl uppercase tracking-wide">WUCKERT INC</h4>
+                            <p class="text-sm text-gray-400 font-medium mt-1">Gold Tiime Everybody</p>
+                        </div>
+                    </div>
+                    <div class="min-w-[380px] bg-white rounded-[20px] shadow-[0_8px_30px_rgba(0,0,0,0.06)] p-6 flex items-center gap-5 hover:shadow-[0_15px_35px_rgba(0,0,0,0.1)] transition-shadow duration-300">
+                        <div class="w-16 h-16 bg-[#666666] rounded-xl shrink-0 flex items-center justify-center text-white">
+                            <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 20 20"><path d="M5 3a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2V5a2 2 0 00-2-2H5zM5 11a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2v-2a2 2 0 00-2-2H5zM11 5a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V5zM11 13a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/></svg>
+                        </div>
+                        <div class="text-left">
+                            <h1 class="font-bold text-gray-600 text-xl uppercase tracking-wide">SCHUMM SCHULTZ</h4>
+                            <p class="text-sm text-gray-400 font-medium mt-1">Work Of The Nation's</p>
+                        </div>
+                    </div>
+                    <div class="min-w-[380px] bg-white rounded-[20px] shadow-[0_8px_30px_rgba(0,0,0,0.06)] p-6 flex items-center gap-5 hover:shadow-[0_15px_35px_rgba(0,0,0,0.1)] transition-shadow duration-300">
+                        <div class="w-16 h-16 bg-[#666666] rounded-xl shrink-0 flex items-center justify-center text-white">
+                            <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M4 4a2 2 0 012-2h8a2 2 0 012 2v12a1 1 0 110 2h-3a1 1 0 01-1-1v-2a1 1 0 00-1-1H9a1 1 0 00-1 1v2a1 1 0 01-1 1H4a1 1 0 110-2V4zm3 1h2v2H7V5zm2 4H7v2h2V9zm2-4h2v2h-2V5zm2 4h-2v2h2V9z" clip-rule="evenodd"/></svg>
+                        </div>
+                        <div class="text-left">
+                            <h1 class="font-bold text-gray-600 text-xl uppercase tracking-wide">BAYER GROUP</h4>
+                            <p class="text-sm text-gray-400 font-medium mt-1">Children Of The Nation</p>
+                        </div>
+                    </div>
                 </div>
 
-                <!-- Value 2 -->
-                <div class="value-card p-8 text-center">
-                    <div class="value-icon">
-                        <i class="fas fa-shield-alt text-amber-600 text-3xl"></i>
+                <div class="flex gap-8">
+                    <div class="min-w-[380px] bg-white rounded-[20px] shadow-[0_8px_30px_rgba(0,0,0,0.06)] p-6 flex items-center gap-5 hover:shadow-[0_15px_35px_rgba(0,0,0,0.1)] transition-shadow duration-300">
+                        <div class="w-16 h-16 bg-[#666666] rounded-xl shrink-0 flex items-center justify-center text-white"><svg class="w-8 h-8" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M4 4a2 2 0 012-2h8a2 2 0 012 2v12a1 1 0 110 2h-3a1 1 0 01-1-1v-2a1 1 0 00-1-1H9a1 1 0 00-1 1v2a1 1 0 01-1 1H4a1 1 0 110-2V4zm3 1h2v2H7V5zm2 4H7v2h2V9zm2-4h2v2h-2V5zm2 4h-2v2h2V9z" clip-rule="evenodd"/></svg></div>
+                        <div class="text-left"><h1 class="font-bold text-gray-600 text-xl uppercase tracking-wide">BADIE LLC</h4><p class="text-sm text-gray-400 font-medium mt-1">Is Golden</p></div>
                     </div>
-                    <h3 class="text-xl font-bold text-gray-900 mb-3">Integrity</h3>
-                    <p class="text-gray-600">
-                        Transparency and honesty are non-negotiable. We stand behind every product and every promise we make to our customers.
-                    </p>
+                    <div class="min-w-[380px] bg-white rounded-[20px] shadow-[0_8px_30px_rgba(0,0,0,0.06)] p-6 flex items-center gap-5 hover:shadow-[0_15px_35px_rgba(0,0,0,0.1)] transition-shadow duration-300">
+                        <div class="w-16 h-16 bg-[#666666] rounded-xl shrink-0 flex items-center justify-center text-white"><svg class="w-8 h-8" fill="currentColor" viewBox="0 0 20 20"><path d="M10 3.5a1.5 1.5 0 013 0V4a1 1 0 001 1h3a1 1 0 011 1v3a1 1 0 01-1 1h-.5a1.5 1.5 0 000 3h.5a1 1 0 011 1v3a1 1 0 01-1 1h-3a1 1 0 01-1-1v-.5a1.5 1.5 0 00-3 0v.5a1 1 0 01-1 1H6a1 1 0 01-1-1v-3a1 1 0 00-1-1h-.5a1.5 1.5 0 010-3H4a1 1 0 001-1V6a1 1 0 011-1h3a1 1 0 001-1v-.5z"/></svg></div>
+                        <div class="text-left"><h1 class="font-bold text-gray-600 text-xl uppercase tracking-wide">WUCKERT INC</h4><p class="text-sm text-gray-400 font-medium mt-1">Gold Tiime Everybody</p></div>
+                    </div>
+                    <div class="min-w-[380px] bg-white rounded-[20px] shadow-[0_8px_30px_rgba(0,0,0,0.06)] p-6 flex items-center gap-5 hover:shadow-[0_15px_35px_rgba(0,0,0,0.1)] transition-shadow duration-300">
+                        <div class="w-16 h-16 bg-[#666666] rounded-xl shrink-0 flex items-center justify-center text-white"><svg class="w-8 h-8" fill="currentColor" viewBox="0 0 20 20"><path d="M5 3a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2V5a2 2 0 00-2-2H5zM5 11a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2v-2a2 2 0 00-2-2H5zM11 5a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V5zM11 13a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/></svg></div>
+                        <div class="text-left"><h1 class="font-bold text-gray-600 text-xl uppercase tracking-wide">SCHUMM SCHULTZ</h4><p class="text-sm text-gray-400 font-medium mt-1">Work Of The Nation's</p></div>
+                    </div>
+                    <div class="min-w-[380px] bg-white rounded-[20px] shadow-[0_8px_30px_rgba(0,0,0,0.06)] p-6 flex items-center gap-5 hover:shadow-[0_15px_35px_rgba(0,0,0,0.1)] transition-shadow duration-300">
+                        <div class="w-16 h-16 bg-[#666666] rounded-xl shrink-0 flex items-center justify-center text-white"><svg class="w-8 h-8" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M4 4a2 2 0 012-2h8a2 2 0 012 2v12a1 1 0 110 2h-3a1 1 0 01-1-1v-2a1 1 0 00-1-1H9a1 1 0 00-1 1v2a1 1 0 01-1 1H4a1 1 0 110-2V4zm3 1h2v2H7V5zm2 4H7v2h2V9zm2-4h2v2h-2V5zm2 4h-2v2h2V9z" clip-rule="evenodd"/></svg></div>
+                        <div class="text-left"><h1 class="font-bold text-gray-600 text-xl uppercase tracking-wide">BAYER GROUP</h4><p class="text-sm text-gray-400 font-medium mt-1">Children Of The Nation</p></div>
+                    </div>
                 </div>
 
-                <!-- Value 3 -->
-                <div class="value-card p-8 text-center">
-                    <div class="value-icon">
-                        <i class="fas fa-lightbulb text-amber-600 text-3xl"></i>
-                    </div>
-                    <h3 class="text-xl font-bold text-gray-900 mb-3">Innovation</h3>
-                    <p class="text-gray-600">
-                        We constantly evolve, embracing new trends and technologies to enhance your shopping experience and style journey.
-                    </p>
-                </div>
-
-                <!-- Value 4 -->
-                <div class="value-card p-8 text-center">
-                    <div class="value-icon">
-                        <i class="fas fa-users text-amber-600 text-3xl"></i>
-                    </div>
-                    <h3 class="text-xl font-bold text-gray-900 mb-3">Community</h3>
-                    <p class="text-gray-600">
-                        We're building more than a store—we're creating a community of fashion enthusiasts who inspire and support each other.
-                    </p>
-                </div>
             </div>
         </div>
-    </section>
 
-    <!-- Team Section -->
-    <section class="py-24 bg-white">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center mb-16">
-                <div class="inline-flex items-center px-4 py-2 bg-amber-100 rounded-full mb-6">
-                    <i class="fas fa-users text-amber-600 mr-2"></i>
-                    <span class="text-amber-700 text-sm font-medium">The Team</span>
-                </div>
-                <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-                    Meet The People Behind The Paranoia
-                </h2>
-                <p class="text-gray-600 max-w-2xl mx-auto">
-                    Our dedicated team works tirelessly to bring you the best fashion experience possible.
-                </p>
-            </div>
+        <div class="relative w-full overflow-hidden fade-mask">
+             <div class="flex w-max animate-marquee-right gap-8" style="animation-duration: 40s;">
 
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-                <!-- Team Member 1 -->
-                <div class="team-card">
-                    <div class="team-image">
-                        <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&q=80" alt="Team Member">
-                        <div class="team-overlay"></div>
-                        <div class="team-social">
-                            <a href="#" class="social-btn"><i class="fab fa-linkedin-in"></i></a>
-                            <a href="#" class="social-btn"><i class="fab fa-twitter"></i></a>
-                            <a href="#" class="social-btn"><i class="fab fa-instagram"></i></a>
-                        </div>
+                <div class="flex gap-8">
+                     <div class="min-w-[380px] bg-white rounded-[20px] shadow-[0_8px_30px_rgba(0,0,0,0.06)] p-6 flex items-center gap-5 hover:shadow-[0_15px_35px_rgba(0,0,0,0.1)] transition-shadow duration-300">
+                        <div class="w-16 h-16 bg-[#666666] rounded-xl shrink-0 flex items-center justify-center text-white"><svg class="w-8 h-8" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0a1.532 1.532 0 01-2.286.948c-1.372-.836-2.942.734-2.106 2.106.54.886.061 2.042-.947 2.287-1.561.379-1.561 2.6 0 2.978a1.532 1.532 0 01.947 2.287c-.836 1.372.734 2.942 2.106 2.106a1.532 1.532 0 012.287.947c.379 1.561 2.6 1.561 2.978 0a1.533 1.533 0 012.287-.947c1.372.836 2.942-.734 2.106-2.106a1.533 1.533 0 01.947-2.287c1.561-.379 1.561-2.6 0-2.978a1.532 1.532 0 01-.947-2.287c.836-1.372-.734-2.942-2.106-2.106a1.532 1.532 0 01-2.287-.947zM10 13a3 3 0 100-6 3 3 0 000 6z" clip-rule="evenodd"/></svg></div>
+                        <div class="text-left"><h1 class="font-bold text-gray-600 text-xl uppercase tracking-wide">LABADIE</h4><p class="text-sm text-gray-400 font-medium mt-1">Time Golden</p></div>
                     </div>
-                    <div class="p-6 text-center">
-                        <h4 class="text-xl font-bold text-gray-900 mb-1">Andi Pratama</h4>
-                        <p class="text-amber-600 font-medium mb-3">Founder & CEO</p>
-                        <p class="text-gray-500 text-sm">Visionary leader with 10+ years experience in fashion retail industry.</p>
+                     <div class="min-w-[380px] bg-white rounded-[20px] shadow-[0_8px_30px_rgba(0,0,0,0.06)] p-6 flex items-center gap-5 hover:shadow-[0_15px_35px_rgba(0,0,0,0.1)] transition-shadow duration-300">
+                        <div class="w-16 h-16 bg-[#666666] rounded-xl shrink-0 flex items-center justify-center text-white"><svg class="w-8 h-8" fill="currentColor" viewBox="0 0 20 20"><path d="M10 3.5a1.5 1.5 0 013 0V4a1 1 0 001 1h3a1 1 0 011 1v3a1 1 0 01-1 1h-.5a1.5 1.5 0 000 3h.5a1 1 0 011 1v3a1 1 0 01-1 1h-3a1 1 0 01-1-1v-.5a1.5 1.5 0 00-3 0v.5a1 1 0 01-1 1H6a1 1 0 01-1-1v-3a1 1 0 00-1-1h-.5a1.5 1.5 0 010-3H4a1 1 0 001-1V6a1 1 0 011-1h3a1 1 0 001-1v-.5z"/></svg></div>
+                        <div class="text-left"><h1 class="font-bold text-gray-600 text-xl uppercase tracking-wide">GUTMANN</h4><p class="text-sm text-gray-400 font-medium mt-1">Quality First</p></div>
+                    </div>
+                     <div class="min-w-[380px] bg-white rounded-[20px] shadow-[0_8px_30px_rgba(0,0,0,0.06)] p-6 flex items-center gap-5 hover:shadow-[0_15px_35px_rgba(0,0,0,0.1)] transition-shadow duration-300">
+                        <div class="w-16 h-16 bg-[#666666] rounded-xl shrink-0 flex items-center justify-center text-white"><svg class="w-8 h-8" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M4 4a2 2 0 012-2h8a2 2 0 012 2v12a1 1 0 110 2h-3a1 1 0 01-1-1v-2a1 1 0 00-1-1H9a1 1 0 00-1 1v2a1 1 0 01-1 1H4a1 1 0 110-2V4zm3 1h2v2H7V5zm2 4H7v2h2V9zm2-4h2v2h-2V5zm2 4h-2v2h2V9z" clip-rule="evenodd"/></svg></div>
+                        <div class="text-left"><h1 class="font-bold text-gray-600 text-xl uppercase tracking-wide">LARKIN</h4><p class="text-sm text-gray-400 font-medium mt-1">Best Agency</p></div>
+                    </div>
+                     <div class="min-w-[380px] bg-white rounded-[20px] shadow-[0_8px_30px_rgba(0,0,0,0.06)] p-6 flex items-center gap-5 hover:shadow-[0_15px_35px_rgba(0,0,0,0.1)] transition-shadow duration-300">
+                        <div class="w-16 h-16 bg-[#666666] rounded-xl shrink-0 flex items-center justify-center text-white"><svg class="w-8 h-8" fill="currentColor" viewBox="0 0 20 20"><path d="M5 3a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2V5a2 2 0 00-2-2H5zM5 11a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2v-2a2 2 0 00-2-2H5zM11 5a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V5zM11 13a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/></svg></div>
+                        <div class="text-left"><h1 class="font-bold text-gray-600 text-xl uppercase tracking-wide">ROWE CO</h4><p class="text-sm text-gray-400 font-medium mt-1">Creative</p></div>
                     </div>
                 </div>
 
-                <!-- Team Member 2 -->
-                <div class="team-card">
-                    <div class="team-image">
-                        <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400&q=80" alt="Team Member">
-                        <div class="team-overlay"></div>
-                        <div class="team-social">
-                            <a href="#" class="social-btn"><i class="fab fa-linkedin-in"></i></a>
-                            <a href="#" class="social-btn"><i class="fab fa-dribbble"></i></a>
-                            <a href="#" class="social-btn"><i class="fab fa-instagram"></i></a>
-                        </div>
+                <div class="flex gap-8">
+                    <div class="min-w-[380px] bg-white rounded-[20px] shadow-[0_8px_30px_rgba(0,0,0,0.06)] p-6 flex items-center gap-5 hover:shadow-[0_15px_35px_rgba(0,0,0,0.1)] transition-shadow duration-300">
+                        <div class="w-16 h-16 bg-[#666666] rounded-xl shrink-0 flex items-center justify-center text-white"><svg class="w-8 h-8" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0a1.532 1.532 0 01-2.286.948c-1.372-.836-2.942.734-2.106 2.106.54.886.061 2.042-.947 2.287-1.561.379-1.561 2.6 0 2.978a1.532 1.532 0 01.947 2.287c-.836 1.372.734 2.942 2.106 2.106a1.532 1.532 0 012.287.947c.379 1.561 2.6 1.561 2.978 0a1.533 1.533 0 012.287-.947c1.372.836 2.942-.734 2.106-2.106a1.533 1.533 0 01.947-2.287c1.561-.379 1.561-2.6 0-2.978a1.532 1.532 0 01-.947-2.287c.836-1.372-.734-2.942-2.106-2.106a1.532 1.532 0 01-2.287-.947zM10 13a3 3 0 100-6 3 3 0 000 6z" clip-rule="evenodd"/></svg></div>
+                        <div class="text-left"><h1 class="font-bold text-gray-600 text-xl uppercase tracking-wide">LABADIE</h4><p class="text-sm text-gray-400 font-medium mt-1">Time Golden</p></div>
                     </div>
-                    <div class="p-6 text-center">
-                        <h4 class="text-xl font-bold text-gray-900 mb-1">Sarah Wijaya</h4>
-                        <p class="text-amber-600 font-medium mb-3">Creative Director</p>
-                        <p class="text-gray-500 text-sm">Award-winning designer with a passion for sustainable fashion.</p>
+                    <div class="min-w-[380px] bg-white rounded-[20px] shadow-[0_8px_30px_rgba(0,0,0,0.06)] p-6 flex items-center gap-5 hover:shadow-[0_15px_35px_rgba(0,0,0,0.1)] transition-shadow duration-300">
+                        <div class="w-16 h-16 bg-[#666666] rounded-xl shrink-0 flex items-center justify-center text-white"><svg class="w-8 h-8" fill="currentColor" viewBox="0 0 20 20"><path d="M10 3.5a1.5 1.5 0 013 0V4a1 1 0 001 1h3a1 1 0 011 1v3a1 1 0 01-1 1h-.5a1.5 1.5 0 000 3h.5a1 1 0 011 1v3a1 1 0 01-1 1h-3a1 1 0 01-1-1v-.5a1.5 1.5 0 00-3 0v.5a1 1 0 01-1 1H6a1 1 0 01-1-1v-3a1 1 0 00-1-1h-.5a1.5 1.5 0 010-3H4a1 1 0 001-1V6a1 1 0 011-1h3a1 1 0 001-1v-.5z"/></svg></div>
+                        <div class="text-left"><h1 class="font-bold text-gray-600 text-xl uppercase tracking-wide">GUTMANN</h4><p class="text-sm text-gray-400 font-medium mt-1">Quality First</p></div>
                     </div>
-                </div>
-
-                <!-- Team Member 3 -->
-                <div class="team-card">
-                    <div class="team-image">
-                        <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400&q=80" alt="Team Member">
-                        <div class="team-overlay"></div>
-                        <div class="team-social">
-                            <a href="#" class="social-btn"><i class="fab fa-linkedin-in"></i></a>
-                            <a href="#" class="social-btn"><i class="fab fa-twitter"></i></a>
-                            <a href="#" class="social-btn"><i class="fab fa-github"></i></a>
-                        </div>
+                    <div class="min-w-[380px] bg-white rounded-[20px] shadow-[0_8px_30px_rgba(0,0,0,0.06)] p-6 flex items-center gap-5 hover:shadow-[0_15px_35px_rgba(0,0,0,0.1)] transition-shadow duration-300">
+                        <div class="w-16 h-16 bg-[#666666] rounded-xl shrink-0 flex items-center justify-center text-white"><svg class="w-8 h-8" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M4 4a2 2 0 012-2h8a2 2 0 012 2v12a1 1 0 110 2h-3a1 1 0 01-1-1v-2a1 1 0 00-1-1H9a1 1 0 00-1 1v2a1 1 0 01-1 1H4a1 1 0 110-2V4zm3 1h2v2H7V5zm2 4H7v2h2V9zm2-4h2v2h-2V5zm2 4h-2v2h2V9z" clip-rule="evenodd"/></svg></div>
+                        <div class="text-left"><h1 class="font-bold text-gray-600 text-xl uppercase tracking-wide">LARKIN</h4><p class="text-sm text-gray-400 font-medium mt-1">Best Agency</p></div>
                     </div>
-                    <div class="p-6 text-center">
-                        <h4 class="text-xl font-bold text-gray-900 mb-1">Budi Santoso</h4>
-                        <p class="text-amber-600 font-medium mb-3">Head of Operations</p>
-                        <p class="text-gray-500 text-sm">Logistics expert ensuring every order arrives perfectly and on time.</p>
+                    <div class="min-w-[380px] bg-white rounded-[20px] shadow-[0_8px_30px_rgba(0,0,0,0.06)] p-6 flex items-center gap-5 hover:shadow-[0_15px_35px_rgba(0,0,0,0.1)] transition-shadow duration-300">
+                        <div class="w-16 h-16 bg-[#666666] rounded-xl shrink-0 flex items-center justify-center text-white"><svg class="w-8 h-8" fill="currentColor" viewBox="0 0 20 20"><path d="M5 3a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2V5a2 2 0 00-2-2H5zM5 11a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2v-2a2 2 0 00-2-2H5zM11 5a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V5zM11 13a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/></svg></div>
+                        <div class="text-left"><h1 class="font-bold text-gray-600 text-xl uppercase tracking-wide">ROWE CO</h4><p class="text-sm text-gray-400 font-medium mt-1">Creative</p></div>
                     </div>
                 </div>
 
-                <!-- Team Member 4 -->
-                <div class="team-card">
-                    <div class="team-image">
-                        <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=400&q=80" alt="Team Member">
-                        <div class="team-overlay"></div>
-                        <div class="team-social">
-                            <a href="#" class="social-btn"><i class="fab fa-linkedin-in"></i></a>
-                            <a href="#" class="social-btn"><i class="fab fa-twitter"></i></a>
-                            <a href="#" class="social-btn"><i class="fab fa-instagram"></i></a>
-                        </div>
-                    </div>
-                    <div class="p-6 text-center">
-                        <h4 class="text-xl font-bold text-gray-900 mb-1">Maya Putri</h4>
-                        <p class="text-amber-600 font-medium mb-3">Marketing Lead</p>
-                        <p class="text-gray-500 text-sm">Digital marketing strategist and brand storyteller extraordinaire.</p>
-                    </div>
-                </div>
             </div>
         </div>
-    </section>
 
-    <!-- Testimonials Section -->
-    <section class="py-24 bg-gray-50">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center mb-16">
-                <div class="inline-flex items-center px-4 py-2 bg-amber-100 rounded-full mb-6">
-                    <i class="fas fa-comments text-amber-600 mr-2"></i>
-                    <span class="text-amber-700 text-sm font-medium">Testimonials</span>
-                </div>
-                <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-                    What Our Customers Say
-                </h2>
-                <p class="text-gray-600 max-w-2xl mx-auto">
-                    Don't just take our word for it—here's what our amazing customers have to say.
-                </p>
-            </div>
+    </div>
+</section>
 
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <!-- Testimonial 1 -->
-                <div class="testimonial-card">
-                    <div class="flex items-center gap-4 mb-6 relative z-10">
-                        <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&q=80" 
-                             alt="Customer" 
-                             class="w-14 h-14 rounded-full object-cover">
-                        <div>
-                            <h4 class="font-semibold text-gray-900">Dian Kusuma</h4>
-                            <p class="text-amber-600 text-sm">Jakarta</p>
-                        </div>
-                    </div>
-                    <p class="text-gray-600 leading-relaxed relative z-10">
-                        "Kualitas produknya luar biasa! Packaging-nya juga rapih dan pengiriman cepat. Sudah jadi langganan tetap di The Paranoia."
-                    </p>
-                    <div class="flex gap-1 mt-4">
-                        <i class="fas fa-star text-amber-400"></i>
-                        <i class="fas fa-star text-amber-400"></i>
-                        <i class="fas fa-star text-amber-400"></i>
-                        <i class="fas fa-star text-amber-400"></i>
-                        <i class="fas fa-star text-amber-400"></i>
-                    </div>
-                </div>
+    <!-- Costumer Say Section -->
+    <section class="bg-white py-20 lg:py-28 font-sans overflow-hidden">
+    <div class="container mx-auto px-6 lg:px-12">
 
-                <!-- Testimonial 2 -->
-                <div class="testimonial-card">
-                    <div class="flex items-center gap-4 mb-6 relative z-10">
-                        <img src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=100&q=80" 
-                             alt="Customer" 
-                             class="w-14 h-14 rounded-full object-cover">
-                        <div>
-                            <h4 class="font-semibold text-gray-900">Rizki Hidayat</h4>
-                            <p class="text-amber-600 text-sm">Bandung</p>
-                        </div>
-                    </div>
-                    <p class="text-gray-600 leading-relaxed relative z-10">
-                        "Desainnya keren-keren dan beda dari yang lain. Customer service-nya juga ramah banget. Highly recommended!"
-                    </p>
-                    <div class="flex gap-1 mt-4">
-                        <i class="fas fa-star text-amber-400"></i>
-                        <i class="fas fa-star text-amber-400"></i>
-                        <i class="fas fa-star text-amber-400"></i>
-                        <i class="fas fa-star text-amber-400"></i>
-                        <i class="fas fa-star text-amber-400"></i>
-                    </div>
-                </div>
-
-                <!-- Testimonial 3 -->
-                <div class="testimonial-card">
-                    <div class="flex items-center gap-4 mb-6 relative z-10">
-                        <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=100&q=80" 
-                             alt="Customer" 
-                             class="w-14 h-14 rounded-full object-cover">
-                        <div>
-                            <h4 class="font-semibold text-gray-900">Anisa Rahma</h4>
-                            <p class="text-amber-600 text-sm">Surabaya</p>
-                        </div>
-                    </div>
-                    <p class="text-gray-600 leading-relaxed relative z-10">
-                        "Suka banget sama koleksinya! Harga terjangkau tapi kualitas premium. Pasti bakal order lagi!"
-                    </p>
-                    <div class="flex gap-1 mt-4">
-                        <i class="fas fa-star text-amber-400"></i>
-                        <i class="fas fa-star text-amber-400"></i>
-                        <i class="fas fa-star text-amber-400"></i>
-                        <i class="fas fa-star text-amber-400"></i>
-                        <i class="fas fa-star text-amber-400"></i>
-                    </div>
-                </div>
-            </div>
+        <div class="text-center max-w-3xl mx-auto mb-20"> <h2 class="text-4xl lg:text-6xl font-bold text-black leading-tight mb-6">
+                Listen to what our <br>
+                <span class="text-[#FCD364]">customers say</span>
+            </h2>
+            <p class="text-gray-500 text-lg leading-relaxed">
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus hendrerit suscipit egestas.
+                Nunc eget congue ante.
+            </p>
         </div>
-    </section>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 pt-16 px-4 lg:px-0 pb-10">
 
-    <!-- Partners Section -->
-    <section class="py-20 bg-white">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center mb-12">
-                <h3 class="text-lg text-gray-500 font-medium">Officially Available on Trusted Marketplaces</h3>
-            </div>
-            <div class="flex flex-wrap justify-center items-center gap-12 md:gap-16">
-                <div class="partner-logo">
-                    <img src="{{ asset('ui/marketplace/shopee.png') }}" alt="Shopee" class="h-10">
-                </div>
-                <div class="partner-logo">
-                    <img src="{{ asset('ui/marketplace/tokopedia.png') }}" alt="Tokopedia" class="h-10">
-                </div>
-                <div class="partner-logo">
-                    <img src="{{ asset('ui/marketplace/blibli.png') }}" alt="Blibli" class="h-10">
-                </div>
-                <div class="partner-logo">
-                    <img src="{{ asset('ui/marketplace/tiktok-shop.png') }}" alt="TikTok Shop" class="h-10">
-                </div>
-                <div class="partner-logo">
-                    <img src="{{ asset('ui/marketplace/lazada.png') }}" alt="Lazada" class="h-10">
-                </div>
-            </div>
+    <div class="relative bg-[#FCD364] rounded-[40px] px-8 pb-10 pt-16 text-center shadow-[0_25px_50px_-12px_rgba(0,0,0,0.3)] hover:-translate-y-2 transition duration-300">
+
+        <div class="absolute -top-10 left-1/2 transform -translate-x-1/2 w-20 h-20 rounded-full overflow-hidden shadow-lg bg-gray-200">
+            <img src="https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80" alt="Pedro Beatty" class="w-full h-full object-cover">
         </div>
-    </section>
+
+        <h4 class="text-xl font-bold text-white mb-4">Pedro Beatty</h4>
+        <p class="text-white text-sm leading-relaxed mb-8 opacity-90">
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ut diam sapien. Phasellus
+            pellentesque, quam sed tempus tempus, dui magna semper urna, placerat tristique diam.
+        </p>
+
+        <div class="flex justify-center gap-1.5 text-white">
+            <svg class="w-4 h-4 fill-current" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+            <svg class="w-4 h-4 fill-current" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+            <svg class="w-4 h-4 fill-current" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+            <svg class="w-4 h-4 fill-current" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+            <svg class="w-4 h-4 fill-current" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+        </div>
+    </div>
+
+    <div class="relative bg-white rounded-[40px] px-8 pb-10 pt-16 text-center shadow-[0_35px_60px_-15px_rgba(0,0,0,0.15)] hover:-translate-y-2 transition duration-300">
+
+        <div class="absolute -top-10 left-1/2 transform -translate-x-1/2 w-20 h-20 rounded-full overflow-hidden shadow-lg bg-gray-200">
+            <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80" alt="Justin Gerhold Jr." class="w-full h-full object-cover">
+        </div>
+
+        <h4 class="text-xl font-bold text-[#FCD364] mb-4">Justin Gerhold Jr.</h4>
+        <p class="text-gray-400 text-sm leading-relaxed mb-8">
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ut diam sapien. Phasellus
+            pellentesque, quam sed tempus tempus, dui magna semper urna, placerat tristique diam.
+        </p>
+
+        <div class="flex justify-center gap-1.5 text-[#FCD364]">
+            <svg class="w-4 h-4 fill-current" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+            <svg class="w-4 h-4 fill-current" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+            <svg class="w-4 h-4 fill-current" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+            <svg class="w-4 h-4 fill-current" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+            <svg class="w-4 h-4 fill-current" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+        </div>
+    </div>
+
+    <div class="relative bg-white rounded-[40px] px-8 pb-10 pt-16 text-center shadow-[0_35px_60px_-15px_rgba(0,0,0,0.15)] hover:-translate-y-2 transition duration-300">
+
+        <div class="absolute -top-10 left-1/2 transform -translate-x-1/2 w-20 h-20 rounded-full overflow-hidden shadow-lg bg-gray-200">
+            <img src="https://images.unsplash.com/photo-1599566150163-29194dcaad36?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80" alt="Rufus Mohr" class="w-full h-full object-cover">
+        </div>
+
+        <h4 class="text-xl font-bold text-[#FCD364] mb-4">Rufus Mohr</h4>
+        <p class="text-gray-400 text-sm leading-relaxed mb-8">
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ut diam sapien. Phasellus
+            pellentesque, quam sed tempus tempus, dui magna semper urna, placerat tristique diam.
+        </p>
+
+        <div class="flex justify-center gap-1.5 text-[#FCD364]">
+            <svg class="w-4 h-4 fill-current" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+            <svg class="w-4 h-4 fill-current" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+            <svg class="w-4 h-4 fill-current" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+            <svg class="w-4 h-4 fill-current" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+            <svg class="w-4 h-4 fill-current" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+        </div>
+    </div>
+
+</div>
+    </div>
+</section>
 
     <!-- CTA Section -->
     <section class="cta-section py-24 relative">
@@ -989,23 +881,23 @@
                 <i class="fas fa-sparkles text-amber-400 mr-2"></i>
                 <span class="text-amber-300 text-sm font-medium">Join Our Community</span>
             </div>
-            
+
             <h2 class="text-3xl md:text-5xl font-bold text-white mb-6 leading-tight">
                 Ready to Elevate Your<br>
                 <span class="text-amber-400">Style Game?</span>
             </h2>
-            
+
             <p class="text-xl text-gray-400 mb-10 max-w-2xl mx-auto">
                 Join over 10,000 fashion enthusiasts who have discovered their unique style with The Paranoia. Your perfect outfit awaits.
             </p>
-            
+
             <div class="flex flex-col sm:flex-row gap-4 justify-center">
-                <a href="{{ route('products') }}" 
+                <a href="{{ route('products') }}"
                    class="inline-flex items-center justify-center px-8 py-4 bg-gradient-to-r from-amber-500 to-yellow-500 text-gray-900 font-bold rounded-xl hover:from-amber-400 hover:to-yellow-400 transition-all duration-300 shadow-lg shadow-amber-500/25 hover:shadow-amber-500/40 hover:scale-105">
                     <i class="fas fa-shopping-bag mr-2"></i>
                     Start Shopping
                 </a>
-                <a href="{{ route('register') }}" 
+                <a href="{{ route('register') }}"
                    class="inline-flex items-center justify-center px-8 py-4 border-2 border-gray-600 text-gray-300 font-semibold rounded-xl hover:border-amber-500 hover:text-amber-500 transition-all duration-300">
                     <i class="fas fa-user-plus mr-2"></i>
                     Create Account
@@ -1040,19 +932,19 @@
 // Scroll reveal animation
 document.addEventListener('DOMContentLoaded', function() {
     const reveals = document.querySelectorAll('.reveal');
-    
+
     const revealOnScroll = () => {
         reveals.forEach(element => {
             const windowHeight = window.innerHeight;
             const elementTop = element.getBoundingClientRect().top;
             const elementVisible = 150;
-            
+
             if (elementTop < windowHeight - elementVisible) {
                 element.classList.add('active');
             }
         });
     };
-    
+
     window.addEventListener('scroll', revealOnScroll);
     revealOnScroll();
 });

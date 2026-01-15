@@ -65,7 +65,6 @@ class AuthController extends Controller
                                 ->uncompromised()],
             'username'     => ['nullable','string','max:255','unique:users,username'],
             'phone_number' => ['nullable','string','max:30'],
-            'address'      => ['nullable','string','max:500'],
         ]);
 
         $user = User::create([
@@ -74,7 +73,6 @@ class AuthController extends Controller
             'password'     => Hash::make($data['password']),
             'username'     => $data['username'] ?? null,
             'phone_number' => $data['phone_number'] ?? null,
-            'address'      => $data['address'],
         ]);
 
         // Assign default role "user" kalau ada
