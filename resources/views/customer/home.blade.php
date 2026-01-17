@@ -98,7 +98,7 @@
                             <img src="{{ asset('ui/hero.png') }}" alt="Fashion Model"
                                 class="w-auto h-auto max-h-[500px] md:max-h-[650px] object-contain object-bottom relative z-10 drop-shadow-2xl block">
 
-                            <div
+                            <!-- <div
                                 class="absolute top-[10%] right-0 md:-right-4 bg-white p-4 pr-6 rounded-2xl shadow-xl flex items-center gap-4 z-20 animate-bounce-slow">
                                 <div
                                     class="w-12 h-12 bg-black rounded-xl flex items-center justify-center text-white shrink-0">
@@ -107,9 +107,9 @@
                                 <div class="text-xs font-bold leading-tight text-gray-900 text-left">
                                     Bonus Mac OS<br>Capitan Pro
                                 </div>
-                            </div>
+                            </div> -->
 
-                            <div class="absolute bottom-12 left-4 md:-left-8 bg-white p-5 rounded-[1.8rem] shadow-xl text-center z-20 animate-bounce-slow w-36"
+                            <!-- <div class="absolute bottom-12 left-4 md:-left-8 bg-white p-5 rounded-[1.8rem] shadow-xl text-center z-20 animate-bounce-slow w-36"
                                 style="animation-delay: 2s;">
                                 <div
                                     class="w-12 h-12 bg-black rounded-full flex items-center justify-center text-white mx-auto mb-2">
@@ -118,7 +118,7 @@
                                 <div class="text-xs font-bold leading-tight text-gray-900">
                                     Include<br>Warranty
                                 </div>
-                            </div>
+                            </div> -->
 
                         </div>
                     </div>
