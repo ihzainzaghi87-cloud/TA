@@ -78,11 +78,11 @@
             <div class="hidden md:flex md:items-center md:space-x-4">
                 @guest
                     <a href="{{ route('login') }}"
-                       class="px-4 py-2  text-black rounded-2xl text-sm font-bold hover:bg-gray-50 transition-colors duration-200 bg-[#FAD470]">
+                       class="px-4 py-2  text-white rounded-2xl text-sm font-bold bg-[#1A1A1D] transition-colors duration-200 hover:ring-2 hover:ring-black hover:ring-inset hover:bg-white hover:text-black ">
                         Login
                     </a>
                     <a href="{{ route('register') }}"
-                       class="px-4 py-2  text-black rounded-2xl text-sm font-bold hover:bg-gray-50 transition-colors duration-200 bg-[#FAD470]">
+                       class="px-4 py-2  text-white rounded-2xl text-sm font-bold bg-[#1A1A1D] transition-colors duration-200 hover:ring-2 hover:ring-black hover:ring-inset hover:bg-white hover:text-black">
                         Sign Up
                     </a>
                 @else
