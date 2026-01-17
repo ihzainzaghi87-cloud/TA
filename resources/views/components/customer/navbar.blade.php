@@ -111,6 +111,10 @@
                                class="block px-4 py-2 text-sm text-gray-700 hover:bg-yellow-50 hover:text-yellow-600 transition duration-150">
                                 <i class="fas fa-user mr-2"></i> Profil Saya
                             </a>
+                            <a href="{{ route('customer.points') }}"
+                               class="block px-4 py-2 text-sm text-gray-700 hover:bg-yellow-50 hover:text-yellow-600 transition duration-150">
+                                <i class="fas fa-coins mr-2"></i> Poin Saya
+                            </a>
                             <a href="{{ route('customer.orders') }}"
                                class="block px-4 py-2 text-sm text-gray-700 hover:bg-yellow-50 hover:text-yellow-600 transition duration-150">
                                 <i class="fas fa-box mr-2"></i> Pesanan Saya
@@ -220,6 +224,10 @@
                         <a href="{{ route('customer.index') }}"
                            class="block px-3 py-2 text-gray-700 hover:bg-yellow-50 hover:text-yellow-600 rounded-md transition duration-150">
                             <i class="fas fa-user mr-2"></i> Profil Saya
+                        </a>
+                        <a href="{{ route('customer.points') }}"
+                           class="block px-3 py-2 text-gray-700 hover:bg-yellow-50 hover:text-yellow-600 rounded-md transition duration-150">
+                            <i class="fas fa-coins mr-2"></i> Poin Saya
                         </a>
                         <a href="{{ route('customer.orders') }}"
                            class="block px-3 py-2 text-gray-700 hover:bg-yellow-50 hover:text-yellow-600 rounded-md transition duration-150">
