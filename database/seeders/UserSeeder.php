@@ -61,7 +61,6 @@ class UserSeeder extends Seeder
                     'name'         => $row['name'],
                     'username'     => $row['username'] ?? null,
                     'phone_number' => $row['phone_number'] ?? null,
-                    'address'      => $row['address'] ?? '',
                     'password'     => Hash::make($defaultPassword),
                 ]
             );
