@@ -180,7 +180,7 @@
     <section id="categories" class="py-16">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <a href="{{ route('products') }}" class="block">
+                <a href="{{ route('products', ['sort' => 'bestseller']) }}" class="block">
                     <div class="relative rounded-3xl shadow-md cursor-pointer overflow-hidden group w-full"
                         style="height: 0; padding-bottom: 108.69%; max-width: 564px; aspect-ratio: 564/600;">
                         <div class="absolute inset-0 bg-cover bg-center"
