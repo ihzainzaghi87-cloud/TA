@@ -517,7 +517,7 @@
                  @forelse($rewardProducts as $product)
                     <div class="group flex flex-col gap-3">
 
-                        <a href="{{ route('product.detail', $product->slug) }}"
+                        <a href="{{ route('reward.detail', $product->slug) }}"
                             class="block relative w-full bg-[#f4f4f4] rounded-[20px] md:rounded-[30px] overflow-hidden aspect-square shadow-sm">
 
                             @if ($product->images->count() > 0)
