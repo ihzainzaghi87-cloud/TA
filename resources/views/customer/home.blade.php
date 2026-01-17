@@ -191,7 +191,9 @@
                         </div>
                         <div class="absolute inset-0 flex items-center justify-center p-8">
                             <div class="text-center">
-                                <h3 class="font-bold text-white text-xl md:text-2xl mb-4 drop-shadow-lg">SIMPLE MADE BE...
+                                <h3 class="font-bold text-white text-xl md:text-2xl drop-shadow-lg">CHECK OUR BEST
+                                </h3>
+                                <h3 class="font-bold text-white text-xl md:text-2xl mb-4 drop-shadow-lg">SELLER COLLECTION
                                 </h3>
                                 <span
                                     class="bg-white font-bold text-black px-6 py-2 rounded-full text-sm hover:bg-gray-200 transition-colors duration-200">
