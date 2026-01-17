@@ -225,15 +225,17 @@
                             }
                         @endphp
                         
-                        <form action="{{ route('customer.confirm-received', $order->id) }}" method="POST" 
-                              onsubmit="return confirm('Konfirmasi bahwa pesanan sudah diterima?')">
+                        @if ($isDelivered)
+                        <form action="{{ route('customer.confirm-received', $order->id) }}" method="POST"
+                            onsubmit="return confirm('Konfirmasi bahwa pesanan sudah diterima?')">
                             @csrf
-                            <button type="submit" 
-                                    class="px-4 py-2 {{ $isDelivered ? 'bg-green-600 animate-pulse' : 'bg-green-500' }} text-white rounded-lg text-sm font-semibold hover:bg-green-600 transition-all">
-                                <i class="fas fa-check mr-1"></i> 
-                                {{ $isDelivered ? 'Konfirmasi Diterima' : 'Pesanan Diterima' }}
+                            <button type="submit"
+                                class="px-4 py-2 bg-green-600 animate-pulse text-white rounded-lg text-sm font-semibold hover:bg-green-700 transition-all">
+                                <i class="fas fa-check mr-1"></i>
+                                Konfirmasi Diterima
                             </button>
                         </form>
+                        @endif
                     </div>
                     @endif
                 </div>
