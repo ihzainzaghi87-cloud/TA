@@ -60,72 +60,156 @@
 
     {{-- Hero Banner Section --}}
     <section class="w-full px-4 md:px-8">
-        <div
-            class="bg-[#1A1A1D] rounded-[2.5rem] overflow-hidden min-h-[550px] md:min-h-[650px] relative w-full my-8 md:my-12 flex items-stretch">
+        @if($banners && $banners->count() > 0)
+            {{-- Banner Slider --}}
+            <div class="relative w-full my-8 md:my-12 rounded-[2.5rem] overflow-hidden min-h-[550px] md:min-h-[650px] select-none"
+                 x-data="{ 
+                    current: 0, 
+                    total: {{ $banners->count() }},
+                    autoplay: null,
+                    startX: 0,
+                    isDragging: false,
+                    start() { this.autoplay = setInterval(() => this.next(), 5000); },
+                    stop() { clearInterval(this.autoplay); },
+                    next() { this.current = (this.current + 1) % this.total; },
+                    prev() { this.current = (this.current - 1 + this.total) % this.total; },
+                    handleTouchStart(e) {
+                        this.startX = e.touches ? e.touches[0].clientX : e.clientX;
+                        this.isDragging = true;
+                        this.stop();
+                    },
+                    handleTouchEnd(e) {
+                        if (!this.isDragging) return;
+                        const endX = e.changedTouches ? e.changedTouches[0].clientX : e.clientX;
+                        const diff = this.startX - endX;
+                        if (Math.abs(diff) > 50) {
+                            if (diff > 0) this.next();
+                            else this.prev();
+                        }
+                        this.isDragging = false;
+                        this.start();
+                    }
+                 }" 
+                 x-init="start()" 
+                 @mouseenter="stop()" 
+                 @mouseleave="start()"
+                 @touchstart="handleTouchStart($event)"
+                 @touchend="handleTouchEnd($event)"
+                 @mousedown="handleTouchStart($event)"
+                 @mouseup="handleTouchEnd($event)">
+                
+                {{-- Banner Slides --}}
+                @foreach($banners as $index => $banner)
+                    <div class="absolute inset-0 transition-opacity duration-700 pointer-events-none"
+                         x-show="current === {{ $index }}"
+                         x-transition:enter="transition ease-out duration-500"
+                         x-transition:enter-start="opacity-0"
+                         x-transition:enter-end="opacity-100"
+                         x-transition:leave="transition ease-in duration-500"
+                         x-transition:leave-start="opacity-100"
+                         x-transition:leave-end="opacity-0">
+                        {{-- Background Image --}}
+                        <img src="{{ Storage::url($banner->image) }}" 
+                             alt="{{ $banner->title ?? 'Banner' }}"
+                             class="w-full h-full object-cover pointer-events-none">
+                        {{-- Overlay (ringan untuk keterbacaan) --}}
+                        <div class="absolute inset-0 bg-black/30"></div>
+                    </div>
+                @endforeach
 
-            <div class="container mx-auto px-6 lg:px-16 relative z-10 w-full">
-                <div class="grid grid-cols-1 lg:grid-cols-2 h-full items-stretch">
-
-                    <div class="py-16 lg:py-0 text-center lg:text-left self-center">
-                        <span class="text-gray-400 text-xs md:text-sm font-bold tracking-[0.2em] uppercase mb-5 block">
-                            New Season Highlight
-                        </span>
-                        <h1 class="text-5xl md:text-6xl lg:text-7xl font-black text-white leading-[1.1] mb-8">
-                            Wear the trend, <br>
-                            own the moment
-                        </h1>
-                        <p class="text-gray-400 text-base md:text-lg mb-10 max-w-lg mx-auto lg:mx-0 leading-relaxed">
-                            Discover curated fashion that defines your style — effortless, bold, and always on trend.
-                        </p>
-
-                        <div class="flex flex-col sm:flex-row gap-5 justify-center lg:justify-start">
-                            <a href="{{ route('products') }}"
-                                class="inline-flex justify-center items-center bg-white text-black px-9 py-4 rounded-full font-bold text-base hover:bg-gray-200 transition-all duration-300 transform hover:scale-105 shadow-lg">
-                                Explore Collection
-                            </a>
-                            <a href="{{ route('articles.index') }}"
-                                class="inline-flex justify-center items-center px-9 py-4 rounded-full font-bold text-base border border-gray-600 text-white hover:border-white hover:bg-white/10 transition-all duration-300">
-                                Discover More
-                            </a>
+                {{-- Content from Banner (Dynamic per banner) --}}
+                @foreach($banners as $index => $banner)
+                    <div class="absolute inset-0 flex items-center justify-center z-10 pointer-events-none"
+                         x-show="current === {{ $index }}"
+                         x-transition:enter="transition ease-out duration-500 delay-100"
+                         x-transition:enter-start="opacity-0 transform translate-y-4"
+                         x-transition:enter-end="opacity-100 transform translate-y-0"
+                         x-transition:leave="transition ease-in duration-300"
+                         x-transition:leave-start="opacity-100"
+                         x-transition:leave-end="opacity-0">
+                        <div class="text-center px-6 max-w-4xl">
+                            @if($banner->title)
+                                <h1 class="text-4xl md:text-5xl lg:text-7xl font-black text-white leading-[1.1] mb-8 drop-shadow-lg">
+                                    {{ $banner->title }}
+                                </h1>
+                                <p class="text-base md:text-2xl lg:text-5xl font-medium text-white leading-[1.1] mb-8 drop-shadow-lg">
+                                    {{ $banner->title }}
+                                </p>
+                            @else
+                                <span class="text-gray-300 text-xs md:text-sm font-bold tracking-[0.2em] uppercase mb-5 block">
+                                    New Season Highlight
+                                </span>
+                                <h1 class="text-5xl md:text-6xl lg:text-7xl font-black text-white leading-[1.1] mb-8">
+                                    Wear the trend, <br>
+                                    own the moment
+                                </h1>
+                                <p class="text-gray-300 text-base md:text-lg mb-10 max-w-lg mx-auto leading-relaxed">
+                                    Discover curated fashion that defines your style — effortless, bold, and always on trend.
+                                </p>
+                            @endif
+                            <div class="flex flex-col sm:flex-row gap-5 justify-center pointer-events-auto">
+                                <a href="{{ route('products') }}"
+                                    class="inline-flex justify-center items-center bg-white text-black px-9 py-4 rounded-full font-bold text-base hover:bg-gray-200 transition-all duration-300 transform hover:scale-105 shadow-lg">
+                                    Explore Collection
+                                </a>
+                                <a href="{{ route('articles.index') }}"
+                                    class="inline-flex justify-center items-center px-9 py-4 rounded-full font-bold text-base border border-gray-300 text-white hover:border-white hover:bg-white/10 transition-all duration-300">
+                                    Discover More
+                                </a>
+                            </div>
                         </div>
                     </div>
+                @endforeach
 
-                    <div
-                        class="relative w-full h-full min-h-[400px] lg:min-h-full flex items-end justify-center lg:justify-end pb-0">
-
-                        <div class="relative w-full max-w-[550px] flex items-end justify-center">
-
-                            <img src="{{ asset('ui/hero.png') }}" alt="Fashion Model"
-                                class="w-auto h-auto max-h-[500px] md:max-h-[650px] object-contain object-bottom relative z-10 drop-shadow-2xl block">
-
-                            <!-- <div
-                                class="absolute top-[10%] right-0 md:-right-4 bg-white p-4 pr-6 rounded-2xl shadow-xl flex items-center gap-4 z-20 animate-bounce-slow">
-                                <div
-                                    class="w-12 h-12 bg-black rounded-xl flex items-center justify-center text-white shrink-0">
-                                    <i class="fas fa-code"></i>
-                                </div>
-                                <div class="text-xs font-bold leading-tight text-gray-900 text-left">
-                                    Bonus Mac OS<br>Capitan Pro
-                                </div>
-                            </div> -->
-
-                            <!-- <div class="absolute bottom-12 left-4 md:-left-8 bg-white p-5 rounded-[1.8rem] shadow-xl text-center z-20 animate-bounce-slow w-36"
-                                style="animation-delay: 2s;">
-                                <div
-                                    class="w-12 h-12 bg-black rounded-full flex items-center justify-center text-white mx-auto mb-2">
-                                    <i class="fas fa-star text-lg"></i>
-                                </div>
-                                <div class="text-xs font-bold leading-tight text-gray-900">
-                                    Include<br>Warranty
-                                </div>
-                            </div> -->
-
+                @if($banners->count() > 1)
+                    {{-- Dots Indicator --}}
+                    <div class="absolute bottom-6 left-1/2 -translate-x-1/2 flex items-center gap-2 z-20 pointer-events-auto">
+                        @foreach($banners as $index => $banner)
+                            <button @click="current = {{ $index }}; stop(); start();"
+                                    class="h-2 rounded-full transition-all duration-300"
+                                    :class="current === {{ $index }} ? 'bg-white w-8' : 'bg-white/50 w-2 hover:bg-white/70'">
+                            </button>
+                        @endforeach
+                    </div>
+                @endif
+            </div>
+        @else
+            {{-- Default Hero --}}
+            <div class="bg-[#1A1A1D] rounded-[2.5rem] overflow-hidden min-h-[550px] md:min-h-[650px] relative w-full my-8 md:my-12 flex items-stretch">
+                <div class="container mx-auto px-6 lg:px-16 relative z-10 w-full">
+                    <div class="grid grid-cols-1 lg:grid-cols-2 h-full items-stretch">
+                        <div class="py-16 lg:py-0 text-center lg:text-left self-center">
+                            <span class="text-gray-400 text-xs md:text-sm font-bold tracking-[0.2em] uppercase mb-5 block">
+                                New Season Highlight
+                            </span>
+                            <h1 class="text-5xl md:text-6xl lg:text-7xl font-black text-white leading-[1.1] mb-8">
+                                Wear the trend, <br>
+                                own the moment
+                            </h1>
+                            <p class="text-gray-400 text-base md:text-lg mb-10 max-w-lg mx-auto lg:mx-0 leading-relaxed">
+                                Discover curated fashion that defines your style — effortless, bold, and always on trend.
+                            </p>
+                            <div class="flex flex-col sm:flex-row gap-5 justify-center lg:justify-start">
+                                <a href="{{ route('products') }}"
+                                    class="inline-flex justify-center items-center bg-white text-black px-9 py-4 rounded-full font-bold text-base hover:bg-gray-200 transition-all duration-300 transform hover:scale-105 shadow-lg">
+                                    Explore Collection
+                                </a>
+                                <a href="{{ route('articles.index') }}"
+                                    class="inline-flex justify-center items-center px-9 py-4 rounded-full font-bold text-base border border-gray-600 text-white hover:border-white hover:bg-white/10 transition-all duration-300">
+                                    Discover More
+                                </a>
+                            </div>
+                        </div>
+                        <div class="relative w-full h-full min-h-[400px] lg:min-h-full flex items-end justify-center lg:justify-end pb-0">
+                            <div class="relative w-full max-w-[550px] flex items-end justify-center">
+                                <img src="{{ asset('ui/hero.png') }}" alt="Fashion Model"
+                                    class="w-auto h-auto max-h-[500px] md:max-h-[650px] object-contain object-bottom relative z-10 drop-shadow-2xl block">
+                            </div>
                         </div>
                     </div>
-
                 </div>
             </div>
-        </div>
+        @endif
     </section>
 
     {{-- Brand Carousel Section --}}
