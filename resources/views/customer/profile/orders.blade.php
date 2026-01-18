@@ -4,15 +4,18 @@
 
 @push('styles')
 <style>
+    /* Card Styling - Sharp & Clean */
     .profile-card {
         background: #fff;
         border: 1px solid #e5e7eb;
-        border-radius: 16px;
+        border-radius: 1.5rem; /* Rounded 24px */
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
         transition: all 0.3s ease;
     }
 
     .profile-card:hover {
-        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.1);
+        border-color: #1A1A1D;
+        transform: translateY(-2px);
     }
 
     .menu-item {
@@ -21,105 +24,127 @@
         padding: 16px 20px;
         border-radius: 12px;
         transition: all 0.2s ease;
-        color: #374151;
+        color: #6b7280;
     }
 
     .menu-item:hover {
-        background: #fffbeb;
-        color: #92400e;
+        background: #f9fafb;
+        color: #1A1A1D;
     }
 
     .menu-item.active {
-        background: #E5E7EB;
-        color: #374151;
+        background: #1A1A1D;
+        color: #ffffff;
         font-weight: 600;
     }
 
     .avatar-ring {
-        background: linear-gradient(135deg, #E5E7EB 0%, #374151 100%);
+        background: linear-gradient(135deg, #1A1A1D 0%, #374151 100%);
     }
 
     .stat-card {
         background: linear-gradient(135deg, #F9FAFB 0%, #F3F4F6 100%);
         border: 1px solid #E5E7EB;
-        border-radius: 12px;
+        border-radius: 1rem;
         padding: 16px;
         text-align: center;
+        transition: all 0.3s ease;
+    }
+
+    .stat-card:hover {
+        border-color: #1A1A1D;
+        transform: translateY(-2px);
     }
 
     .filter-btn {
         padding: 8px 16px;
-        border-radius: 20px;
-        font-size: 14px;
-        font-weight: 500;
+        border-radius: 9999px;
+        font-size: 12px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
         transition: all 0.2s ease;
-        border: 2px solid #e5e7eb;
+        border: 1px solid #e5e7eb;
         background: #fff;
-        color: #374151;
+        color: #6b7280;
     }
 
     .filter-btn:hover {
-        border-color: #E5E7EB;
+        border-color: #1A1A1D;
         background: #F9FAFB;
+        color: #1A1A1D;
     }
 
     .filter-btn.active {
-        background: #E5E7EB;
-        border-color: #E5E7EB;
-        color: #374151;
+        background: #1A1A1D;
+        border-color: #1A1A1D;
+        color: #ffffff;
     }
 
     .order-card {
         background: #fff;
         border: 1px solid #e5e7eb;
-        border-radius: 16px;
+        border-radius: 1.5rem;
         transition: all 0.3s ease;
         overflow: hidden;
     }
 
     .order-card:hover {
-        border-color: #E5E7EB;
+        border-color: #1A1A1D;
         box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+        transform: translateY(-2px);
     }
 
+    /* Status Badges - Monochrome / Semantic High Contrast */
     .status-badge {
-        padding: 4px 12px;
-        border-radius: 20px;
+        padding: 6px 16px;
+        border-radius: 9999px;
         font-size: 12px;
-        font-weight: 600;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        border: 1px solid transparent;
     }
 
     .status-pending {
-        background: #F3F4F6;
-        color: #374151;
+        background: #f3f4f6;
+        color: #4b5563;
+        border-color: #d1d5db;
     }
 
     .status-processing {
         background: #dbeafe;
         color: #1e40af;
+        border-color: #93c5fd;
     }
 
     .status-shipped {
-        background: #e0e7ff;
-        color: #3730a3;
+        background: #f3e8ff;
+        color: #6b21a8;
+        border-color: #d8b4fe;
     }
 
     .status-delivered {
-        background: #dcfce7;
-        color: #166534;
+        background: #1A1A1D;
+        color: #ffffff;
+        border-color: #1A1A1D;
     }
 
     .status-cancelled {
         background: #fee2e2;
         color: #991b1b;
+        border-color: #fca5a5;
     }
 
+    /* Product Thumbnail */
     .product-thumb {
-        width: 60px;
-        height: 60px;
-        border-radius: 8px;
-        object-fit: cover;
-        border: 1px solid #e5e7eb;
+        width: 70px;
+        height: 70px;
+        border-radius: 12px;
+        object-fit: contain;
+        background: #f9fafb;
+        border: 1px solid #f3f4f6;
+        padding: 4px;
     }
 
     @keyframes pulse {
@@ -138,29 +163,29 @@
 @endpush
 
 @section('content')
-<div class="min-h-screen bg-gray-50 py-8">
+<div class="min-h-screen bg-gray-50 py-10">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <nav class="flex items-center mb-8 text-sm">
-            <a href="{{ route('home') }}" class="text-gray-500 hover:text-gray-600 transition-colors">
+            <a href="{{ route('home') }}" class="text-gray-400 hover:text-black transition-colors">
                 <i class="fas fa-home"></i>
             </a>
             <i class="fas fa-chevron-right text-gray-300 mx-3 text-xs"></i>
-            <a href="{{ route('customer.index') }}" class="text-gray-500 hover:text-gray-600 transition-colors">Profil</a>
+            <a href="{{ route('customer.index') }}" class="text-gray-400 hover:text-black transition-colors">Profile</a>
             <i class="fas fa-chevron-right text-gray-300 mx-3 text-xs"></i>
-            <span class="text-gray-900 font-medium">Pesanan Saya</span>
+            <span class="text-[#1A1A1D] font-bold">Pesanan Saya</span>
         </nav>
 
         <!-- Flash Messages -->
         @if(session('success'))
-        <div class="mb-6 bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded-lg flex items-center">
-            <i class="fas fa-check-circle mr-2"></i>
+        <div class="mb-6 bg-[#1A1A1D] text-white px-6 py-4 rounded-2xl flex items-center shadow-lg">
+            <i class="fas fa-check-circle mr-3 text-green-400"></i>
             {{ session('success') }}
         </div>
         @endif
 
         @if(session('error'))
-        <div class="mb-6 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg flex items-center">
-            <i class="fas fa-exclamation-circle mr-2"></i>
+        <div class="mb-6 bg-red-50 border border-red-200 text-red-600 px-6 py-4 rounded-2xl flex items-center">
+            <i class="fas fa-exclamation-circle mr-3"></i>
             {{ session('error') }}
         </div>
         @endif
@@ -207,12 +232,12 @@
             <!-- Main Content -->
             <div class="lg:col-span-3 space-y-6">
                 <!-- Page Title -->
-                <div class="profile-card p-6">
-                    <h1 class="text-2xl font-bold text-gray-900 flex items-center gap-3">
-                        <i class="fas fa-box text-gray-500"></i>
+                <div class="profile-card p-8">
+                    <h1 class="text-3xl font-black text-[#1A1A1D] tracking-tight flex items-center gap-3">
+                        <i class="fas fa-box"></i>
                         Pesanan Saya
                     </h1>
-                    <p class="text-gray-500 mt-1">Kelola dan lacak pesanan Anda</p>
+                    <p class="text-gray-500 mt-2 text-sm">Kelola dan lacak pesanan Anda</p>
                 </div>
 
                 <!-- Order Stats -->
@@ -261,10 +286,6 @@
                        class="filter-btn {{ $status == 'Delivered' ? 'active' : '' }}">
                         Selesai
                     </a>
-                    <a href="{{ route('customer.orders', ['status' => 'Cancelled']) }}" 
-                       class="filter-btn {{ $status == 'Cancelled' ? 'active' : '' }}">
-                        Dibatalkan
-                    </a>
                 </div>
 
                 <!-- Orders List -->
@@ -283,12 +304,12 @@
 
                     <div class="order-card">
                         <!-- Order Header -->
-                        <div class="p-4 bg-gray-50 border-b border-gray-100">
-                            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+                        <div class="p-5 bg-gray-50 border-b border-gray-100">
+                            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
                                 <div class="flex items-center gap-3">
-                                    <span class="text-sm text-gray-500">{{ $order->created_at->format('d M Y, H:i') }}</span>
+                                    <span class="text-sm text-gray-500"><i class="fas fa-calendar text-[#1A1A1D] mr-1"></i>{{ $order->created_at->format('d M Y, H:i') }}</span>
                                     <span class="text-gray-300">|</span>
-                                    <span class="text-sm font-semibold text-gray-900">#{{ $order->order_number }}</span>
+                                    <span class="text-sm font-bold text-[#1A1A1D]">#{{ $order->order_number }}</span>
                                 </div>
                                 <div class="flex flex-wrap items-center gap-2">
                                     <span class="status-badge status-{{ strtolower($order->status) }} inline-block">
@@ -324,49 +345,51 @@
                         </div>
 
                         <!-- Order Items -->
-                        <div class="p-4">
+                        <div class="p-6">
                             @foreach($order->orderItems->take(2) as $item)
-                            <div class="flex items-center gap-4 {{ !$loop->last ? 'mb-3 pb-3 border-b border-gray-100' : '' }}">
+                            <div class="flex items-start gap-5 {{ !$loop->last ? 'mb-4 pb-4 border-b border-gray-100' : '' }}">
                                 @if($item->variation && $item->variation->product && $item->variation->product->images->first())
                                 <img src="{{ asset('storage/products/' . $item->variation->product->images->first()->image) }}" 
                                      alt="{{ $item->variation->product->name }}"
-                                     class="product-thumb">
+                                     class="product-thumb mix-blend-multiply">
                                 @else
                                 <div class="product-thumb bg-gray-100 flex items-center justify-center">
-                                    <i class="fas fa-image text-gray-400"></i>
+                                    <i class="fas fa-image text-gray-300 text-xl"></i>
                                 </div>
                                 @endif
                                 
                                 <div class="flex-1 min-w-0">
-                                    <h4 class="font-semibold text-gray-900 truncate">
+                                    <h4 class="font-bold text-[#1A1A1D] text-base leading-tight">
                                         {{ $item->variation->product->name ?? 'Produk tidak tersedia' }}
                                     </h4>
-                                    <p class="text-sm text-gray-500">
-                                        {{ $item->variation->color ?? '' }} 
-                                        {{ $item->variation->size ? '- ' . $item->variation->size : '' }}
+                                    <p class="text-xs text-gray-500 mt-1 uppercase tracking-wide font-semibold">
+                                        {{ $item->variation->color ?? '-' }} / {{ $item->variation->size ?? '-' }}
                                     </p>
-                                    <p class="text-sm text-gray-500">x{{ $item->quantity }}</p>
+                                    <div class="flex items-center justify-between mt-3">
+                                        <span class="px-2 py-1 bg-gray-100 rounded text-xs font-medium text-gray-600">
+                                            Qty: {{ $item->quantity }}
+                                        </span>
+                                        <span class="font-bold text-[#1A1A1D]">
+                                            Rp {{ number_format($item->price * $item->quantity, 0, ',', '.') }}
+                                        </span>
+                                    </div>
                                 </div>
-                                
-                                <p class="font-semibold text-gray-900">
-                                    Rp {{ number_format($item->price * $item->quantity, 0, ',', '.') }}
-                                </p>
                             </div>
                             @endforeach
 
                             @if($order->orderItems->count() > 2)
-                            <p class="text-sm text-gray-500 mt-3">
-                                +{{ $order->orderItems->count() - 2 }} produk lainnya
+                            <p class="text-sm text-gray-500 mt-4 font-medium">
+                                <i class="fas fa-plus-circle mr-1"></i>{{ $order->orderItems->count() - 2 }} produk lainnya
                             </p>
                             @endif
                         </div>
 
                         <!-- Order Footer -->
-                        <div class="p-4 bg-gray-50 border-t border-gray-100">
-                            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                        <div class="p-5 bg-gray-50 border-t border-gray-100">
+                            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                                 <div>
-                                    <p class="text-sm text-gray-500">Total Pesanan</p>
-                                    <p class="text-lg font-bold text-gray-600">
+                                    <p class="text-xs text-gray-500 uppercase tracking-wide font-semibold mb-1">Total Pesanan</p>
+                                    <p class="text-2xl font-black text-[#1A1A1D]">
                                         Rp {{ number_format($order->total, 0, ',', '.') }}
                                     </p>
                                 </div>
@@ -374,14 +397,14 @@
                                 <!-- Action Buttons -->
                                 <div class="flex flex-wrap gap-2">
                                     <a href="{{ route('customer.order-detail', $order->id) }}" 
-                                       class="px-4 py-2 bg-white border border-gray-300 rounded-lg text-sm font-semibold text-gray-700 hover:border-gray-400 hover:text-gray-600 transition-all">
-                                        <i class="fas fa-eye mr-1"></i> Detail
+                                       class="inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-white border border-gray-300 rounded-xl text-gray-700 hover:border-[#1A1A1D] hover:text-[#1A1A1D] transition-all text-sm font-bold shadow-sm">
+                                        <i class="fas fa-eye"></i> Detail
                                     </a>
                                     
                                     @if(in_array($order->status, ['Shipped', 'Delivered']))
                                     <a href="{{ route('customer.track-order', $order->id) }}" 
-                                       class="px-4 py-2 bg-gradient-to-r from-gray-500 to-gray-600 text-white rounded-lg text-sm font-semibold hover:from-gray-600 hover:to-gray-700 transition-all">
-                                        <i class="fas fa-truck mr-1"></i> Lacak
+                                       class="px-5 py-2.5 bg-[#1A1A1D] text-white rounded-xl text-sm font-bold hover:bg-gray-800 transition-all shadow-lg flex items-center gap-2">
+                                        <i class="fas fa-search-location"></i> Lacak
                                     </a>
 
                                     {{-- Confirm Receipt Button if Delivered --}}
@@ -392,8 +415,8 @@
                                           class="inline-block">
                                         @csrf
                                         <button type="submit" 
-                                                class="px-4 py-2 bg-green-500 text-white rounded-lg text-sm font-semibold hover:bg-green-600 transition-all animate-pulse">
-                                            <i class="fas fa-check-circle mr-1"></i> Konfirmasi
+                                                class="px-5 py-2.5 bg-green-600 text-white rounded-xl text-sm font-bold hover:bg-green-700 transition-all shadow-md flex items-center gap-2 animate-pulse">
+                                            <i class="fas fa-check-double"></i> Konfirmasi
                                         </button>
                                     </form>
                                     @endif
@@ -412,11 +435,11 @@
                 @else
                 <!-- Empty State -->
                 <div class="profile-card p-12 text-center">
-                    <div class="w-24 h-24 mx-auto bg-gray-100 rounded-full flex items-center justify-center mb-4">
+                    <div class="w-24 h-24 mx-auto bg-gray-100 rounded-full flex items-center justify-center mb-6">
                         <i class="fas fa-box-open text-gray-400 text-4xl"></i>
                     </div>
-                    <h4 class="text-xl font-bold text-gray-900 mb-2">Belum Ada Pesanan</h4>
-                    <p class="text-gray-500 mb-6">
+                    <h4 class="text-2xl font-black text-[#1A1A1D] mb-3 tracking-tight">Belum Ada Pesanan</h4>
+                    <p class="text-gray-500 mb-8 text-sm">
                         @if($status)
                             Tidak ada pesanan dengan status "{{ ucfirst($status) }}"
                         @else
@@ -425,14 +448,14 @@
                     </p>
                     @if($status)
                     <a href="{{ route('customer.orders') }}" 
-                       class="inline-block text-gray-600 hover:text-gray-700 font-semibold">
-                        <i class="fas fa-arrow-left mr-2"></i>
+                       class="inline-flex items-center justify-center gap-2 px-6 py-3 bg-white border border-gray-300 rounded-xl text-gray-700 hover:border-[#1A1A1D] hover:text-[#1A1A1D] transition-all font-bold shadow-sm">
+                        <i class="fas fa-arrow-left"></i>
                         Lihat Semua Pesanan
                     </a>
                     @else
                     <a href="{{ route('home') }}" 
-                       class="inline-block bg-gradient-to-r from-gray-500 to-gray-600 text-white px-8 py-3 rounded-xl font-bold hover:from-gray-600 hover:to-gray-700 transition-all transform hover:scale-105">
-                        <i class="fas fa-shopping-bag mr-2"></i>
+                       class="inline-flex items-center justify-center gap-2 px-8 py-4 bg-[#1A1A1D] text-white rounded-2xl font-bold hover:bg-gray-800 transition-all shadow-lg">
+                        <i class="fas fa-shopping-bag"></i>
                         Mulai Belanja
                     </a>
                     @endif
