@@ -90,7 +90,7 @@
                     <div class="relative" @click.away="userMenuOpen = false">
                         <button @click="userMenuOpen = !userMenuOpen"
                                 class="flex items-center space-x-2 text-gray-700 hover:text-gray-500 focus:outline-none">
-                            <div class="h-8 w-8 rounded-full flex items-center justify-center text-white font-semibold" style="background: linear-gradient(135deg, #E5E7EB 0%, #374151 100%);">
+                            <div class="h-8 w-8 rounded-full flex items-center justify-center text-white font-semibold" style="background: linear-gradient(135deg, #1A1A1D 0%, #374151 100%);">
                                 {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
                             </div>
                             <span class="text-sm font-medium">{{ Auth::user()->name }}</span>
