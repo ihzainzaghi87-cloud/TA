@@ -1,222 +1,183 @@
 @extends('customer.layouts.app')
 
-@section('title', 'Detail Pesanan #' . $order->order_number)
+@section('title', 'Order Detail #' . $order->order_number)
 
 @push('styles')
 <style>
+    /* Card Styling - Sharp & Clean */
     .profile-card {
         background: #fff;
         border: 1px solid #e5e7eb;
-        border-radius: 16px;
+        border-radius: 1.5rem; /* Rounded 24px */
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
         transition: all 0.3s ease;
     }
+    .profile-card:hover {
+        border-color: #1A1A1D;
+        transform: translateY(-2px);
+    }
 
+    /* Status Badges - Monochrome / Semantic High Contrast */
     .status-badge {
         padding: 6px 16px;
-        border-radius: 20px;
-        font-size: 13px;
-        font-weight: 600;
+        border-radius: 9999px;
+        font-size: 12px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        border: 1px solid transparent;
     }
 
-    .status-pending {
-        background: #fef3c7;
-        color: #92400e;
-    }
+    .status-pending { background: #f3f4f6; color: #4b5563; border-color: #d1d5db; }
+    .status-processing { background: #dbeafe; color: #1e40af; border-color: #93c5fd; }
+    .status-shipped { background: #f3e8ff; color: #6b21a8; border-color: #d8b4fe; }
+    .status-delivered { background: #1A1A1D; color: #ffffff; border-color: #1A1A1D; } /* Black for success/final */
+    .status-cancelled { background: #fee2e2; color: #991b1b; border-color: #fca5a5; }
 
-    .status-processing {
-        background: #dbeafe;
-        color: #1e40af;
-    }
-
-    .status-shipped {
-        background: #e0e7ff;
-        color: #3730a3;
-    }
-
-    .status-delivered {
-        background: #dcfce7;
-        color: #166534;
-    }
-
-    .status-cancelled {
-        background: #fee2e2;
-        color: #991b1b;
-    }
-
+    /* Timeline Styles */
     .timeline-item {
         position: relative;
-        padding-left: 40px;
-        padding-bottom: 24px;
+        padding-left: 48px;
+        padding-bottom: 32px;
     }
 
     .timeline-item::before {
         content: '';
         position: absolute;
-        left: 11px;
-        top: 28px;
+        left: 14px;
+        top: 30px;
         bottom: 0;
         width: 2px;
-        background: #e5e7eb;
+        background: #f3f4f6;
     }
 
-    .timeline-item:last-child::before {
-        display: none;
-    }
+    .timeline-item:last-child::before { display: none; }
 
     .timeline-dot {
         position: absolute;
         left: 0;
-        top: 4px;
-        width: 24px;
-        height: 24px;
+        top: 0;
+        width: 30px;
+        height: 30px;
         border-radius: 50%;
-        background: #e5e7eb;
-        border: 3px solid #fff;
-        box-shadow: 0 0 0 2px #e5e7eb;
+        background: #fff;
+        border: 2px solid #e5e7eb;
         display: flex;
         align-items: center;
         justify-content: center;
+        z-index: 10;
         transition: all 0.3s ease;
     }
 
+    /* Active State (Pulsing) */
     .timeline-dot.active {
-        background: #FAD470;
-        box-shadow: 0 0 0 2px #FAD470;
+        background: #fff;
+        border-color: #1A1A1D;
+        color: #1A1A1D;
         animation: pulse-ring 2s infinite;
     }
 
+    /* Completed State (Solid Black) */
     .timeline-dot.completed {
-        background: #10b981;
-        box-shadow: 0 0 0 2px #10b981;
+        background: #1A1A1D;
+        border-color: #1A1A1D;
+        color: #fff;
     }
 
     .timeline-dot.cancelled {
         background: #ef4444;
-        box-shadow: 0 0 0 2px #ef4444;
+        border-color: #ef4444;
+        color: #fff;
     }
 
     @keyframes pulse-ring {
-        0%, 100% {
-            box-shadow: 0 0 0 2px #FAD470, 0 0 0 4px rgba(250, 212, 112, 0.3);
-        }
-        50% {
-            box-shadow: 0 0 0 2px #FAD470, 0 0 0 8px rgba(250, 212, 112, 0.1);
-        }
+        0% { box-shadow: 0 0 0 0 rgba(26, 26, 29, 0.4); }
+        70% { box-shadow: 0 0 0 10px rgba(26, 26, 29, 0); }
+        100% { box-shadow: 0 0 0 0 rgba(26, 26, 29, 0); }
     }
 
+    /* Product Thumbnail */
     .product-thumb {
-        width: 80px;
-        height: 80px;
+        width: 70px;
+        height: 70px;
         border-radius: 12px;
-        object-fit: cover;
-        border: 1px solid #e5e7eb;
+        object-fit: contain;
+        background: #f9fafb;
+        border: 1px solid #f3f4f6;
+        padding: 4px;
     }
 
     .info-row {
         display: flex;
         justify-content: space-between;
-        padding: 12px 0;
+        padding: 14px 0;
         border-bottom: 1px solid #f3f4f6;
+        font-size: 14px;
     }
 
-    .info-row:last-child {
-        border-bottom: none;
-    }
-
-    @keyframes pulse {
-        0%, 100% {
-            opacity: 1;
-        }
-        50% {
-            opacity: .7;
-        }
-    }
-
-    .animate-pulse {
-        animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-    }
+    .info-row:last-child { border-bottom: none; }
 </style>
 @endpush
 
 @section('content')
-<div class="min-h-screen bg-gray-50 py-8">
-    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-        <!-- Breadcrumb -->
+<div class="min-h-screen bg-gray-50 py-10">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        
         <nav class="flex items-center mb-8 text-sm">
-            <a href="{{ route('home') }}" class="text-gray-500 hover:text-amber-600 transition-colors">
+            <a href="{{ route('home') }}" class="text-gray-400 hover:text-black transition-colors">
                 <i class="fas fa-home"></i>
             </a>
             <i class="fas fa-chevron-right text-gray-300 mx-3 text-xs"></i>
-            <a href="{{ route('customer.index') }}" class="text-gray-500 hover:text-amber-600 transition-colors">Profil</a>
+            <a href="{{ route('customer.index') }}" class="text-gray-400 hover:text-black transition-colors">Account</a>
             <i class="fas fa-chevron-right text-gray-300 mx-3 text-xs"></i>
-            <a href="{{ route('customer.orders') }}" class="text-gray-500 hover:text-amber-600 transition-colors">Pesanan</a>
+            <a href="{{ route('customer.orders') }}" class="text-gray-400 hover:text-black transition-colors">My Orders</a>
             <i class="fas fa-chevron-right text-gray-300 mx-3 text-xs"></i>
-            <span class="text-gray-900 font-medium">#{{ $order->order_number }}</span>
+            <span class="text-[#1A1A1D] font-bold">#{{ $order->order_number }}</span>
         </nav>
 
-        <!-- Flash Messages -->
         @if(session('success'))
-        <div class="mb-6 bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded-lg flex items-center">
-            <i class="fas fa-check-circle mr-2"></i>
+        <div class="mb-6 bg-[#1A1A1D] text-white px-6 py-4 rounded-2xl flex items-center shadow-lg">
+            <i class="fas fa-check-circle mr-3 text-green-400"></i>
             {{ session('success') }}
         </div>
         @endif
 
         @if(session('error'))
-        <div class="mb-6 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg flex items-center">
-            <i class="fas fa-exclamation-circle mr-2"></i>
+        <div class="mb-6 bg-red-50 border border-red-200 text-red-600 px-6 py-4 rounded-2xl flex items-center">
+            <i class="fas fa-exclamation-circle mr-3"></i>
             {{ session('error') }}
         </div>
         @endif
 
-        <!-- Order Header -->
-        <div class="profile-card p-6 mb-6">
-            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <div class="profile-card p-8 mb-8">
+            <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
                 <div>
-                    <h1 class="text-2xl font-bold text-gray-900 mb-2">Pesanan #{{ $order->order_number }}</h1>
-                    <p class="text-gray-500">
-                        <i class="fas fa-calendar-alt mr-2"></i>
-                        {{ $order->created_at->format('d F Y, H:i') }}
+                    <div class="flex items-center gap-3 mb-2">
+                        <h1 class="text-3xl font-black text-[#1A1A1D] tracking-tight">Order #{{ $order->order_number }}</h1>
+                        <span class="status-badge status-{{ strtolower($order->status) }}">
+                            {{ $order->status }}
+                        </span>
+                    </div>
+                    <p class="text-gray-500 text-sm flex items-center gap-2">
+                        <i class="fas fa-calendar text-[#1A1A1D]"></i>
+                        Placed on {{ $order->created_at->format('d F Y, H:i') }}
                     </p>
                 </div>
-                <div class="flex flex-col sm:items-end gap-2">
-                    <span class="status-badge status-{{ strtolower($order->status) }} inline-block">
-                        @switch($order->status)
-                            @case('Pending')
-                                <i class="fas fa-clock mr-1"></i> Menunggu Pembayaran
-                                @break
-                            @case('Processing')
-                                <i class="fas fa-cog mr-1"></i> Sedang Diproses
-                                @break
-                            @case('Shipped')
-                                <i class="fas fa-truck mr-1"></i> Dalam Pengiriman
-                                @break
-                            @case('Delivered')
-                                <i class="fas fa-check-circle mr-1"></i> Selesai
-                                @break
-                            @case('Cancelled')
-                                <i class="fas fa-times-circle mr-1"></i> Dibatalkan
-                                @break
-                        @endswitch
-                    </span>
 
-                    <!-- Print Invoice Button -->
-                    <a href="{{ route('customer.print-invoice', $order->id) }}" 
-                    target="_blank"
-                    class="inline-flex items-center justify-center gap-2 px-4 py-2 bg-white border-2 border-gray-300 rounded-lg text-gray-700 hover:border-amber-400 hover:text-amber-600 hover:bg-amber-50 transition-all text-sm font-semibold">
+                <div class="flex flex-wrap gap-3">
+                    <a href="{{ route('customer.print-invoice', $order->id) }}" target="_blank"
+                       class="inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-white border border-gray-300 rounded-xl text-gray-700 hover:border-[#1A1A1D] hover:text-[#1A1A1D] transition-all text-sm font-bold shadow-sm">
                         <i class="fas fa-print"></i>
-                        <span>Print Invoice</span>
+                        <span>Invoice</span>
                     </a>
                     
                     @if($order->status == 'Shipped')
-                    <div class="flex gap-2">
                         <a href="{{ route('customer.track-order', $order->id) }}" 
-                           class="px-4 py-2 bg-gradient-to-r from-amber-500 to-yellow-500 text-white rounded-lg text-sm font-semibold hover:from-amber-600 hover:to-yellow-600 transition-all">
-                            <i class="fas fa-truck mr-1"></i> Lacak Pengiriman
+                           class="px-5 py-2.5 bg-[#1A1A1D] text-white rounded-xl text-sm font-bold hover:bg-gray-800 transition-all shadow-lg flex items-center gap-2">
+                            <i class="fas fa-search-location"></i> Track Order
                         </a>
                         
                         @php
-                            // Check if delivered based on tracking data
                             $isDelivered = false;
                             if (isset($trackingData)) {
                                 $isDelivered = ($trackingData['delivered'] ?? false) === true
@@ -227,212 +188,145 @@
                         
                         @if ($isDelivered)
                         <form action="{{ route('customer.confirm-received', $order->id) }}" method="POST"
-                            onsubmit="return confirm('Konfirmasi bahwa pesanan sudah diterima?')">
+                            onsubmit="return confirm('Confirm order received?')">
                             @csrf
                             <button type="submit"
-                                class="px-4 py-2 bg-green-600 animate-pulse text-white rounded-lg text-sm font-semibold hover:bg-green-700 transition-all">
-                                <i class="fas fa-check mr-1"></i>
-                                Konfirmasi Diterima
+                                class="px-5 py-2.5 bg-green-600 text-white rounded-xl text-sm font-bold hover:bg-green-700 transition-all shadow-md flex items-center gap-2">
+                                <i class="fas fa-check-double"></i> Confirm Received
                             </button>
                         </form>
                         @endif
-                    </div>
                     @endif
                 </div>
             </div>
         </div>
 
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            <!-- Left Column - Order Items & Timeline -->
-            <div class="lg:col-span-2 space-y-6">
-                <!-- Order Items -->
-                <div class="profile-card p-6">
-                    <h3 class="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
-                        <i class="fas fa-box text-amber-500"></i>
-                        Produk Pesanan
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <div class="lg:col-span-2 space-y-8">
+                
+                <div class="profile-card p-8">
+                    <h3 class="text-xl font-bold text-[#1A1A1D] mb-6 flex items-center gap-2 uppercase tracking-wide">
+                        <i class="fas fa-box-open"></i> Order Items
                     </h3>
                     
-                    <div class="space-y-4">
+                    <div class="space-y-6">
                         @foreach($order->orderItems as $item)
-                        <div class="flex gap-4 p-4 bg-gray-50 rounded-xl">
+                        <div class="flex gap-5 items-start">
                             @if($item->variation && $item->variation->product && $item->variation->product->images->first())
-                            <img src="{{ asset('storage/products/' . $item->variation->product->images->first()->image) }}" 
-                                 alt="{{ $item->variation->product->name }}"
-                                 class="product-thumb">
+                                <img src="{{ asset('storage/products/' . $item->variation->product->images->first()->image) }}" 
+                                     alt="{{ $item->variation->product->name }}"
+                                     class="product-thumb mix-blend-multiply">
                             @else
-                            <div class="product-thumb bg-gray-200 flex items-center justify-center">
-                                <i class="fas fa-image text-gray-400 text-2xl"></i>
-                            </div>
+                                <div class="product-thumb flex items-center justify-center text-gray-300">
+                                    <i class="fas fa-image text-xl"></i>
+                                </div>
                             @endif
-                            <div class="flex-1">
-                                <h4 class="font-semibold text-gray-900">
-                                    {{ $item->variation->product->name ?? 'Produk tidak tersedia' }}
+
+                            <div class="flex-1 min-w-0">
+                                <h4 class="font-bold text-[#1A1A1D] text-base leading-tight">
+                                    {{ $item->variation->product->name ?? 'Product Unavailable' }}
                                 </h4>
-                                <p class="text-sm text-gray-500 mt-1">
-                                    Variasi: {{ $item->variation->color ?? '-' }} / {{ $item->variation->size ?? '-' }}
+                                <p class="text-xs text-gray-500 mt-1 uppercase tracking-wide font-semibold">
+                                    {{ $item->variation->color ?? '-' }} / {{ $item->variation->size ?? '-' }}
                                 </p>
-                                <div class="flex items-center justify-between mt-2">
-                                    <p class="text-sm text-gray-500">
-                                        {{ $item->quantity }} x Rp {{ number_format($item->price, 0, ',', '.') }}
-                                    </p>
-                                    <p class="font-bold text-gray-900">
+                                <div class="flex items-center justify-between mt-3">
+                                    <span class="px-2 py-1 bg-gray-100 rounded text-xs font-medium text-gray-600">
+                                        Qty: {{ $item->quantity }}
+                                    </span>
+                                    <span class="font-bold text-[#1A1A1D]">
                                         Rp {{ number_format($item->price * $item->quantity, 0, ',', '.') }}
-                                    </p>
+                                    </span>
                                 </div>
                             </div>
                         </div>
+                        @if(!$loop->last) <hr class="border-gray-100"> @endif
                         @endforeach
                     </div>
                 </div>
 
-                <!-- Order Timeline -->
-                <div class="profile-card p-6">
-                    <h3 class="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
-                        <i class="fas fa-history text-amber-500"></i>
-                        Status Pesanan
+                <div class="profile-card p-8">
+                    <h3 class="text-xl font-bold text-[#1A1A1D] mb-8 flex items-center gap-2 uppercase tracking-wide">
+                        <i class="fas fa-stream"></i> Order Status
                     </h3>
                     
-                    <div class="space-y-0">
+                    <div>
                         @php
                             $statusOrder = ['Pending', 'Processing', 'Shipped', 'Delivered'];
                             $currentStatusIndex = array_search($order->status, $statusOrder);
                             $isCancelled = $order->status === 'Cancelled';
-                            
-                            // Check tracking data for delivered status
-                            $trackingDelivered = false;
-                            if (isset($trackingData)) {
-                                $trackingDelivered = ($trackingData['delivered'] ?? false) === true
-                                                  || (isset($trackingData['delivery_status']['status']) && $trackingData['delivery_status']['status'] === 'DELIVERED');
-                            }
                         @endphp
 
-                        {{-- Pesanan Dibuat --}}
+                        {{-- Order Placed --}}
                         <div class="timeline-item">
                             <div class="timeline-dot completed">
-                                <i class="fas fa-check text-white text-xs"></i>
+                                <i class="fas fa-check text-xs"></i>
                             </div>
                             <div>
-                                <p class="font-semibold text-gray-900">Pesanan Dibuat</p>
-                                <p class="text-sm text-gray-500">{{ $order->created_at->format('d M Y, H:i') }}</p>
+                                <p class="font-bold text-[#1A1A1D]">Order Placed</p>
+                                <p class="text-xs text-gray-500">{{ $order->created_at->format('d M Y, H:i') }}</p>
                                 @if($order->status === 'Pending')
-                                <p class="text-xs text-amber-600 mt-1">
-                                    <i class="fas fa-info-circle mr-1"></i>
-                                    Menunggu konfirmasi pembayaran
-                                </p>
+                                <p class="text-xs text-gray-600 mt-1 italic">Waiting for payment...</p>
                                 @endif
                             </div>
                         </div>
 
-                        {{-- Pembayaran Dikonfirmasi --}}
+                        {{-- Payment Confirmed / Processing --}}
                         <div class="timeline-item">
                             <div class="timeline-dot {{ $currentStatusIndex >= 1 ? 'completed' : ($order->status === 'Pending' ? 'active' : '') }}">
-                                @if($currentStatusIndex >= 1)
-                                <i class="fas fa-check text-white text-xs"></i>
-                                @elseif($order->status === 'Pending')
-                                <i class="fas fa-circle text-white text-xs" style="font-size: 8px;"></i>
-                                @endif
+                                @if($currentStatusIndex >= 1) <i class="fas fa-check text-xs"></i> @endif
                             </div>
                             <div>
-                                <p class="font-semibold {{ $currentStatusIndex >= 1 ? 'text-gray-900' : 'text-gray-400' }}">
-                                    Pembayaran Dikonfirmasi
-                                </p>
-                                @if($currentStatusIndex >= 1)
-                                <p class="text-sm text-gray-500">Pesanan sedang dikemas</p>
-                                @elseif($order->status === 'Pending')
-                                <p class="text-sm text-gray-400">Menunggu pembayaran</p>
-                                @else
-                                <p class="text-sm text-gray-400">Belum diproses</p>
-                                @endif
-                                
+                                <p class="font-bold {{ $currentStatusIndex >= 1 ? 'text-[#1A1A1D]' : 'text-gray-400' }}">Payment Confirmed</p>
                                 @if($order->status === 'Processing')
-                                <p class="text-xs text-blue-600 mt-1">
-                                    <i class="fas fa-cog fa-spin mr-1"></i>
-                                    Sedang dalam proses pengemasan
+                                <p class="text-xs text-blue-600 font-medium mt-1">
+                                    <i class="fas fa-circle-notch fa-spin mr-1"></i> Processing your order
                                 </p>
                                 @endif
                             </div>
                         </div>
 
-                        {{-- Pesanan Dikirim --}}
+                        {{-- Shipped --}}
                         <div class="timeline-item">
                             <div class="timeline-dot {{ $currentStatusIndex >= 2 ? 'completed' : ($order->status === 'Processing' ? 'active' : '') }}">
-                                @if($currentStatusIndex >= 2)
-                                <i class="fas fa-check text-white text-xs"></i>
-                                @elseif($order->status === 'Processing')
-                                <i class="fas fa-circle text-white text-xs" style="font-size: 8px;"></i>
-                                @endif
+                                @if($currentStatusIndex >= 2) <i class="fas fa-truck text-xs"></i> @endif
                             </div>
                             <div>
-                                <p class="font-semibold {{ $currentStatusIndex >= 2 ? 'text-gray-900' : 'text-gray-400' }}">
-                                    Pesanan Dikirim
-                                </p>
+                                <p class="font-bold {{ $currentStatusIndex >= 2 ? 'text-[#1A1A1D]' : 'text-gray-400' }}">Shipped</p>
                                 @if($order->tracking_number && $currentStatusIndex >= 2)
-                                <p class="text-sm text-gray-500">
-                                    No. Resi: <span class="font-mono font-semibold">{{ $order->tracking_number }}</span>
-                                </p>
-                                <p class="text-xs text-gray-500">
-                                    Kurir: {{ strtoupper($order->courier ?? '-') }} - {{ $order->service ?? '-' }}
-                                </p>
-                                @else
-                                <p class="text-sm text-gray-400">Menunggu pengiriman</p>
-                                @endif
-                                
-                                @if($order->status === 'Shipped')
-                                <div class="mt-2 flex items-center gap-2">
-                                    <span class="text-xs px-2 py-1 bg-purple-100 text-purple-700 rounded-full">
-                                        <i class="fas fa-shipping-fast mr-1"></i>
-                                        Dalam pengiriman
-                                    </span>
-                                    @if($trackingDelivered)
-                                    <span class="text-xs px-2 py-1 bg-green-100 text-green-700 rounded-full animate-pulse">
-                                        <i class="fas fa-box-check mr-1"></i>
-                                        Sudah diterima kurir
-                                    </span>
-                                    @endif
+                                <div class="mt-1 p-2 bg-gray-50 rounded border border-gray-100 inline-block">
+                                    <p class="text-xs text-gray-500">Tracking Number:</p>
+                                    <p class="text-sm font-mono font-bold text-[#1A1A1D]">{{ $order->tracking_number }}</p>
+                                    <p class="text-[10px] text-gray-400 mt-1 uppercase">{{ strtoupper($order->courier ?? '') }}</p>
                                 </div>
                                 @endif
                             </div>
                         </div>
 
-                        {{-- Pesanan Selesai --}}
+                        {{-- Delivered --}}
                         <div class="timeline-item">
                             <div class="timeline-dot {{ $order->status === 'Delivered' ? 'completed' : ($order->status === 'Shipped' ? 'active' : '') }}">
-                                @if($order->status === 'Delivered')
-                                <i class="fas fa-check text-white text-xs"></i>
-                                @elseif($order->status === 'Shipped')
-                                <i class="fas fa-circle text-white text-xs" style="font-size: 8px;"></i>
-                                @endif
+                                @if($order->status === 'Delivered') <i class="fas fa-home text-xs"></i> @endif
                             </div>
                             <div>
-                                <p class="font-semibold {{ $order->status === 'Delivered' ? 'text-gray-900' : 'text-gray-400' }}">
-                                    Pesanan Selesai
-                                </p>
+                                <p class="font-bold {{ $order->status === 'Delivered' ? 'text-[#1A1A1D]' : 'text-gray-400' }}">Delivered</p>
                                 @if($order->delivered_at)
-                                <p class="text-sm text-gray-500">
-                                    {{ \Carbon\Carbon::parse($order->delivered_at)->format('d M Y, H:i') }}
-                                </p>
-                                <p class="text-xs text-green-600 mt-1">
-                                    <i class="fas fa-check-circle mr-1"></i>
-                                    Pesanan telah diterima
-                                </p>
-                                @else
-                                <p class="text-sm text-gray-400">Menunggu konfirmasi penerimaan</p>
+                                <p class="text-xs text-gray-500">{{ \Carbon\Carbon::parse($order->delivered_at)->format('d M Y, H:i') }}</p>
                                 @endif
                             </div>
                         </div>
 
-                        {{-- Pesanan Dibatalkan --}}
+                        {{-- Cancelled --}}
                         @if($isCancelled)
                         <div class="timeline-item">
                             <div class="timeline-dot cancelled">
-                                <i class="fas fa-times text-white text-xs"></i>
+                                <i class="fas fa-times text-xs"></i>
                             </div>
                             <div>
-                                <p class="font-semibold text-red-600">Pesanan Dibatalkan</p>
-                                <p class="text-sm text-gray-500">{{ $order->updated_at->format('d M Y, H:i') }}</p>
+                                <p class="font-bold text-red-600">Cancelled</p>
+                                <p class="text-xs text-gray-500">{{ $order->updated_at->format('d M Y, H:i') }}</p>
                                 @if($order->cancellation_reason)
-                                <p class="text-xs text-red-600 mt-1">
-                                    Alasan: {{ $order->cancellation_reason }}
+                                <p class="text-xs text-red-500 mt-1 bg-red-50 px-2 py-1 rounded">
+                                    Reason: {{ $order->cancellation_reason }}
                                 </p>
                                 @endif
                             </div>
@@ -442,110 +336,69 @@
                 </div>
             </div>
 
-            <!-- Right Column - Order Summary -->
-            <div class="space-y-6">
-                <!-- Shipping Address -->
-                <div class="profile-card p-6">
-                    <h3 class="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
-                        <i class="fas fa-map-marker-alt text-amber-500"></i>
-                        Alamat Pengiriman
+            <div class="space-y-8">
+                
+                <div class="profile-card p-8">
+                    <h3 class="text-lg font-bold text-[#1A1A1D] mb-4 flex items-center gap-2 uppercase tracking-wide">
+                        <i class="fas fa-map-marker-alt"></i> Shipping Address
                     </h3>
-                    
                     @if($order->shippingAddress)
-                    <div class="space-y-2">
-                        <p class="font-semibold text-gray-900">{{ $order->shippingAddress->recipient_name }}</p>
-                        <p class="text-sm text-gray-600">
-                            <i class="fas fa-phone mr-1"></i>
-                            {{ $order->shippingAddress->phone }}
-                        </p>
-                        <p class="text-sm text-gray-600">
-                            {{ $order->shippingAddress->full_address }},
-                            {{ $order->shippingAddress->city_name ?? '' }},
-                            {{ $order->shippingAddress->province_name ?? '' }}
-                            {{ $order->shippingAddress->postal_code }}
+                    <div class="text-sm">
+                        <p class="font-bold text-gray-900 mb-1">{{ $order->shippingAddress->recipient_name }}</p>
+                        <p class="text-gray-500 mb-3">{{ $order->shippingAddress->phone }}</p>
+                        <p class="text-gray-600 leading-relaxed bg-gray-50 p-3 rounded-xl border border-gray-100">
+                            {{ $order->shippingAddress->full_address }}<br>
+                            {{ $order->shippingAddress->city_name }}, {{ $order->shippingAddress->province_name }} {{ $order->shippingAddress->postal_code }}
                         </p>
                     </div>
                     @else
-                    <p class="text-gray-500 text-sm">Alamat tidak tersedia</p>
+                    <p class="text-gray-400 text-sm italic">Address not available</p>
                     @endif
                 </div>
 
-                <!-- Shipping Info -->
-                @if($order->courier)
-                <div class="profile-card p-6">
-                    <h3 class="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
-                        <i class="fas fa-truck text-amber-500"></i>
-                        Informasi Pengiriman
+                <div class="profile-card p-8">
+                    <h3 class="text-lg font-bold text-[#1A1A1D] mb-6 flex items-center gap-2 uppercase tracking-wide">
+                        <i class="fas fa-receipt"></i> Payment Summary
                     </h3>
                     
-                    <div class="space-y-3">
-                        <div class="flex justify-between">
-                            <span class="text-gray-500">Kurir</span>
-                            <span class="font-semibold text-gray-900">{{ strtoupper($order->courier) }}</span>
-                        </div>
-                        <div class="flex justify-between">
-                            <span class="text-gray-500">Layanan</span>
-                            <span class="font-semibold text-gray-900">{{ $order->service ?? '-' }}</span>
-                        </div>
-                        @if($order->tracking_number)
-                        <div class="pt-2 border-t border-gray-100">
-                            <p class="text-xs text-gray-500 mb-1">Nomor Resi:</p>
-                            <p class="font-mono font-bold text-gray-900 text-sm">{{ $order->tracking_number }}</p>
-                            <a href="{{ route('customer.track-order', $order->id) }}" 
-                               class="mt-2 inline-block text-xs text-amber-600 hover:text-amber-700">
-                                Lacak pengiriman →
-                            </a>
-                        </div>
-                        @endif
-                    </div>
-                </div>
-                @endif
-
-                <!-- Order Summary -->
-                <div class="profile-card p-6">
-                    <h3 class="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
-                        <i class="fas fa-receipt text-amber-500"></i>
-                        Ringkasan Pembayaran
-                    </h3>
-                    
-                    <div class="space-y-3">
+                    <div class="space-y-2">
                         <div class="info-row">
-                            <span class="text-gray-500">Subtotal ({{ $order->orderItems->sum('quantity') }} produk)</span>
-                            <span class="text-gray-900">Rp {{ number_format($order->subtotal ?? $order->orderItems->sum(fn($i) => $i->price * $i->quantity), 0, ',', '.') }}</span>
+                            <span class="text-gray-500">Subtotal</span>
+                            <span class="font-medium text-gray-900">Rp {{ number_format($order->subtotal ?? $order->orderItems->sum(fn($i) => $i->price * $i->quantity), 0, ',', '.') }}</span>
                         </div>
                         <div class="info-row">
-                            <span class="text-gray-500">Ongkos Kirim</span>
-                            <span class="text-gray-900">Rp {{ number_format($order->shipping_cost ?? 0, 0, ',', '.') }}</span>
+                            <span class="text-gray-500">Shipping Cost</span>
+                            <span class="font-medium text-gray-900">Rp {{ number_format($order->shipping_cost ?? 0, 0, ',', '.') }}</span>
                         </div>
                         @if($order->points_used > 0)
-                        <div class="info-row">
-                            <span class="text-gray-500">Poin Digunakan</span>
-                            <span class="text-green-600">- Rp {{ number_format($order->points_used, 0, ',', '.') }}</span>
+                        <div class="info-row text-red-600 bg-red-50 px-2 rounded-lg -mx-2">
+                            <span class="text-xs font-bold uppercase py-1">Points Used</span>
+                            <span class="font-bold py-1">- Rp {{ number_format($order->points_used, 0, ',', '.') }}</span>
                         </div>
                         @endif
-                        <div class="pt-3 border-t-2 border-gray-200">
-                            <div class="flex justify-between">
-                                <span class="font-bold text-gray-900">Total</span>
-                                <span class="font-bold text-xl text-amber-600">Rp {{ number_format($order->total, 0, ',', '.') }}</span>
+                        
+                        <div class="pt-4 mt-2 border-t border-dashed border-gray-200">
+                            <div class="flex justify-between items-center">
+                                <span class="font-bold text-[#1A1A1D] text-lg">TOTAL</span>
+                                <span class="font-black text-2xl text-[#1A1A1D]">Rp {{ number_format($order->total, 0, ',', '.') }}</span>
                             </div>
                         </div>
                     </div>
 
                     @if($order->pointTransactions && $order->pointTransactions->where('type', 'earned')->first())
-                    <div class="mt-4 p-3 bg-green-50 rounded-xl border border-green-200">
-                        <p class="text-sm text-green-700">
-                            <i class="fas fa-coins mr-1"></i>
-                            Anda mendapat <strong>{{ $order->pointTransactions->where('type', 'earned')->first()->points }}</strong> poin dari pesanan ini!
+                    <div class="mt-6 p-4 bg-[#1A1A1D] rounded-xl text-white text-center">
+                        <p class="text-xs text-gray-400 uppercase tracking-widest mb-1">Points Earned</p>
+                        <p class="text-xl font-bold flex items-center justify-center gap-2">
+                            <i class="fas fa-star text-yellow-400"></i>
+                            +{{ $order->pointTransactions->where('type', 'earned')->first()->points }} PTS
                         </p>
                     </div>
                     @endif
                 </div>
 
-                <!-- Back Button -->
                 <a href="{{ route('customer.orders') }}" 
-                   class="block w-full text-center py-3 bg-white border-2 border-gray-300 rounded-xl font-semibold text-gray-700 hover:border-amber-400 hover:text-amber-600 hover:bg-amber-50 transition-all">
-                    <i class="fas fa-arrow-left mr-2"></i>
-                    Kembali ke Daftar Pesanan
+                   class="flex items-center justify-center w-full py-4 bg-white border border-gray-200 rounded-2xl font-bold text-gray-600 hover:bg-[#1A1A1D] hover:text-white hover:border-[#1A1A1D] transition-all shadow-sm">
+                    <i class="fas fa-arrow-left mr-2"></i> Back to Orders
                 </a>
             </div>
         </div>
