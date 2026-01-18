@@ -297,8 +297,8 @@
                             || (isset($trackingData['detail']['status']) && $trackingData['detail']['status'] === 'DELIVERED');
             }
             
-            // Show button if order is shipped OR tracking shows delivered
-            $showConfirmButton = ($order->status == 'shipped') || ($isDelivered && $order->status != 'delivered');
+            // Show button if order is shipped OR tracking shows delivered, but NOT if order status is already delivered
+            $showConfirmButton = (($order->status == 'Shipped') || ($isDelivered && $order->status != 'Delivered')) && $order->status != 'Delivered';
         @endphp
 
         @if($showConfirmButton)
