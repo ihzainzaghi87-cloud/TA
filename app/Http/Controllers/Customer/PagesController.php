@@ -272,6 +272,7 @@ class PagesController extends Controller
         $relatedProducts = Product::with(['images'])
             ->where('category_id', $product->category_id)
             ->where('id', '!=', $product->id)
+            ->where('is_reward', false)
             ->where('is_active', true)
             ->take(4)
             ->get();
