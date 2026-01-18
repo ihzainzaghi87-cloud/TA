@@ -19,15 +19,15 @@
     .article-card {
         background: #fff;
         border: 1px solid #e5e7eb;
-        border-radius: 16px;
+        border-radius: 1.5rem;
         transition: all 0.3s ease;
         overflow: hidden;
     }
 
     .article-card:hover {
-        border-color: #000; /* Hitam saat hover */
+        border-color: #1A1A1D;
         transform: translateY(-4px);
-        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.1);
+        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
     }
 
     .article-card .article-image {
@@ -41,7 +41,7 @@
     /* Featured Article Card */
     .featured-article {
         position: relative;
-        border-radius: 24px;
+        border-radius: 1.5rem;
         overflow: hidden;
     }
 
@@ -59,14 +59,14 @@
     }
 
     .pagination-link:hover {
-        background: #000;
+        background: #1A1A1D;
         color: #fff;
-        border-color: #000;
+        border-color: #1A1A1D;
     }
 
     .pagination-link.active {
-        background: #000;
-        border-color: #000;
+        background: #1A1A1D;
+        border-color: #1A1A1D;
         color: #fff;
     }
 </style>
@@ -151,20 +151,10 @@
         <a href="{{ route('articles.show', $featuredArticle->slug) }}" class="block featured-article group">
             <div class="relative h-[400px] md:h-[500px] overflow-hidden rounded-[2rem] border border-gray-200 shadow-sm">
                 {{-- Article Image or Placeholder --}}
-                @if($featuredArticle->trixRichText && $featuredArticle->trixRichText->first())
-                    @php
-                        preg_match('/<img[^>]+src="([^">]+)"/', $featuredArticle->trixRichText->first()->content ?? '', $matches);
-                        $imageUrl = $matches[1] ?? null;
-                    @endphp
-                    @if($imageUrl)
-                        <img src="{{ $imageUrl }}"
-                             alt="{{ $featuredArticle->title }}"
-                             class="w-full h-full object-cover article-image">
-                    @else
-                        <div class="w-full h-full bg-gray-900 flex items-center justify-center">
-                            <i class="fas fa-newspaper text-white text-8xl opacity-50"></i>
-                        </div>
-                    @endif
+                @if($featuredArticle->thumbnail)
+                    <img src="{{ asset('storage/' . $featuredArticle->thumbnail) }}"
+                         alt="{{ $featuredArticle->title }}"
+                         class="w-full h-full object-cover article-image">
                 @else
                     <div class="w-full h-full bg-gray-900 flex items-center justify-center">
                         <i class="fas fa-newspaper text-white text-8xl opacity-50"></i>
@@ -213,14 +203,14 @@
 
         @if($articles->isEmpty())
             {{-- Empty State --}}
-            <div class="text-center py-20 bg-white rounded-3xl border border-gray-100">
+            <div class="text-center py-20 bg-white rounded-[1.5rem] border border-gray-100 shadow-lg">
                 <div class="w-24 h-24 bg-gray-50 rounded-full flex items-center justify-center mx-auto mb-6">
                     <i class="fas fa-pen-fancy text-gray-300 text-4xl"></i>
                 </div>
-                <h3 class="text-xl font-bold text-gray-900 mb-2">No Articles Yet</h3>
+                <h3 class="text-xl font-black text-gray-900 mb-2">No Articles Yet</h3>
                 <p class="text-gray-500 mb-8 max-w-md mx-auto">We are currently crafting amazing content for you. Please check back later!</p>
                 <a href="{{ route('home') }}"
-                   class="inline-block bg-black text-white px-8 py-3 rounded-full font-bold hover:bg-gray-800 transition-colors">
+                   class="inline-block bg-[#1A1A1D] text-white px-8 py-3 rounded-full font-black hover:bg-gray-800 transition-colors">
                     Back to Home
                 </a>
             </div>
@@ -231,20 +221,10 @@
                 <a href="{{ route('articles.show', $article->slug) }}" class="article-card group flex flex-col h-full">
                     {{-- Blog Image --}}
                     <div class="relative h-56 overflow-hidden bg-gray-100">
-                        @if($article->trixRichText && $article->trixRichText->first())
-                            @php
-                                preg_match('/<img[^>]+src="([^">]+)"/', $article->trixRichText->first()->content ?? '', $matches);
-                                $imageUrl = $matches[1] ?? null;
-                            @endphp
-                            @if($imageUrl)
-                                <img src="{{ $imageUrl }}"
-                                     alt="{{ $article->title }}"
-                                     class="w-full h-full object-cover article-image">
-                            @else
-                                <div class="w-full h-full flex items-center justify-center text-gray-300">
-                                    <i class="fas fa-image text-4xl"></i>
-                                </div>
-                            @endif
+                        @if($article->thumbnail)
+                            <img src="{{ asset('storage/' . $article->thumbnail) }}"
+                                 alt="{{ $article->title }}"
+                                 class="w-full h-full object-cover article-image">
                         @else
                             <div class="w-full h-full flex items-center justify-center text-gray-300">
                                 <i class="fas fa-image text-4xl"></i>
@@ -296,7 +276,7 @@
                         </span>
                     @else
                         <a href="{{ $articles->previousPageUrl() }}"
-                           class="w-10 h-10 flex items-center justify-center rounded-full border border-gray-300 text-black hover:bg-black hover:text-white transition-colors">
+                           class="w-10 h-10 flex items-center justify-center rounded-full border border-gray-300 text-black hover:bg-[#1A1A1D] hover:text-white transition-colors">
                             <i class="fas fa-chevron-left text-xs"></i>
                         </a>
                     @endif
@@ -304,7 +284,7 @@
                     {{-- Page Numbers --}}
                     @foreach($articles->getUrlRange(1, $articles->lastPage()) as $page => $url)
                         @if($page == $articles->currentPage())
-                            <span class="w-10 h-10 flex items-center justify-center rounded-full bg-black text-white font-bold text-sm shadow-md">
+                            <span class="w-10 h-10 flex items-center justify-center rounded-full bg-[#1A1A1D] text-white font-black text-sm shadow-lg">
                                 {{ $page }}
                             </span>
                         @else
@@ -318,7 +298,7 @@
                     {{-- Next --}}
                     @if($articles->hasMorePages())
                         <a href="{{ $articles->nextPageUrl() }}"
-                           class="w-10 h-10 flex items-center justify-center rounded-full border border-gray-300 text-black hover:bg-black hover:text-white transition-colors">
+                           class="w-10 h-10 flex items-center justify-center rounded-full border border-gray-300 text-black hover:bg-[#1A1A1D] hover:text-white transition-colors">
                             <i class="fas fa-chevron-right text-xs"></i>
                         </a>
                     @else
