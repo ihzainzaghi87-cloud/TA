@@ -76,7 +76,7 @@
                                 <div class="text-sm font-medium text-gray-900 dark:text-white">
                                     {{ $banner->title ?? 'Untitled Banner' }}
                                 </div>
-                                <div class="text-xs text-gray-500 dark:text-gray-400">Banner system</div>
+                                <div class="text-xs text-gray-500 dark:text-gray-400">{{ $banner->subtitle ?? 'No Subtitle' }}</div>
                             </div>
                         </td>
                         <td class="px-4 py-3">
