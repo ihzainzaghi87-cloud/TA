@@ -1,6 +1,6 @@
 @extends('customer.layouts.app')
 
-@section('title', 'Order Detail #' . $order->order_number)
+@section('title', 'Detail Pesanan #' . $order->order_number)
 
 @push('styles')
 <style>
@@ -128,9 +128,9 @@
                 <i class="fas fa-home"></i>
             </a>
             <i class="fas fa-chevron-right text-gray-300 mx-3 text-xs"></i>
-            <a href="{{ route('customer.index') }}" class="text-gray-400 hover:text-black transition-colors">Account</a>
+            <a href="{{ route('customer.index') }}" class="text-gray-400 hover:text-black transition-colors">Profile</a>
             <i class="fas fa-chevron-right text-gray-300 mx-3 text-xs"></i>
-            <a href="{{ route('customer.orders') }}" class="text-gray-400 hover:text-black transition-colors">My Orders</a>
+            <a href="{{ route('customer.orders') }}" class="text-gray-400 hover:text-black transition-colors">Pesanan Saya</a>
             <i class="fas fa-chevron-right text-gray-300 mx-3 text-xs"></i>
             <span class="text-[#1A1A1D] font-bold">#{{ $order->order_number }}</span>
         </nav>
@@ -153,14 +153,14 @@
             <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
                 <div>
                     <div class="flex items-center gap-3 mb-2">
-                        <h1 class="text-3xl font-black text-[#1A1A1D] tracking-tight">Order #{{ $order->order_number }}</h1>
+                        <h1 class="text-3xl font-black text-[#1A1A1D] tracking-tight">Pesanan #{{ $order->order_number }}</h1>
                         <span class="status-badge status-{{ strtolower($order->status) }}">
                             {{ $order->status }}
                         </span>
                     </div>
                     <p class="text-gray-500 text-sm flex items-center gap-2">
                         <i class="fas fa-calendar text-[#1A1A1D]"></i>
-                        Placed on {{ $order->created_at->format('d F Y, H:i') }}
+                        Order dibuat pada {{ $order->created_at->format('d F Y, H:i') }}
                     </p>
                 </div>
 
@@ -174,7 +174,7 @@
                     @if($order->status == 'Shipped')
                         <a href="{{ route('customer.track-order', $order->id) }}" 
                            class="px-5 py-2.5 bg-[#1A1A1D] text-white rounded-xl text-sm font-bold hover:bg-gray-800 transition-all shadow-lg flex items-center gap-2">
-                            <i class="fas fa-search-location"></i> Track Order
+                            <i class="fas fa-search-location"></i> Lacak Pesanan
                         </a>
                         
                         @php
@@ -188,11 +188,11 @@
                         
                         @if ($isDelivered)
                         <form action="{{ route('customer.confirm-received', $order->id) }}" method="POST"
-                            onsubmit="return confirm('Confirm order received?')">
+                            onsubmit="return confirm('Konfirmasi pesanan diterima?')">
                             @csrf
                             <button type="submit"
                                 class="px-5 py-2.5 bg-green-600 text-white rounded-xl text-sm font-bold hover:bg-green-700 transition-all shadow-md flex items-center gap-2">
-                                <i class="fas fa-check-double"></i> Confirm Received
+                                <i class="fas fa-check-double"></i> Konfirmasi Diterima
                             </button>
                         </form>
                         @endif
@@ -206,7 +206,7 @@
                 
                 <div class="profile-card p-8">
                     <h3 class="text-xl font-bold text-[#1A1A1D] mb-6 flex items-center gap-2 uppercase tracking-wide">
-                        <i class="fas fa-box-open"></i> Order Items
+                        <i class="fas fa-box-open"></i> Item Pesanan
                     </h3>
                     
                     <div class="space-y-6">
@@ -246,7 +246,7 @@
 
                 <div class="profile-card p-8">
                     <h3 class="text-xl font-bold text-[#1A1A1D] mb-8 flex items-center gap-2 uppercase tracking-wide">
-                        <i class="fas fa-stream"></i> Order Status
+                        <i class="fas fa-stream"></i> Status Pesanan
                     </h3>
                     
                     <div>
@@ -262,10 +262,10 @@
                                 <i class="fas fa-check text-xs"></i>
                             </div>
                             <div>
-                                <p class="font-bold text-[#1A1A1D]">Order Placed</p>
+                                <p class="font-bold text-[#1A1A1D]">Pesanan Dibuat</p>
                                 <p class="text-xs text-gray-500">{{ $order->created_at->format('d M Y, H:i') }}</p>
                                 @if($order->status === 'Pending')
-                                <p class="text-xs text-gray-600 mt-1 italic">Waiting for payment...</p>
+                                <p class="text-xs text-gray-600 mt-1 italic">Menunggu pembayaran...</p>
                                 @endif
                             </div>
                         </div>
@@ -276,10 +276,10 @@
                                 @if($currentStatusIndex >= 1) <i class="fas fa-check text-xs"></i> @endif
                             </div>
                             <div>
-                                <p class="font-bold {{ $currentStatusIndex >= 1 ? 'text-[#1A1A1D]' : 'text-gray-400' }}">Payment Confirmed</p>
+                                <p class="font-bold {{ $currentStatusIndex >= 1 ? 'text-[#1A1A1D]' : 'text-gray-400' }}">Pembayaran Dikonfirmasi</p>
                                 @if($order->status === 'Processing')
                                 <p class="text-xs text-blue-600 font-medium mt-1">
-                                    <i class="fas fa-circle-notch fa-spin mr-1"></i> Processing your order
+                                    <i class="fas fa-circle-notch fa-spin mr-1"></i> Memproses pesanan Anda
                                 </p>
                                 @endif
                             </div>
@@ -291,10 +291,10 @@
                                 @if($currentStatusIndex >= 2) <i class="fas fa-truck text-xs"></i> @endif
                             </div>
                             <div>
-                                <p class="font-bold {{ $currentStatusIndex >= 2 ? 'text-[#1A1A1D]' : 'text-gray-400' }}">Shipped</p>
+                                <p class="font-bold {{ $currentStatusIndex >= 2 ? 'text-[#1A1A1D]' : 'text-gray-400' }}">Dikirim</p>
                                 @if($order->tracking_number && $currentStatusIndex >= 2)
                                 <div class="mt-1 p-2 bg-gray-50 rounded border border-gray-100 inline-block">
-                                    <p class="text-xs text-gray-500">Tracking Number:</p>
+                                    <p class="text-xs text-gray-500">Nomor Pelacakan:</p>
                                     <p class="text-sm font-mono font-bold text-[#1A1A1D]">{{ $order->tracking_number }}</p>
                                     <p class="text-[10px] text-gray-400 mt-1 uppercase">{{ strtoupper($order->courier ?? '') }}</p>
                                 </div>
@@ -308,7 +308,7 @@
                                 @if($order->status === 'Delivered') <i class="fas fa-home text-xs"></i> @endif
                             </div>
                             <div>
-                                <p class="font-bold {{ $order->status === 'Delivered' ? 'text-[#1A1A1D]' : 'text-gray-400' }}">Delivered</p>
+                                <p class="font-bold {{ $order->status === 'Delivered' ? 'text-[#1A1A1D]' : 'text-gray-400' }}">Diterima</p>
                                 @if($order->delivered_at)
                                 <p class="text-xs text-gray-500">{{ \Carbon\Carbon::parse($order->delivered_at)->format('d M Y, H:i') }}</p>
                                 @endif
@@ -322,11 +322,11 @@
                                 <i class="fas fa-times text-xs"></i>
                             </div>
                             <div>
-                                <p class="font-bold text-red-600">Cancelled</p>
+                                <p class="font-bold text-red-600">Dibatalkan</p>
                                 <p class="text-xs text-gray-500">{{ $order->updated_at->format('d M Y, H:i') }}</p>
                                 @if($order->cancellation_reason)
                                 <p class="text-xs text-red-500 mt-1 bg-red-50 px-2 py-1 rounded">
-                                    Reason: {{ $order->cancellation_reason }}
+                                    Alasan: {{ $order->cancellation_reason }}
                                 </p>
                                 @endif
                             </div>
@@ -340,7 +340,7 @@
                 
                 <div class="profile-card p-8">
                     <h3 class="text-lg font-bold text-[#1A1A1D] mb-4 flex items-center gap-2 uppercase tracking-wide">
-                        <i class="fas fa-map-marker-alt"></i> Shipping Address
+                        <i class="fas fa-map-marker-alt"></i> Alamat Pengiriman
                     </h3>
                     @if($order->shippingAddress)
                     <div class="text-sm">
@@ -352,13 +352,13 @@
                         </p>
                     </div>
                     @else
-                    <p class="text-gray-400 text-sm italic">Address not available</p>
+                    <p class="text-gray-400 text-sm italic">Alamat tidak tersedia</p>
                     @endif
                 </div>
 
                 <div class="profile-card p-8">
                     <h3 class="text-lg font-bold text-[#1A1A1D] mb-6 flex items-center gap-2 uppercase tracking-wide">
-                        <i class="fas fa-receipt"></i> Payment Summary
+                        <i class="fas fa-receipt"></i> Ringkasan Pembayaran
                     </h3>
                     
                     <div class="space-y-2">
@@ -367,12 +367,12 @@
                             <span class="font-medium text-gray-900">Rp {{ number_format($order->subtotal ?? $order->orderItems->sum(fn($i) => $i->price * $i->quantity), 0, ',', '.') }}</span>
                         </div>
                         <div class="info-row">
-                            <span class="text-gray-500">Shipping Cost</span>
+                            <span class="text-gray-500">Biaya Pengiriman</span>
                             <span class="font-medium text-gray-900">Rp {{ number_format($order->shipping_cost ?? 0, 0, ',', '.') }}</span>
                         </div>
                         @if($order->points_used > 0)
                         <div class="info-row text-red-600 bg-red-50 px-2 rounded-lg -mx-2">
-                            <span class="text-xs font-bold uppercase py-1">Points Used</span>
+                            <span class="text-xs font-bold uppercase py-1">Poin Digunakan</span>
                             <span class="font-bold py-1">- Rp {{ number_format($order->points_used, 0, ',', '.') }}</span>
                         </div>
                         @endif
@@ -387,7 +387,7 @@
 
                     @if($order->pointTransactions && $order->pointTransactions->where('type', 'earned')->first())
                     <div class="mt-6 p-4 bg-[#1A1A1D] rounded-xl text-white text-center">
-                        <p class="text-xs text-gray-400 uppercase tracking-widest mb-1">Points Earned</p>
+                        <p class="text-xs text-gray-400 uppercase tracking-widest mb-1">Poin Diperoleh</p>
                         <p class="text-xl font-bold flex items-center justify-center gap-2">
                             <i class="fas fa-star text-yellow-400"></i>
                             +{{ $order->pointTransactions->where('type', 'earned')->first()->points }} PTS
@@ -398,7 +398,7 @@
 
                 <a href="{{ route('customer.orders') }}" 
                    class="flex items-center justify-center w-full py-4 bg-white border border-gray-200 rounded-2xl font-bold text-gray-600 hover:bg-[#1A1A1D] hover:text-white hover:border-[#1A1A1D] transition-all shadow-sm">
-                    <i class="fas fa-arrow-left mr-2"></i> Back to Orders
+                    <i class="fas fa-arrow-left mr-2"></i> Kembali ke Pesanan
                 </a>
             </div>
         </div>
