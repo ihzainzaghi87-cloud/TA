@@ -4,47 +4,36 @@
 
 @section('content')
 <!-- Hero Section -->
-<section class="bg-[#E5DECC]">
+<section class="bg-[#1A1A1D]">
     <!-- Text Content -->
     <div class="py-20 px-6 md:px-12">
-        <p class="text-sm md:text-base text-gray-700 mb-2">
+        <p class="text-sm md:text-base text-white mb-2">
             Home / Rewards
             @if($activeCategory)
                 / {{ $activeCategory->name }}
             @endif
         </p>
-        <h1 class="text-4xl md:text-5xl font-bold mb-4 text-left">
+        <h1 class="text-4xl text-white md:text-5xl font-bold mb-4 text-left">
             @if($activeCategory)
                 {{ $activeCategory->name }}
             @else
                 Explore Reward Products
             @endif
         </h1>
-        <p class="text-lg md:text-xl mb-8">
+        <p class="text-lg text-white md:text-xl mb-8">
             {{ $activeCategory ? $activeCategory->description : 'Redeem your points for exclusive reward products!' }}
         </p>
     </div>
 </section>
 
 <!-- Products Section -->
-<section class="bg-white py-12 px-6 md:px-12">
-    <!-- Search and Filter Bar -->
-    <div class="mb-8 flex flex-col md:flex-row gap-4 items-center justify-between">
-        <!-- Search Form -->
-        <form method="GET" action="{{ route('rewards') }}" class="flex-1 max-w-md">
-            <!-- Preserve existing filters -->
-            @if(request('category'))
-                <input type="hidden" name="category" value="{{ request('category') }}">
-            @endif
-            @if(request('price_min'))
-                <input type="hidden" name="price_min" value="{{ request('price_min') }}">
-            @endif
-            @if(request('price_max'))
-                <input type="hidden" name="price_max" value="{{ request('price_max') }}">
-            @endif
-            @if(request('sort'))
-                <input type="hidden" name="sort" value="{{ request('sort') }}">
-            @endif
+<section class="bg-white py-12 px-4 sm:px-6 md:px-12">
+    <div class="mb-10 flex flex-col md:flex-row gap-4 items-center justify-between">
+        <form method="GET" action="{{ route('rewards') }}" class="flex-1 w-full md:max-w-md">
+            @if(request('category')) <input type="hidden" name="category" value="{{ request('category') }}"> @endif
+            @if(request('price_min')) <input type="hidden" name="price_min" value="{{ request('price_min') }}"> @endif
+            @if(request('price_max')) <input type="hidden" name="price_max" value="{{ request('price_max') }}"> @endif
+            @if(request('sort')) <input type="hidden" name="sort" value="{{ request('sort') }}"> @endif
             
             <div class="relative">
                 <input 
@@ -52,55 +41,42 @@
                     name="search" 
                     value="{{ request('search') }}"
                     placeholder="Search reward products..." 
-                    class="w-full px-4 py-3 pl-10 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                    class="w-full px-5 py-3 pl-11 bg-gray-50 border border-gray-200 text-gray-900 rounded-xl focus:ring-2 focus:ring-[#1A1A1D] focus:border-transparent transition-all placeholder-gray-400 font-medium"
                 >
-                <svg class="absolute left-3 top-3.5 h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg class="absolute left-4 top-3.5 h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
                 </svg>
             </div>
         </form>
 
-        <!-- Filter and Sort Buttons -->
-        <div class="flex gap-3">
-            <!-- Filter Button -->
+        <div class="flex gap-3 w-full md:w-auto">
             <button 
                 onclick="openFilterModal()" 
-                class="px-6 py-3 bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition-all flex items-center gap-2"
+                class="flex-1 md:flex-none px-6 py-3 bg-[#1A1A1D] text-white rounded-xl hover:bg-gray-800 transition-all flex items-center justify-center gap-2 font-bold shadow-lg hover:shadow-xl transform active:scale-95"
             >
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"/>
                 </svg>
                 Filter
                 @if(request('category') || request('price_min') || request('price_max'))
-                    <span class="bg-orange-500 text-white text-xs px-2 py-0.5 rounded-full">
+                    <span class="bg-white text-[#1A1A1D] text-xs font-bold px-2 py-0.5 rounded-full">
                         {{ collect([request('category'), request('price_min'), request('price_max')])->filter()->count() }}
                     </span>
                 @endif
             </button>
 
-            <!-- Sort Dropdown -->
-            <form method="GET" action="{{ route('rewards') }}" id="sortForm">
-                <!-- Preserve existing filters -->
-                @if(request('search'))
-                    <input type="hidden" name="search" value="{{ request('search') }}">
-                @endif
-                @if(request('category'))
-                    <input type="hidden" name="category" value="{{ request('category') }}">
-                @endif
-                @if(request('price_min'))
-                    <input type="hidden" name="price_min" value="{{ request('price_min') }}">
-                @endif
-                @if(request('price_max'))
-                    <input type="hidden" name="price_max" value="{{ request('price_max') }}">
-                @endif
+            <form method="GET" action="{{ route('rewards') }}" id="sortForm" class="flex-1 md:flex-none">
+                @foreach(request()->except('sort') as $key => $value)
+                    <input type="hidden" name="{{ $key }}" value="{{ $value }}">
+                @endforeach
                 
                 <select 
                     name="sort" 
                     onchange="document.getElementById('sortForm').submit()"
-                    class="px-6 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                    class="w-full px-6 py-3 border border-gray-200 bg-gray-50 text-gray-900 rounded-xl focus:ring-2 focus:ring-[#1A1A1D] focus:border-transparent font-medium cursor-pointer"
                 >
                     <option value="newest" {{ request('sort') == 'newest' ? 'selected' : '' }}>Newest</option>
-                    <option value="bestseller" {{ request('sort') == 'bestseller' ? 'selected' : '' }}>Best Seller</option>
+                    <option value="bestseller" {{ request('sort') == 'bestseller' ? 'selected' : '' }}>Most Claimed</option>
                     <option value="price_low" {{ request('sort') == 'price_low' ? 'selected' : '' }}>Lowest Points</option>
                     <option value="price_high" {{ request('sort') == 'price_high' ? 'selected' : '' }}>Highest Points</option>
                 </select>
@@ -108,118 +84,112 @@
         </div>
     </div>
 
-    <!-- Active Filters Display -->
     @if(request('category') || request('price_min') || request('price_max') || request('search'))
-        <div class="mb-6 flex flex-wrap gap-2 items-center">
-            <span class="text-sm text-gray-600">Active Filters:</span>
+        <div class="mb-8 flex flex-wrap gap-2 items-center">
+            <span class="text-sm font-bold text-gray-500 mr-2">Filters:</span>
             
             @if(request('search'))
                 <a href="{{ route('rewards', array_filter(request()->except('search'))) }}" 
-                   class="inline-flex items-center gap-1 px-3 py-1 bg-gray-200 text-gray-700 rounded-full text-sm hover:bg-gray-300">
-                    Search: "{{ request('search') }}"
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
-                    </svg>
+                   class="inline-flex items-center gap-2 px-4 py-1.5 bg-[#1A1A1D] text-white rounded-full text-sm hover:bg-gray-800 transition-colors">
+                    "{{ request('search') }}"
+                    <i class="fas fa-times text-xs"></i>
                 </a>
             @endif
 
             @if($activeCategory)
                 <a href="{{ route('rewards', array_filter(request()->except('category'))) }}" 
-                   class="inline-flex items-center gap-1 px-3 py-1 bg-orange-100 text-orange-700 rounded-full text-sm hover:bg-orange-200">
-                    Category: {{ $activeCategory->name }}
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
-                    </svg>
+                   class="inline-flex items-center gap-2 px-4 py-1.5 bg-gray-200 text-[#1A1A1D] rounded-full text-sm font-bold hover:bg-gray-300 transition-colors">
+                    {{ $activeCategory->name }}
+                    <i class="fas fa-times text-xs"></i>
                 </a>
             @endif
 
             @if(request('price_min') || request('price_max'))
                 <a href="{{ route('rewards', array_filter(request()->except(['price_min', 'price_max']))) }}" 
-                   class="inline-flex items-center gap-1 px-3 py-1 bg-green-100 text-green-700 rounded-full text-sm hover:bg-green-200">
-                    Points: {{ number_format(request('price_min', 0)) }} - {{ number_format(request('price_max', 999999999)) }}
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
-                    </svg>
+                   class="inline-flex items-center gap-2 px-4 py-1.5 bg-gray-200 text-[#1A1A1D] rounded-full text-sm font-bold hover:bg-gray-300 transition-colors">
+                    {{ number_format(request('price_min', 0)) }} - {{ number_format(request('price_max', 999999)) }} Pts
+                    <i class="fas fa-times text-xs"></i>
                 </a>
             @endif
 
-            <a href="{{ route('rewards') }}" class="text-sm text-red-600 hover:text-red-800 underline ml-2">
+            <a href="{{ route('rewards') }}" class="text-sm font-bold text-red-500 hover:text-red-700 underline ml-2">
                 Clear All
             </a>
         </div>
     @endif
 
-    <!-- Results Count -->
-    <h2 class="text-2xl md:text-3xl font-bold text-gray-900 mb-6">
+    <h2 class="text-2xl md:text-3xl font-black text-[#1A1A1D] mb-8">
         {{ $activeCategory ? $activeCategory->name : 'All Rewards' }}
-        <span class="text-lg text-gray-600 font-normal">({{ $products->total() }} products)</span>
+        <span class="text-lg text-gray-500 font-medium ml-2">({{ $products->total() }} items)</span>
     </h2>
 
-    <!-- Products Grid -->
     @if($products->count() > 0)
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-12">
+        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6 mb-12">
             @foreach($products as $product)
-                <div class="group bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden">
-                    <!-- Image Container -->
-                    <div class="relative overflow-hidden">
-                        @if($product->images->isNotEmpty())
-                            <img 
-                                src="{{ asset('storage/' . $product->images->first()->image_path) }}" 
-                                alt="{{ $product->name }}" 
-                                class="w-full h-56 object-cover group-hover:scale-105 transition-transform duration-500"
-                            >
-                        @else
-                            <div class="w-full h-56 bg-gray-200 flex items-center justify-center">
-                                <span class="text-gray-400">No Image</span>
-                            </div>
-                        @endif
-                        
-                        <!-- Badge (if bestseller) -->
-                        @if(request('sort') == 'bestseller' && isset($product->total_sold) && $product->total_sold > 0)
-                            <div class="absolute top-4 left-4 bg-white/95 text-gray-900 font-bold text-sm px-3 py-1.5 rounded-full">
-                                🔥 {{ $product->total_sold }} sold
+                <div class="group bg-white rounded-[30px] p-4 hover:shadow-2xl transition-all duration-300 border border-gray-100">
+                    
+                    <div class="relative w-full h-48 bg-[#F3F5F9] rounded-[20px] overflow-hidden flex items-center justify-center">
+                        <a href="{{ route('reward.detail', $product->slug) }}" class="w-full h-full flex items-center justify-center">
+                            @if($product->images->isNotEmpty())
+                                <img 
+                                    src="{{ asset('storage/' . $product->images->first()->image_path) }}" 
+                                    alt="{{ $product->name }}" 
+                                    class="w-full h-full object-contain p-5 group-hover:scale-110 transition-transform duration-500 mix-blend-multiply"
+                                >
+                            @else
+                                <div class="flex flex-col items-center justify-center text-gray-400">
+                                    <i class="fas fa-image text-3xl mb-2"></i>
+                                    <span class="text-xs">No Image</span>
+                                </div>
+                            @endif
+                        </a>
+
+                         @if(request('sort') == 'bestseller' && isset($product->total_sold) && $product->total_sold > 0)
+                            <div class="absolute top-3 left-3 bg-[#1A1A1D] text-white font-bold text-[10px] px-2.5 py-1 rounded-full shadow-sm z-10">
+                                🔥 {{ $product->total_sold }} Claimed
                             </div>
                         @endif
                     </div>
                     
-                    <!-- Product Content -->
-                    <div class="p-6">
-                        <div class="mb-4">
-                            <span class="text-sm font-medium text-red-600 bg-red-50 px-2 py-1 rounded">
-                                {{ $product->category->name ?? 'Uncategorized' }}
+                    <div class="pt-4 pb-1">
+                        <div class="mb-2">
+                            <span class="text-[11px] font-bold text-[#1A1A1D] bg-gray-100 px-2 py-1 rounded-md uppercase tracking-wide">
+                                {{ $product->category->name ?? 'REWARD' }}
                             </span>
                         </div>
                         
-                        <h3 class="text-xl font-bold text-gray-900 mb-2 line-clamp-2">
-                            {{ $product->name }}
-                        </h3>
+                        <a href="{{ route('reward.detail', $product->slug) }}">
+                            <h3 class="text-base font-bold text-[#1A1A1D] mb-1 line-clamp-1 group-hover:text-gray-600 transition-colors">
+                                {{ $product->name }}
+                            </h3>
+                        </a>
                         
-                        <p class="text-2xl font-black text-gray-900 mb-6">
-                            {{ number_format($product->point_price, 0, ',', '.') }} Points
+                        <p class="text-lg font-black text-[#1A1A1D] mb-4 flex items-center gap-1.5">
+                            <i class="fas fa-coins text-yellow-500 text-sm"></i>
+                            {{ number_format($product->point_price, 0, ',', '.') }} Pts
                         </p>
                         
                         <a href="{{ route('reward.detail', $product->slug) }}" 
-                           class="block w-full bg-gradient-to-r from-red-600 to-orange-500 text-white font-bold py-3 rounded-xl hover:from-red-700 hover:to-orange-600 active:scale-95 transition-all duration-200 shadow-lg hover:shadow-xl text-center">
-                            Buy Now
+                           class="flex items-center justify-center gap-2 w-full bg-[#F3F5F9] text-[#1A1A1D] font-bold py-2.5 rounded-xl hover:bg-[#1A1A1D] hover:text-white active:scale-95 transition-all duration-200">
+                            <i class="fas fa-gift text-sm"></i>
+                            <span class="text-sm">Redeem</span>
                         </a>
                     </div>
                 </div>
             @endforeach
         </div>
 
-        <!-- Simple Clean Pagination -->
         @if($products->hasPages())
-        <div class="mt-8 flex flex-col items-center gap-4">
-            {{-- Page Numbers --}}
+        <div class="mt-12 flex flex-col items-center gap-4">
             <div class="flex items-center gap-2">
                 {{-- Previous --}}
                 @if ($products->onFirstPage())
-                    <span class="w-10 h-10 flex items-center justify-center rounded-full bg-gray-100 text-gray-400 cursor-not-allowed">
+                    <span class="w-10 h-10 flex items-center justify-center rounded-full bg-gray-100 text-gray-300 cursor-not-allowed">
                         <i class="fas fa-chevron-left text-sm"></i>
                     </span>
                 @else
                     <a href="{{ $products->previousPageUrl() }}" 
-                    class="w-10 h-10 flex items-center justify-center rounded-full bg-white border-2 border-gray-200 text-gray-700 hover:border-amber-500 hover:text-amber-600 hover:shadow-md transition-all duration-200">
+                       class="w-10 h-10 flex items-center justify-center rounded-full bg-white border border-gray-300 text-[#1A1A1D] hover:bg-[#1A1A1D] hover:text-white hover:border-[#1A1A1D] transition-all duration-200 shadow-sm hover:shadow-md">
                         <i class="fas fa-chevron-left text-sm"></i>
                     </a>
                 @endif
@@ -227,12 +197,12 @@
                 {{-- Page Numbers --}}
                 @foreach (range(1, $products->lastPage()) as $page)
                     @if ($page == $products->currentPage())
-                        <span class="w-10 h-10 flex items-center justify-center rounded-full bg-gradient-to-r from-amber-500 to-yellow-500 text-white font-bold shadow-lg">
+                        <span class="w-10 h-10 flex items-center justify-center rounded-full bg-[#1A1A1D] text-white font-bold shadow-lg transform scale-110">
                             {{ $page }}
                         </span>
                     @else
                         <a href="{{ $products->url($page) }}" 
-                        class="w-10 h-10 flex items-center justify-center rounded-full bg-white border-2 border-gray-200 text-gray-700 hover:border-amber-500 hover:text-amber-600 hover:shadow-md transition-all duration-200 font-medium">
+                           class="w-10 h-10 flex items-center justify-center rounded-full bg-white border border-gray-300 text-[#1A1A1D] hover:bg-[#1A1A1D] hover:text-white hover:border-[#1A1A1D] transition-all duration-200 font-bold">
                             {{ $page }}
                         </a>
                     @endif
@@ -241,33 +211,31 @@
                 {{-- Next --}}
                 @if ($products->hasMorePages())
                     <a href="{{ $products->nextPageUrl() }}" 
-                    class="w-10 h-10 flex items-center justify-center rounded-full bg-white border-2 border-gray-200 text-gray-700 hover:border-amber-500 hover:text-amber-600 hover:shadow-md transition-all duration-200">
+                       class="w-10 h-10 flex items-center justify-center rounded-full bg-white border border-gray-300 text-[#1A1A1D] hover:bg-[#1A1A1D] hover:text-white hover:border-[#1A1A1D] transition-all duration-200 shadow-sm hover:shadow-md">
                         <i class="fas fa-chevron-right text-sm"></i>
                     </a>
                 @else
-                    <span class="w-10 h-10 flex items-center justify-center rounded-full bg-gray-100 text-gray-400 cursor-not-allowed">
+                    <span class="w-10 h-10 flex items-center justify-center rounded-full bg-gray-100 text-gray-300 cursor-not-allowed">
                         <i class="fas fa-chevron-right text-sm"></i>
                     </span>
                 @endif
             </div>
 
-            {{-- Info Text --}}
-            <p class="text-sm text-gray-600">
-                Page <span class="font-semibold text-amber-600">{{ $products->currentPage() }}</span> 
+            <p class="text-sm text-gray-500 font-medium">
+                Page <span class="text-[#1A1A1D] font-bold">{{ $products->currentPage() }}</span> 
                 of 
-                <span class="font-semibold text-gray-900">{{ $products->lastPage() }}</span>
-                ({{ $products->total() }} products)
+                <span class="text-[#1A1A1D] font-bold">{{ $products->lastPage() }}</span>
             </p>
         </div>
         @endif
     @else
-        <div class="text-center py-16">
-            <svg class="mx-auto h-24 w-24 text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
-            </svg>
-            <h3 class="text-xl font-semibold text-gray-700 mb-2">No Reward Products Found</h3>
-            <p class="text-gray-500 mb-6">Try adjusting your filters or search terms</p>
-            <a href="{{ route('rewards') }}" class="inline-block px-6 py-3 bg-orange-500 text-white rounded-lg hover:bg-orange-600">
+        <div class="text-center py-20 bg-gray-50 rounded-[30px] border border-gray-100">
+            <div class="bg-white w-24 h-24 mx-auto rounded-full flex items-center justify-center shadow-sm mb-6">
+                <i class="fas fa-gift text-gray-300 text-4xl"></i>
+            </div>
+            <h3 class="text-xl font-bold text-[#1A1A1D] mb-2">No Reward Products Found</h3>
+            <p class="text-gray-500 mb-8 max-w-xs mx-auto">We couldn't find any rewards matching your search filters.</p>
+            <a href="{{ route('rewards') }}" class="inline-block px-8 py-3 bg-[#1A1A1D] text-white font-bold rounded-xl hover:bg-gray-800 transition-all shadow-lg hover:shadow-xl">
                 Clear Filters
             </a>
         </div>

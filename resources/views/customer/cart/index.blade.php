@@ -57,15 +57,15 @@
 
 @section('content')
 {{-- Hero Section - Style dari file baru --}}
-<section class="header-bg">
+<section class="header-bg bg-[#1A1A1D]">
     <div class="py-20 px-6 md:px-12">
-        <p class="text-sm md:text-base text-gray-700 mb-2">
+        <p class="text-sm md:text-base text-white mb-2">
             Home / Shopping Cart
         </p>
-        <h1 class="text-4xl md:text-5xl font-bold mb-4 text-left text-black">
+        <h1 class="text-4xl md:text-5xl font-bold mb-4 text-left text-white">
             KERANJANG BELANJA
         </h1>
-        <p class="text-lg md:text-xl mb-8 text-gray-800">
+        <p class="text-lg md:text-xl mb-8 text-white">
             Periksa dan atur item yang ingin Anda beli. Update jumlah atau hapus produk sebelum checkout.
         </p>
     </div>
