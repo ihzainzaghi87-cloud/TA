@@ -367,7 +367,7 @@
                         Reset
                     </button>
                     <button type="submit"
-                        class="flex-1 px-6 py-3 bg-gradient-to-r from-red-600 to-orange-500 text-white font-semibold rounded-lg hover:from-red-700 hover:to-orange-600 transition">
+                        class="flex-1 px-6 py-3 bg-gradient-to-r from-[#1A1A1D] to-[#374151] text-white font-semibold rounded-lg hover:from-[#374151] hover:to-[#1A1A1D] transition">
                         Apply Filters
                     </button>
                 </div>
