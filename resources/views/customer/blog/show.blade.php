@@ -171,12 +171,12 @@
                          class="w-full h-full object-cover">
                     <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent"></div>
                 @else
-                    <div class="w-full h-full bg-[#E5DECC]">
+                    <div class="w-full h-full bg-[#374151]">
                         <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
                     </div>
                 @endif
             @else
-                <div class="w-full h-full bg-[#E5DECC]">
+                <div class="w-full h-full bg-[#374151]">
                     <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
                 </div>
             @endif
