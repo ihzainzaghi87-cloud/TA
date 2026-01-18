@@ -13,16 +13,36 @@
                 / {{ $activeCategory->name }}
             @endif
         </p>
-        <h1 class="text-4xl text-white md:text-5xl font-bold mb-4 text-left">
-            @if($activeCategory)
-                {{ $activeCategory->name }}
-            @else
-                Explore Reward Products
-            @endif
-        </h1>
-        <p class="text-lg text-white md:text-xl mb-8">
-            {{ $activeCategory ? $activeCategory->description : 'Redeem your points for exclusive reward products!' }}
-        </p>
+
+        <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6 mb-4">
+            <div class="flex-1">
+                <h1 class="text-4xl text-white md:text-5xl font-bold text-left">
+                    @if($activeCategory)
+                        {{ $activeCategory->name }}
+                    @else
+                        Explore Reward Products
+                    @endif
+                </h1>
+                <p class="text-lg text-white md:text-xl mt-4">
+                    {{ $activeCategory ? $activeCategory->description : 'Redeem your points for exclusive reward products!' }}
+                </p>
+            </div>
+
+            <!-- User Points Display -->
+            <div class="lg:flex-shrink-0">
+                <div class="bg-white/10 backdrop-blur-sm rounded-xl px-6 py-4 border border-white/20">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 bg-yellow-500 rounded-full flex items-center justify-center">
+                            <i class="fas fa-coins text-white text-lg"></i>
+                        </div>
+                        <div>
+                            <p class="text-white/70 text-sm font-medium">Your Points</p>
+                            <p class="text-white text-2xl font-black">{{ Auth::user()->userPoint->total_points ?? 0 }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </section>
 
