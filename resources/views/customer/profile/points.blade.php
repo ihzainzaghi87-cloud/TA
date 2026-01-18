@@ -85,11 +85,11 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <!-- Breadcrumb -->
         <nav class="flex items-center mb-8 text-sm">
-            <a href="{{ route('home') }}" class="text-gray-500 hover:text-amber-600 transition-colors">
+            <a href="{{ route('home') }}" class="text-gray-500 hover:text-gray-600 transition-colors">
                 <i class="fas fa-home"></i>
             </a>
             <i class="fas fa-chevron-right text-gray-300 mx-3 text-xs"></i>
-            <a href="{{ route('customer.index') }}" class="text-gray-500 hover:text-amber-600 transition-colors">Profil</a>
+            <a href="{{ route('customer.index') }}" class="text-gray-500 hover:text-gray-600 transition-colors">Profil</a>
             <i class="fas fa-chevron-right text-gray-300 mx-3 text-xs"></i>
             <span class="text-gray-900 font-medium">Poin Saya</span>
         </nav>
@@ -165,8 +165,8 @@
                     <div class="stat-card p-6">
                         <div class="flex items-center justify-between">
                             <div>
-                                <p class="text-amber-800 text-sm font-medium">Total Poin Didapat</p>
-                                <p class="text-3xl font-bold text-amber-900">{{ number_format($totalEarned) }}</p>
+                                <p class="text-gray-800 text-sm font-medium">Total Poin Didapat</p>
+                                <p class="text-3xl font-bold text-gray-900">{{ number_format($totalEarned) }}</p>
                             </div>
                             <div class="w-12 h-12 bg-green-400 rounded-full flex items-center justify-center">
                                 <i class="fas fa-arrow-up text-white text-xl"></i>
@@ -177,8 +177,8 @@
                     <div class="stat-card p-6">
                         <div class="flex items-center justify-between">
                             <div>
-                                <p class="text-amber-800 text-sm font-medium">Total Poin Digunakan</p>
-                                <p class="text-3xl font-bold text-amber-900">{{ number_format($totalRedeemed) }}</p>
+                                <p class="text-gray-800 text-sm font-medium">Total Poin Digunakan</p>
+                                <p class="text-3xl font-bold text-gray-900">{{ number_format($totalRedeemed) }}</p>
                             </div>
                             <div class="w-12 h-12 bg-red-400 rounded-full flex items-center justify-center">
                                 <i class="fas fa-arrow-down text-white text-xl"></i>
@@ -191,13 +191,13 @@
                 <div class="profile-card p-6">
                     <div class="flex items-center justify-between mb-6">
                         <h3 class="text-xl font-bold text-gray-900 flex items-center gap-3">
-                            <div class="w-10 h-10 bg-amber-100 rounded-xl flex items-center justify-center">
-                                <i class="fas fa-history text-amber-600"></i>
+                            <div class="w-10 h-10 bg-gray-100 rounded-xl flex items-center justify-center">
+                                <i class="fas fa-history text-gray-600"></i>
                             </div>
                             Transaksi Terakhir
                         </h3>
                         <a href="{{ route('customer.point-transactions') }}" 
-                           class="text-amber-600 hover:text-amber-700 text-sm font-semibold flex items-center gap-2">
+                           class="text-gray-600 hover:text-gray-700 text-sm font-semibold flex items-center gap-2">
                             Lihat Semua
                             <i class="fas fa-arrow-right"></i>
                         </a>
@@ -236,7 +236,7 @@
                         <h4 class="text-gray-900 font-semibold mb-2">Belum Ada Transaksi</h4>
                         <p class="text-gray-500 text-sm">Mulai belanja untuk mendapatkan poin!</p>
                         <a href="{{ route('home') }}#products" 
-                           class="inline-block mt-4 bg-gradient-to-r from-amber-500 to-yellow-500 text-white px-6 py-2 rounded-lg font-semibold text-sm hover:from-amber-600 hover:to-yellow-600 transition-all">
+                           class="inline-block mt-4 bg-gradient-to-r from-gray-500 to-gray-500 text-white px-6 py-2 rounded-lg font-semibold text-sm hover:from-gray-600 hover:to-gray-600 transition-all">
                             Mulai Belanja
                         </a>
                     </div>
@@ -246,30 +246,30 @@
                 <!-- How to Earn Points -->
                 <div class="profile-card p-6">
                     <h3 class="text-xl font-bold text-gray-900 mb-6 flex items-center gap-3">
-                        <div class="w-10 h-10 bg-amber-100 rounded-xl flex items-center justify-center">
-                            <i class="fas fa-lightbulb text-amber-600"></i>
+                        <div class="w-10 h-10 bg-gray-100 rounded-xl flex items-center justify-center">
+                            <i class="fas fa-lightbulb text-gray-600"></i>
                         </div>
                         Cara Mendapatkan Poin
                     </h3>
 
                     <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
                         <div class="text-center p-4 bg-gray-50 rounded-xl">
-                            <div class="w-14 h-14 mx-auto bg-amber-100 rounded-full flex items-center justify-center mb-3">
-                                <i class="fas fa-shopping-bag text-amber-600 text-xl"></i>
+                            <div class="w-14 h-14 mx-auto bg-gray-100 rounded-full flex items-center justify-center mb-3">
+                                <i class="fas fa-shopping-bag text-gray-600 text-xl"></i>
                             </div>
                             <h4 class="font-semibold text-gray-900 mb-1">Belanja</h4>
                             <p class="text-sm text-gray-500">Setiap Rp 10.000 = 1 poin</p>
                         </div>
                         <div class="text-center p-4 bg-gray-50 rounded-xl">
-                            <div class="w-14 h-14 mx-auto bg-amber-100 rounded-full flex items-center justify-center mb-3">
-                                <i class="fas fa-star text-amber-600 text-xl"></i>
+                            <div class="w-14 h-14 mx-auto bg-gray-100 rounded-full flex items-center justify-center mb-3">
+                                <i class="fas fa-star text-gray-600 text-xl"></i>
                             </div>
                             <h4 class="font-semibold text-gray-900 mb-1">Review Produk</h4>
                             <p class="text-sm text-gray-500">10 poin per review</p>
                         </div>
                         <div class="text-center p-4 bg-gray-50 rounded-xl">
-                            <div class="w-14 h-14 mx-auto bg-amber-100 rounded-full flex items-center justify-center mb-3">
-                                <i class="fas fa-birthday-cake text-amber-600 text-xl"></i>
+                            <div class="w-14 h-14 mx-auto bg-gray-100 rounded-full flex items-center justify-center mb-3">
+                                <i class="fas fa-birthday-cake text-gray-600 text-xl"></i>
                             </div>
                             <h4 class="font-semibold text-gray-900 mb-1">Ulang Tahun</h4>
                             <p class="text-sm text-gray-500">Bonus 100 poin</p>

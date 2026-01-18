@@ -81,11 +81,11 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <!-- Breadcrumb -->
         <nav class="flex items-center mb-8 text-sm">
-            <a href="{{ route('home') }}" class="text-gray-500 hover:text-amber-600 transition-colors">
+            <a href="{{ route('home') }}" class="text-gray-500 hover:text-gray-600 transition-colors">
                 <i class="fas fa-home"></i>
             </a>
             <i class="fas fa-chevron-right text-gray-300 mx-3 text-xs"></i>
-            <a href="{{ route('customer.index') }}" class="text-gray-500 hover:text-amber-600 transition-colors">Profil</a>
+            <a href="{{ route('customer.index') }}" class="text-gray-500 hover:text-gray-600 transition-colors">Profil</a>
             <i class="fas fa-chevron-right text-gray-300 mx-3 text-xs"></i>
             <span class="text-gray-900 font-medium">Edit Profil</span>
         </nav>
@@ -149,8 +149,8 @@
                 <div class="profile-card p-6">
                     <div class="flex items-center mb-6">
                         <h3 class="text-xl font-bold text-gray-900 flex items-center gap-3">
-                            <div class="w-10 h-10 bg-amber-100 rounded-xl flex items-center justify-center">
-                                <i class="fas fa-edit text-amber-600"></i>
+                            <div class="w-10 h-10 bg-gray-100 rounded-xl flex items-center justify-center">
+                                <i class="fas fa-edit text-gray-600"></i>
                             </div>
                             Edit Profil
                         </h3>
@@ -164,7 +164,7 @@
                             <!-- Name -->
                             <div>
                                 <label for="name" class="form-label">
-                                    <i class="fas fa-user text-amber-500 mr-2"></i>
+                                    <i class="fas fa-user text-gray-500 mr-2"></i>
                                     Nama Lengkap <span class="text-red-500">*</span>
                                 </label>
                                 <input type="text" 
@@ -182,7 +182,7 @@
                             <!-- Email -->
                             <div>
                                 <label for="email" class="form-label">
-                                    <i class="fas fa-envelope text-amber-500 mr-2"></i>
+                                    <i class="fas fa-envelope text-gray-500 mr-2"></i>
                                     Email <span class="text-red-500">*</span>
                                 </label>
                                 <input type="email" 
@@ -200,7 +200,7 @@
                             <!-- Phone -->
                             <div>
                                 <label for="phone" class="form-label">
-                                    <i class="fas fa-phone text-amber-500 mr-2"></i>
+                                    <i class="fas fa-phone text-gray-500 mr-2"></i>
                                     Nomor Telepon
                                 </label>
                                 <input type="tel" 
@@ -217,7 +217,7 @@
                             <!-- Date of Birth -->
                             <div>
                                 <label for="date_of_birth" class="form-label">
-                                    <i class="fas fa-birthday-cake text-amber-500 mr-2"></i>
+                                    <i class="fas fa-birthday-cake text-gray-500 mr-2"></i>
                                     Tanggal Lahir
                                 </label>
                                 <input type="date" 
@@ -234,7 +234,7 @@
                             <!-- Gender -->
                             <div class="md:col-span-2">
                                 <label class="form-label">
-                                    <i class="fas fa-venus-mars text-amber-500 mr-2"></i>
+                                    <i class="fas fa-venus-mars text-gray-500 mr-2"></i>
                                     Jenis Kelamin
                                 </label>
                                 <div class="flex flex-wrap gap-4 mt-2">
@@ -243,7 +243,7 @@
                                                name="gender" 
                                                value="male" 
                                                {{ old('gender', $user->gender) == 'male' ? 'checked' : '' }}
-                                               class="w-4 h-4 text-amber-500 border-gray-300 focus:ring-amber-500">
+                                               class="w-4 h-4 text-gray-500 border-gray-300 focus:ring-gray-500">
                                         <span class="ml-2 text-gray-700">Laki-laki</span>
                                     </label>
                                     <label class="inline-flex items-center cursor-pointer">
@@ -251,7 +251,7 @@
                                                name="gender" 
                                                value="female" 
                                                {{ old('gender', $user->gender) == 'female' ? 'checked' : '' }}
-                                               class="w-4 h-4 text-amber-500 border-gray-300 focus:ring-amber-500">
+                                               class="w-4 h-4 text-gray-500 border-gray-300 focus:ring-gray-500">
                                         <span class="ml-2 text-gray-700">Perempuan</span>
                                     </label>
                                     <label class="inline-flex items-center cursor-pointer">
@@ -259,7 +259,7 @@
                                                name="gender" 
                                                value="other" 
                                                {{ old('gender', $user->gender) == 'other' ? 'checked' : '' }}
-                                               class="w-4 h-4 text-amber-500 border-gray-300 focus:ring-amber-500">
+                                               class="w-4 h-4 text-gray-500 border-gray-300 focus:ring-gray-500">
                                         <span class="ml-2 text-gray-700">Lainnya</span>
                                     </label>
                                 </div>
@@ -272,7 +272,7 @@
                         <!-- Action Buttons -->
                         <div class="flex flex-col sm:flex-row gap-4 mt-8 pt-6 border-t border-gray-200">
                             <button type="submit" 
-                                    class="flex-1 bg-gradient-to-r from-amber-500 to-yellow-500 text-white px-6 py-3 rounded-xl font-bold text-sm hover:from-amber-600 hover:to-yellow-600 transition-all duration-300 flex items-center justify-center gap-2">
+                                    class="flex-1 bg-gradient-to-r from-gray-500 to-gray-500 text-white px-6 py-3 rounded-xl font-bold text-sm hover:from-gray-600 hover:to-gray-600 transition-all duration-300 flex items-center justify-center gap-2">
                                 <i class="fas fa-save"></i>
                                 Simpan Perubahan
                             </button>

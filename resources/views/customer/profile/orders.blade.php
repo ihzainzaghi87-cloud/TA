@@ -30,18 +30,18 @@
     }
 
     .menu-item.active {
-        background: #FAD470;
-        color: #92400e;
+        background: #E5E7EB;
+        color: #374151;
         font-weight: 600;
     }
 
     .avatar-ring {
-        background: linear-gradient(135deg, #FAD470 0%, #F8B500 100%);
+        background: linear-gradient(135deg, #E5E7EB 0%, #374151 100%);
     }
 
     .stat-card {
-        background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
-        border: 1px solid #fcd34d;
+        background: linear-gradient(135deg, #F9FAFB 0%, #F3F4F6 100%);
+        border: 1px solid #E5E7EB;
         border-radius: 12px;
         padding: 16px;
         text-align: center;
@@ -59,14 +59,14 @@
     }
 
     .filter-btn:hover {
-        border-color: #FAD470;
-        background: #fffbeb;
+        border-color: #E5E7EB;
+        background: #F9FAFB;
     }
 
     .filter-btn.active {
-        background: #FAD470;
-        border-color: #FAD470;
-        color: #92400e;
+        background: #E5E7EB;
+        border-color: #E5E7EB;
+        color: #374151;
     }
 
     .order-card {
@@ -78,7 +78,7 @@
     }
 
     .order-card:hover {
-        border-color: #FAD470;
+        border-color: #E5E7EB;
         box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
     }
 
@@ -90,8 +90,8 @@
     }
 
     .status-pending {
-        background: #fef3c7;
-        color: #92400e;
+        background: #F3F4F6;
+        color: #374151;
     }
 
     .status-processing {
@@ -140,13 +140,12 @@
 @section('content')
 <div class="min-h-screen bg-gray-50 py-8">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <!-- Breadcrumb -->
         <nav class="flex items-center mb-8 text-sm">
-            <a href="{{ route('home') }}" class="text-gray-500 hover:text-amber-600 transition-colors">
+            <a href="{{ route('home') }}" class="text-gray-500 hover:text-gray-600 transition-colors">
                 <i class="fas fa-home"></i>
             </a>
             <i class="fas fa-chevron-right text-gray-300 mx-3 text-xs"></i>
-            <a href="{{ route('customer.index') }}" class="text-gray-500 hover:text-amber-600 transition-colors">Profil</a>
+            <a href="{{ route('customer.index') }}" class="text-gray-500 hover:text-gray-600 transition-colors">Profil</a>
             <i class="fas fa-chevron-right text-gray-300 mx-3 text-xs"></i>
             <span class="text-gray-900 font-medium">Pesanan Saya</span>
         </nav>
@@ -210,7 +209,7 @@
                 <!-- Page Title -->
                 <div class="profile-card p-6">
                     <h1 class="text-2xl font-bold text-gray-900 flex items-center gap-3">
-                        <i class="fas fa-box text-amber-500"></i>
+                        <i class="fas fa-box text-gray-500"></i>
                         Pesanan Saya
                     </h1>
                     <p class="text-gray-500 mt-1">Kelola dan lacak pesanan Anda</p>
@@ -219,24 +218,24 @@
                 <!-- Order Stats -->
                 <div class="grid grid-cols-2 sm:grid-cols-5 gap-3">
                     <div class="stat-card">
-                        <p class="text-2xl font-bold text-amber-900">{{ $orderStats['total'] }}</p>
-                        <p class="text-xs text-amber-700">Total</p>
+                        <p class="text-2xl font-bold text-gray-900">{{ $orderStats['total'] }}</p>
+                        <p class="text-xs text-gray-700">Total</p>
                     </div>
                     <div class="stat-card">
-                        <p class="text-2xl font-bold text-amber-900">{{ $orderStats['pending'] }}</p>
-                        <p class="text-xs text-amber-700">Pending</p>
+                        <p class="text-2xl font-bold text-gray-900">{{ $orderStats['pending'] }}</p>
+                        <p class="text-xs text-gray-700">Pending</p>
                     </div>
                     <div class="stat-card">
-                        <p class="text-2xl font-bold text-amber-900">{{ $orderStats['processing'] }}</p>
-                        <p class="text-xs text-amber-700">Diproses</p>
+                        <p class="text-2xl font-bold text-gray-900">{{ $orderStats['processing'] }}</p>
+                        <p class="text-xs text-gray-700">Diproses</p>
                     </div>
                     <div class="stat-card">
-                        <p class="text-2xl font-bold text-amber-900">{{ $orderStats['shipped'] }}</p>
-                        <p class="text-xs text-amber-700">Dikirim</p>
+                        <p class="text-2xl font-bold text-gray-900">{{ $orderStats['shipped'] }}</p>
+                        <p class="text-xs text-gray-700">Dikirim</p>
                     </div>
                     <div class="stat-card">
-                        <p class="text-2xl font-bold text-amber-900">{{ $orderStats['delivered'] }}</p>
-                        <p class="text-xs text-amber-700">Selesai</p>
+                        <p class="text-2xl font-bold text-gray-900">{{ $orderStats['delivered'] }}</p>
+                        <p class="text-xs text-gray-700">Selesai</p>
                     </div>
                 </div>
 
@@ -367,7 +366,7 @@
                             <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
                                 <div>
                                     <p class="text-sm text-gray-500">Total Pesanan</p>
-                                    <p class="text-lg font-bold text-amber-600">
+                                    <p class="text-lg font-bold text-gray-600">
                                         Rp {{ number_format($order->total, 0, ',', '.') }}
                                     </p>
                                 </div>
@@ -375,13 +374,13 @@
                                 <!-- Action Buttons -->
                                 <div class="flex flex-wrap gap-2">
                                     <a href="{{ route('customer.order-detail', $order->id) }}" 
-                                       class="px-4 py-2 bg-white border border-gray-300 rounded-lg text-sm font-semibold text-gray-700 hover:border-amber-400 hover:text-amber-600 transition-all">
+                                       class="px-4 py-2 bg-white border border-gray-300 rounded-lg text-sm font-semibold text-gray-700 hover:border-gray-400 hover:text-gray-600 transition-all">
                                         <i class="fas fa-eye mr-1"></i> Detail
                                     </a>
                                     
                                     @if(in_array($order->status, ['Shipped', 'Delivered']))
                                     <a href="{{ route('customer.track-order', $order->id) }}" 
-                                       class="px-4 py-2 bg-gradient-to-r from-amber-500 to-yellow-500 text-white rounded-lg text-sm font-semibold hover:from-amber-600 hover:to-yellow-600 transition-all">
+                                       class="px-4 py-2 bg-gradient-to-r from-gray-500 to-gray-600 text-white rounded-lg text-sm font-semibold hover:from-gray-600 hover:to-gray-700 transition-all">
                                         <i class="fas fa-truck mr-1"></i> Lacak
                                     </a>
 
@@ -426,13 +425,13 @@
                     </p>
                     @if($status)
                     <a href="{{ route('customer.orders') }}" 
-                       class="inline-block text-amber-600 hover:text-amber-700 font-semibold">
+                       class="inline-block text-gray-600 hover:text-gray-700 font-semibold">
                         <i class="fas fa-arrow-left mr-2"></i>
                         Lihat Semua Pesanan
                     </a>
                     @else
                     <a href="{{ route('home') }}" 
-                       class="inline-block bg-gradient-to-r from-amber-500 to-yellow-500 text-white px-8 py-3 rounded-xl font-bold hover:from-amber-600 hover:to-yellow-600 transition-all transform hover:scale-105">
+                       class="inline-block bg-gradient-to-r from-gray-500 to-gray-600 text-white px-8 py-3 rounded-xl font-bold hover:from-gray-600 hover:to-gray-700 transition-all transform hover:scale-105">
                         <i class="fas fa-shopping-bag mr-2"></i>
                         Mulai Belanja
                     </a>

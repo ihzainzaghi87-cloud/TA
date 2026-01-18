@@ -100,13 +100,13 @@
     <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         <!-- Breadcrumb -->
         <nav class="flex items-center mb-8 text-sm">
-            <a href="{{ route('home') }}" class="text-gray-500 hover:text-amber-600 transition-colors">
+            <a href="{{ route('home') }}" class="text-gray-500 hover:text-gray-600 transition-colors">
                 <i class="fas fa-home"></i>
             </a>
             <i class="fas fa-chevron-right text-gray-300 mx-3 text-xs"></i>
-            <a href="{{ route('customer.orders') }}" class="text-gray-500 hover:text-amber-600 transition-colors">Pesanan</a>
+            <a href="{{ route('customer.orders') }}" class="text-gray-500 hover:text-gray-600 transition-colors">Pesanan</a>
             <i class="fas fa-chevron-right text-gray-300 mx-3 text-xs"></i>
-            <a href="{{ route('customer.order-detail', $order->id) }}" class="text-gray-500 hover:text-amber-600 transition-colors">#{{ $order->order_number }}</a>
+            <a href="{{ route('customer.order-detail', $order->id) }}" class="text-gray-500 hover:text-gray-600 transition-colors">#{{ $order->order_number }}</a>
             <i class="fas fa-chevron-right text-gray-300 mx-3 text-xs"></i>
             <span class="text-gray-900 font-medium">Lacak Pengiriman</span>
         </nav>
@@ -124,7 +124,7 @@
             <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
                 <div>
                     <h1 class="text-2xl font-bold text-gray-900 mb-2">
-                        <i class="fas fa-truck text-amber-500 mr-2"></i>
+                        <i class="fas fa-truck text-gray-500 mr-2"></i>
                         Lacak Pesanan
                     </h1>
                     <p class="text-gray-500">Pesanan #{{ $order->order_number }}</p>
@@ -143,29 +143,29 @@
         <div class="info-card p-6 mb-6">
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div class="text-center">
-                    <div class="w-14 h-14 mx-auto bg-amber-400 rounded-full flex items-center justify-center mb-3">
+                    <div class="w-14 h-14 mx-auto bg-gray-400 rounded-full flex items-center justify-center mb-3">
                         <i class="fas fa-box text-white text-xl"></i>
                     </div>
-                    <p class="text-sm text-amber-800 font-medium">Kurir</p>
-                    <p class="text-lg font-bold text-amber-900">{{ strtoupper($order->courier ?? '-') }}</p>
-                    <p class="text-sm text-amber-700">{{ $order->courier_service ?? '' }}</p>
+                    <p class="text-sm text-gray-800 font-medium">Kurir</p>
+                    <p class="text-lg font-bold text-gray-900">{{ strtoupper($order->courier ?? '-') }}</p>
+                    <p class="text-sm text-gray-700">{{ $order->courier_service ?? '' }}</p>
                 </div>
                 <div class="text-center">
-                    <div class="w-14 h-14 mx-auto bg-amber-400 rounded-full flex items-center justify-center mb-3">
+                    <div class="w-14 h-14 mx-auto bg-gray-400 rounded-full flex items-center justify-center mb-3">
                         <i class="fas fa-barcode text-white text-xl"></i>
                     </div>
-                    <p class="text-sm text-amber-800 font-medium">Nomor Resi</p>
-                    <p class="text-lg font-bold text-amber-900 break-all">{{ $order->tracking_number ?? '-' }}</p>
+                    <p class="text-sm text-gray-800 font-medium">Nomor Resi</p>
+                    <p class="text-lg font-bold text-gray-900 break-all">{{ $order->tracking_number ?? '-' }}</p>
                 </div>
                 <div class="text-center">
-                    <div class="w-14 h-14 mx-auto bg-amber-400 rounded-full flex items-center justify-center mb-3">
+                    <div class="w-14 h-14 mx-auto bg-gray-400 rounded-full flex items-center justify-center mb-3">
                         <i class="fas fa-map-marker-alt text-white text-xl"></i>
                     </div>
-                    <p class="text-sm text-amber-800 font-medium">Tujuan</p>
-                    <p class="text-lg font-bold text-amber-900">
+                    <p class="text-sm text-gray-800 font-medium">Tujuan</p>
+                    <p class="text-lg font-bold text-gray-900">
                         {{ $order->shippingAddress->city_name ?? 'Kota' }}
                     </p>
-                    <p class="text-sm text-amber-700">{{ $order->shippingAddress->province_name ?? '' }}</p>
+                    <p class="text-sm text-gray-700">{{ $order->shippingAddress->province_name ?? '' }}</p>
                 </div>
             </div>
         </div>
@@ -173,7 +173,7 @@
         <!-- Tracking Timeline -->
         <div class="profile-card p-6 mb-6">
             <h3 class="text-lg font-bold text-gray-900 mb-6 flex items-center gap-2">
-                <i class="fas fa-route text-amber-500"></i>
+                <i class="fas fa-route text-gray-500"></i>
                 Riwayat Pengiriman
             </h3>
 
@@ -252,7 +252,7 @@
         @if($trackingData && isset($trackingData['summary']))
         <div class="profile-card p-6 mb-6">
             <h3 class="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
-                <i class="fas fa-info-circle text-amber-500"></i>
+                <i class="fas fa-info-circle text-gray-500"></i>
                 Ringkasan Pengiriman
             </h3>
             
@@ -338,12 +338,12 @@
         <!-- Back Button -->
         <div class="flex gap-4">
             <a href="{{ route('customer.order-detail', $order->id) }}" 
-               class="flex-1 text-center py-3 bg-white border border-gray-300 rounded-xl font-semibold text-gray-700 hover:border-amber-400 hover:text-amber-600 transition-all">
+               class="flex-1 text-center py-3 bg-white border border-gray-300 rounded-xl font-semibold text-gray-700 hover:border-gray-400 hover:text-gray-600 transition-all">
                 <i class="fas fa-arrow-left mr-2"></i>
                 Detail Pesanan
             </a>
             <a href="{{ route('customer.orders') }}" 
-               class="flex-1 text-center py-3 bg-gradient-to-r from-amber-500 to-yellow-500 text-white rounded-xl font-semibold hover:from-amber-600 hover:to-yellow-600 transition-all">
+               class="flex-1 text-center py-3 bg-gradient-to-r from-gray-500 to-gray-500 text-white rounded-xl font-semibold hover:from-gray-600 hover:to-gray-600 transition-all">
                 <i class="fas fa-list mr-2"></i>
                 Semua Pesanan
             </a>

@@ -96,13 +96,13 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <!-- Breadcrumb -->
         <nav class="flex items-center mb-8 text-sm">
-            <a href="{{ route('home') }}" class="text-gray-500 hover:text-amber-600 transition-colors">
+            <a href="{{ route('home') }}" class="text-gray-500 hover:text-gray-600 transition-colors">
                 <i class="fas fa-home"></i>
             </a>
             <i class="fas fa-chevron-right text-gray-300 mx-3 text-xs"></i>
-            <a href="{{ route('customer.index') }}" class="text-gray-500 hover:text-amber-600 transition-colors">Profil</a>
+            <a href="{{ route('customer.index') }}" class="text-gray-500 hover:text-gray-600 transition-colors">Profil</a>
             <i class="fas fa-chevron-right text-gray-300 mx-3 text-xs"></i>
-            <a href="{{ route('customer.points') }}" class="text-gray-500 hover:text-amber-600 transition-colors">Poin</a>
+            <a href="{{ route('customer.points') }}" class="text-gray-500 hover:text-gray-600 transition-colors">Poin</a>
             <i class="fas fa-chevron-right text-gray-300 mx-3 text-xs"></i>
             <span class="text-gray-900 font-medium">Riwayat Transaksi</span>
         </nav>
@@ -121,7 +121,7 @@
                     </div>
 
                     <!-- Current Balance -->
-                    <div class="bg-gradient-to-r from-amber-500 to-yellow-500 rounded-xl p-4 mb-6 text-center">
+                    <div class="bg-gradient-to-r from-gray-500 to-gray-500 rounded-xl p-4 mb-6 text-center">
                         <p class="text-white/80 text-xs mb-1">Saldo Poin</p>
                         <p class="text-white text-2xl font-bold">{{ number_format($currentBalance) }}</p>
                     </div>
@@ -153,8 +153,8 @@
                 <div class="profile-card p-6">
                     <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
                         <h3 class="text-xl font-bold text-gray-900 flex items-center gap-3">
-                            <div class="w-10 h-10 bg-amber-100 rounded-xl flex items-center justify-center">
-                                <i class="fas fa-history text-amber-600"></i>
+                            <div class="w-10 h-10 bg-gray-100 rounded-xl flex items-center justify-center">
+                                <i class="fas fa-history text-gray-600"></i>
                             </div>
                             Riwayat Transaksi Poin
                         </h3>
@@ -230,13 +230,13 @@
                         </p>
                         @if($type)
                         <a href="{{ route('customer.point-transactions') }}" 
-                           class="inline-block mt-4 text-amber-600 hover:text-amber-700 font-semibold text-sm">
+                           class="inline-block mt-4 text-gray-600 hover:text-gray-700 font-semibold text-sm">
                             <i class="fas fa-arrow-left mr-2"></i>
                             Lihat Semua Transaksi
                         </a>
                         @else
                         <a href="{{ route('home') }}#products" 
-                           class="inline-block mt-4 bg-gradient-to-r from-amber-500 to-yellow-500 text-white px-6 py-2 rounded-lg font-semibold text-sm hover:from-amber-600 hover:to-yellow-600 transition-all">
+                           class="inline-block mt-4 bg-gradient-to-r from-gray-500 to-gray-500 text-white px-6 py-2 rounded-lg font-semibold text-sm hover:from-gray-600 hover:to-gray-600 transition-all">
                             Mulai Belanja
                         </a>
                         @endif

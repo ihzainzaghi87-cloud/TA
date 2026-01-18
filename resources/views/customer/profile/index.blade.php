@@ -52,7 +52,7 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <!-- Breadcrumb -->
         <nav class="flex items-center mb-8 text-sm">
-            <a href="{{ route('home') }}" class="text-gray-500 hover:text-amber-600 transition-colors">
+            <a href="{{ route('home') }}" class="text-gray-500 hover:text-gray-600 transition-colors">
                 <i class="fas fa-home"></i>
             </a>
             <i class="fas fa-chevron-right text-gray-300 mx-3 text-xs"></i>
@@ -128,10 +128,10 @@
                     <div class="stat-card p-6">
                         <div class="flex items-center justify-between">
                             <div>
-                                <p class="text-amber-800 text-sm font-medium">Total Poin</p>
-                                <p class="text-3xl font-bold text-amber-900">{{ number_format($userPoint->total_points ?? 0) }}</p>
+                                <p class="text-gray-800 text-sm font-medium">Total Poin</p>
+                                <p class="text-3xl font-bold text-gray-900">{{ number_format($userPoint->total_points ?? 0) }}</p>
                             </div>
-                            <div class="w-12 h-12 bg-amber-400 rounded-full flex items-center justify-center">
+                            <div class="w-12 h-12 bg-gray-400 rounded-full flex items-center justify-center">
                                 <i class="fas fa-coins text-white text-xl"></i>
                             </div>
                         </div>
@@ -141,10 +141,10 @@
                     <div class="stat-card p-6">
                         <div class="flex items-center justify-between">
                             <div>
-                                <p class="text-amber-800 text-sm font-medium">Total Pesanan</p>
-                                <p class="text-3xl font-bold text-amber-900">{{ $totalOrders }}</p>
+                                <p class="text-gray-800 text-sm font-medium">Total Pesanan</p>
+                                <p class="text-3xl font-bold text-gray-900">{{ $totalOrders }}</p>
                             </div>
-                            <div class="w-12 h-12 bg-amber-400 rounded-full flex items-center justify-center">
+                            <div class="w-12 h-12 bg-gray-400 rounded-full flex items-center justify-center">
                                 <i class="fas fa-shopping-bag text-white text-xl"></i>
                             </div>
                         </div>
@@ -154,10 +154,10 @@
                     <div class="stat-card p-6">
                         <div class="flex items-center justify-between">
                             <div>
-                                <p class="text-amber-800 text-sm font-medium">Pesanan Selesai</p>
-                                <p class="text-3xl font-bold text-amber-900">{{ $completedOrders }}</p>
+                                <p class="text-gray-800 text-sm font-medium">Pesanan Selesai</p>
+                                <p class="text-3xl font-bold text-gray-900">{{ $completedOrders }}</p>
                             </div>
-                            <div class="w-12 h-12 bg-amber-400 rounded-full flex items-center justify-center">
+                            <div class="w-12 h-12 bg-gray-400 rounded-full flex items-center justify-center">
                                 <i class="fas fa-check-circle text-white text-xl"></i>
                             </div>
                         </div>
@@ -168,13 +168,13 @@
                 <div class="profile-card p-6">
                     <div class="flex items-center justify-between mb-6">
                         <h3 class="text-xl font-bold text-gray-900 flex items-center gap-3">
-                            <div class="w-10 h-10 bg-amber-100 rounded-xl flex items-center justify-center">
-                                <i class="fas fa-user text-amber-600"></i>
+                            <div class="w-10 h-10 bg-gray-100 rounded-xl flex items-center justify-center">
+                                <i class="fas fa-user text-gray-600"></i>
                             </div>
                             Informasi Profil
                         </h3>
                         <a href="{{ route('customer.edit') }}" 
-                           class="inline-flex items-center px-4 py-2 bg-gradient-to-r from-amber-500 to-yellow-500 text-white rounded-lg font-semibold text-sm hover:from-amber-600 hover:to-yellow-600 transition-all duration-300">
+                           class="inline-flex items-center px-4 py-2 bg-gradient-to-r from-gray-500 to-gray-500 text-white rounded-lg font-semibold text-sm hover:from-gray-600 hover:to-gray-600 transition-all duration-300">
                             <i class="fas fa-edit mr-2"></i>
                             Edit Profil
                         </a>
@@ -183,8 +183,8 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div class="space-y-4">
                             <div class="flex items-center p-4 bg-gray-50 rounded-xl">
-                                <div class="w-10 h-10 bg-amber-100 rounded-lg flex items-center justify-center mr-4">
-                                    <i class="fas fa-user text-amber-600"></i>
+                                <div class="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center mr-4">
+                                    <i class="fas fa-user text-gray-600"></i>
                                 </div>
                                 <div>
                                     <p class="text-xs text-gray-500 uppercase tracking-wide">Nama Lengkap</p>
@@ -193,8 +193,8 @@
                             </div>
 
                             <div class="flex items-center p-4 bg-gray-50 rounded-xl">
-                                <div class="w-10 h-10 bg-amber-100 rounded-lg flex items-center justify-center mr-4">
-                                    <i class="fas fa-envelope text-amber-600"></i>
+                                <div class="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center mr-4">
+                                    <i class="fas fa-envelope text-gray-600"></i>
                                 </div>
                                 <div>
                                     <p class="text-xs text-gray-500 uppercase tracking-wide">Email</p>
@@ -203,8 +203,8 @@
                             </div>
 
                             <div class="flex items-center p-4 bg-gray-50 rounded-xl">
-                                <div class="w-10 h-10 bg-amber-100 rounded-lg flex items-center justify-center mr-4">
-                                    <i class="fas fa-phone text-amber-600"></i>
+                                <div class="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center mr-4">
+                                    <i class="fas fa-phone text-gray-600"></i>
                                 </div>
                                 <div>
                                     <p class="text-xs text-gray-500 uppercase tracking-wide">Nomor Telepon</p>
@@ -215,8 +215,8 @@
 
                         <div class="space-y-4">
                             <div class="flex items-center p-4 bg-gray-50 rounded-xl">
-                                <div class="w-10 h-10 bg-amber-100 rounded-lg flex items-center justify-center mr-4">
-                                    <i class="fas fa-birthday-cake text-amber-600"></i>
+                                <div class="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center mr-4">
+                                    <i class="fas fa-birthday-cake text-gray-600"></i>
                                 </div>
                                 <div>
                                     <p class="text-xs text-gray-500 uppercase tracking-wide">Tanggal Lahir</p>
@@ -227,8 +227,8 @@
                             </div>
 
                             <div class="flex items-center p-4 bg-gray-50 rounded-xl">
-                                <div class="w-10 h-10 bg-amber-100 rounded-lg flex items-center justify-center mr-4">
-                                    <i class="fas fa-venus-mars text-amber-600"></i>
+                                <div class="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center mr-4">
+                                    <i class="fas fa-venus-mars text-gray-600"></i>
                                 </div>
                                 <div>
                                     <p class="text-xs text-gray-500 uppercase tracking-wide">Jenis Kelamin</p>
@@ -245,8 +245,8 @@
                             </div>
 
                             <div class="flex items-center p-4 bg-gray-50 rounded-xl">
-                                <div class="w-10 h-10 bg-amber-100 rounded-lg flex items-center justify-center mr-4">
-                                    <i class="fas fa-calendar-alt text-amber-600"></i>
+                                <div class="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center mr-4">
+                                    <i class="fas fa-calendar-alt text-gray-600"></i>
                                 </div>
                                 <div>
                                     <p class="text-xs text-gray-500 uppercase tracking-wide">Bergabung Sejak</p>
@@ -259,7 +259,7 @@
 
                 <!-- Quick Actions -->
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <a href="{{ route('customer.orders') }}" class="profile-card p-6 flex items-center hover:border-amber-400 group">
+                    <a href="{{ route('customer.orders') }}" class="profile-card p-6 flex items-center hover:border-gray-400 group">
                         <div class="w-14 h-14 bg-blue-100 rounded-xl flex items-center justify-center mr-4 group-hover:bg-blue-200 transition-colors">
                             <i class="fas fa-box text-blue-600 text-xl"></i>
                         </div>
@@ -270,7 +270,7 @@
                         <i class="fas fa-chevron-right text-gray-400 ml-auto"></i>
                     </a>
 
-                    <a href="{{ route('addresses.index') }}" class="profile-card p-6 flex items-center hover:border-amber-400 group">
+                    <a href="{{ route('addresses.index') }}" class="profile-card p-6 flex items-center hover:border-gray-400 group">
                         <div class="w-14 h-14 bg-green-100 rounded-xl flex items-center justify-center mr-4 group-hover:bg-green-200 transition-colors">
                             <i class="fas fa-map-marker-alt text-green-600 text-xl"></i>
                         </div>

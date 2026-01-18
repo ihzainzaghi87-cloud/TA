@@ -127,11 +127,11 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <!-- Breadcrumb -->
         <nav class="flex items-center mb-8 text-sm">
-            <a href="{{ route('home') }}" class="text-gray-500 hover:text-amber-600 transition-colors">
+            <a href="{{ route('home') }}" class="text-gray-500 hover:text-gray-600 transition-colors">
                 <i class="fas fa-home"></i>
             </a>
             <i class="fas fa-chevron-right text-gray-300 mx-3 text-xs"></i>
-            <a href="{{ route('customer.index') }}" class="text-gray-500 hover:text-amber-600 transition-colors">Profil</a>
+            <a href="{{ route('customer.index') }}" class="text-gray-500 hover:text-gray-600 transition-colors">Profil</a>
             <i class="fas fa-chevron-right text-gray-300 mx-3 text-xs"></i>
             <span class="text-gray-900 font-medium">Ubah Password</span>
         </nav>
@@ -202,19 +202,19 @@
                 <div class="profile-card p-6">
                     <div class="flex items-center mb-6">
                         <h3 class="text-xl font-bold text-gray-900 flex items-center gap-3">
-                            <div class="w-10 h-10 bg-amber-100 rounded-xl flex items-center justify-center">
-                                <i class="fas fa-lock text-amber-600"></i>
+                            <div class="w-10 h-10 bg-gray-100 rounded-xl flex items-center justify-center">
+                                <i class="fas fa-lock text-gray-600"></i>
                             </div>
                             Ubah Password
                         </h3>
                     </div>
 
                     <!-- Info Alert -->
-                    <div class="mb-6 bg-amber-50 border border-amber-200 text-amber-800 px-4 py-3 rounded-xl flex items-start">
+                    <div class="mb-6 bg-gray-50 border border-gray-200 text-gray-800 px-4 py-3 rounded-xl flex items-start">
                         <i class="fas fa-info-circle mr-3 mt-0.5"></i>
                         <div class="text-sm">
                             <p class="font-semibold">Untuk keamanan akun Anda:</p>
-                            <ul class="list-disc list-inside mt-1 text-amber-700">
+                            <ul class="list-disc list-inside mt-1 text-gray-700">
                                 <li>Gunakan kombinasi huruf besar, huruf kecil, dan angka</li>
                                 <li>Jangan gunakan password yang sama dengan akun lain</li>
                                 <li>Password minimal 8 karakter</li>
@@ -230,7 +230,7 @@
                             <!-- Current Password -->
                             <div>
                                 <label for="current_password" class="form-label">
-                                    <i class="fas fa-key text-amber-500 mr-2"></i>
+                                    <i class="fas fa-key text-gray-500 mr-2"></i>
                                     Password Lama <span class="text-red-500">*</span>
                                 </label>
                                 <div class="relative">
@@ -252,7 +252,7 @@
                             <!-- New Password -->
                             <div>
                                 <label for="password" class="form-label">
-                                    <i class="fas fa-lock text-amber-500 mr-2"></i>
+                                    <i class="fas fa-lock text-gray-500 mr-2"></i>
                                     Password Baru <span class="text-red-500">*</span>
                                 </label>
                                 <div class="relative">
@@ -297,7 +297,7 @@
                             <!-- Confirm Password -->
                             <div>
                                 <label for="password_confirmation" class="form-label">
-                                    <i class="fas fa-check-circle text-amber-500 mr-2"></i>
+                                    <i class="fas fa-check-circle text-gray-500 mr-2"></i>
                                     Konfirmasi Password Baru <span class="text-red-500">*</span>
                                 </label>
                                 <div class="relative">
@@ -320,7 +320,7 @@
                         <!-- Action Buttons -->
                         <div class="flex flex-col sm:flex-row gap-4 mt-8 pt-6 border-t border-gray-200">
                             <button type="submit" 
-                                    class="flex-1 bg-gradient-to-r from-amber-500 to-yellow-500 text-white px-6 py-3 rounded-xl font-bold text-sm hover:from-amber-600 hover:to-yellow-600 transition-all duration-300 flex items-center justify-center gap-2">
+                                    class="flex-1 bg-gradient-to-r from-gray-500 to-gray-500 text-white px-6 py-3 rounded-xl font-bold text-sm hover:from-gray-600 hover:to-gray-600 transition-all duration-300 flex items-center justify-center gap-2">
                                 <i class="fas fa-save"></i>
                                 Ubah Password
                             </button>
