@@ -369,9 +369,16 @@
                                         <span class="px-2 py-1 bg-gray-100 rounded text-xs font-medium text-gray-600">
                                             Qty: {{ $item->quantity }}
                                         </span>
+                                        @if ($item->price > 0)
                                         <span class="font-bold text-[#1A1A1D]">
                                             Rp {{ number_format($item->price * $item->quantity, 0, ',', '.') }}
                                         </span>
+                                        @else
+                                        <span class="font-bold text-[#1A1A1D] flex items-center gap-1">
+                                            <i class="fas fa-coins text-yellow-500"></i>
+                                            {{ number_format($item->point_price * $item->quantity, 0, ',', '.') }} Poin
+                                        </span>
+                                        @endif
                                     </div>
                                 </div>
                             </div>

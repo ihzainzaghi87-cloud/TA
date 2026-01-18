@@ -235,9 +235,16 @@
                                     <span class="px-2 py-1 bg-gray-100 rounded text-xs font-medium text-gray-600">
                                         Qty: {{ $item->quantity }}
                                     </span>
+                                    @if ($item->price > 0)
                                     <span class="font-bold text-[#1A1A1D]">
                                         Rp {{ number_format($item->price * $item->quantity, 0, ',', '.') }}
                                     </span>
+                                    @else
+                                    <span class="font-bold text-[#1A1A1D] flex items-center gap-1">
+                                        <i class="fas fa-coins text-yellow-500"></i>
+                                        {{ number_format($item->point_price * $item->quantity, 0, ',', '.') }} Poin
+                                    </span>
+                                    @endif
                                 </div>
                             </div>
                         </div>
@@ -372,6 +379,21 @@
                             <span class="text-gray-500">Biaya Pengiriman</span>
                             <span class="font-medium text-gray-900">Rp {{ number_format($order->shipping_cost ?? 0, 0, ',', '.') }}</span>
                         </div>
+                        @php
+                            $pointItems = $order->orderItems->where('price', 0);
+                            $totalPointsUsed = $pointItems->sum(fn($item) => $item->point_price * $item->quantity);
+                        @endphp
+                        @if($totalPointsUsed > 0)
+                        <div class="info-row text-yellow-600 bg-yellow-50 px-2 rounded-lg -mx-2">
+                            <span class="text-xs font-bold uppercase py-1 flex items-center gap-1">
+                                <i class="fas fa-coins"></i> Poin Digunakan
+                            </span>
+                            <span class="font-bold py-1 flex items-center gap-1">
+                                <i class="fas fa-coins text-yellow-500"></i>
+                                {{ number_format($totalPointsUsed, 0, ',', '.') }} Poin
+                            </span>
+                        </div>
+                        @endif
                         @if($order->points_used > 0)
                         <div class="info-row text-red-600 bg-red-50 px-2 rounded-lg -mx-2">
                             <span class="text-xs font-bold uppercase py-1">Poin Digunakan</span>
