@@ -4,15 +4,18 @@
 
 @push('styles')
 <style>
+    /* Card Styling - Sharp & Clean */
     .profile-card {
         background: #fff;
         border: 1px solid #e5e7eb;
-        border-radius: 16px;
+        border-radius: 1.5rem; /* Rounded 24px */
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
         transition: all 0.3s ease;
     }
 
     .profile-card:hover {
-        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.1);
+        border-color: #1A1A1D;
+        transform: translateY(-2px);
     }
 
     .menu-item {
@@ -21,22 +24,22 @@
         padding: 16px 20px;
         border-radius: 12px;
         transition: all 0.2s ease;
-        color: #374151;
+        color: #6b7280;
     }
 
     .menu-item:hover {
-        background: #fffbeb;
-        color: #92400e;
+        background: #f9fafb;
+        color: #1A1A1D;
     }
 
     .menu-item.active {
-        background: #FAD470;
-        color: #92400e;
+        background: #1A1A1D;
+        color: #ffffff;
         font-weight: 600;
     }
 
     .avatar-ring {
-        background: linear-gradient(135deg, #FAD470 0%, #F8B500 100%);
+        background: linear-gradient(135deg, #1A1A1D 0%, #374151 100%);
     }
 
     .form-input {
@@ -51,9 +54,9 @@
 
     .form-input:focus {
         outline: none;
-        border-color: #FAD470;
+        border-color: #1A1A1D;
         background: #fff;
-        box-shadow: 0 0 0 3px rgba(250, 212, 112, 0.2);
+        box-shadow: 0 0 0 3px rgba(26, 26, 29, 0.1);
     }
 
     .form-input.error {
@@ -63,37 +66,40 @@
     .form-label {
         display: block;
         margin-bottom: 8px;
-        font-weight: 600;
-        color: #374151;
+        font-weight: 700;
+        color: #1A1A1D;
         font-size: 14px;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
     }
 
     .form-error {
         color: #ef4444;
         font-size: 12px;
         margin-top: 4px;
+        font-weight: 600;
     }
 </style>
 @endpush
 
 @section('content')
-<div class="min-h-screen bg-gray-50 py-8">
+<div class="min-h-screen bg-gray-50 py-10">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <!-- Breadcrumb -->
         <nav class="flex items-center mb-8 text-sm">
-            <a href="{{ route('home') }}" class="text-gray-500 hover:text-gray-600 transition-colors">
+            <a href="{{ route('home') }}" class="text-gray-400 hover:text-black transition-colors">
                 <i class="fas fa-home"></i>
             </a>
             <i class="fas fa-chevron-right text-gray-300 mx-3 text-xs"></i>
-            <a href="{{ route('customer.index') }}" class="text-gray-500 hover:text-gray-600 transition-colors">Profil</a>
+            <a href="{{ route('customer.index') }}" class="text-gray-400 hover:text-black transition-colors">Profile</a>
             <i class="fas fa-chevron-right text-gray-300 mx-3 text-xs"></i>
-            <span class="text-gray-900 font-medium">Edit Profil</span>
+            <span class="text-[#1A1A1D] font-bold">Edit Profil</span>
         </nav>
 
         <!-- Flash Messages -->
         @if(session('error'))
-        <div class="mb-6 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg flex items-center">
-            <i class="fas fa-exclamation-circle mr-2"></i>
+        <div class="mb-6 bg-red-50 border border-red-200 text-red-600 px-6 py-4 rounded-2xl flex items-center">
+            <i class="fas fa-exclamation-circle mr-3"></i>
             {{ session('error') }}
         </div>
         @endif
@@ -146,12 +152,10 @@
 
             <!-- Main Content -->
             <div class="lg:col-span-3">
-                <div class="profile-card p-6">
-                    <div class="flex items-center mb-6">
-                        <h3 class="text-xl font-bold text-gray-900 flex items-center gap-3">
-                            <div class="w-10 h-10 bg-gray-100 rounded-xl flex items-center justify-center">
-                                <i class="fas fa-edit text-gray-600"></i>
-                            </div>
+                <div class="profile-card p-8">
+                    <div class="flex items-center mb-8">
+                        <h3 class="text-2xl font-black text-[#1A1A1D] tracking-tight flex items-center gap-2 uppercase tracking-wide">
+                            <i class="fas fa-edit"></i>
                             Edit Profil
                         </h3>
                     </div>
@@ -254,14 +258,6 @@
                                                class="w-4 h-4 text-gray-500 border-gray-300 focus:ring-gray-500">
                                         <span class="ml-2 text-gray-700">Perempuan</span>
                                     </label>
-                                    <label class="inline-flex items-center cursor-pointer">
-                                        <input type="radio" 
-                                               name="gender" 
-                                               value="other" 
-                                               {{ old('gender', $user->gender) == 'other' ? 'checked' : '' }}
-                                               class="w-4 h-4 text-gray-500 border-gray-300 focus:ring-gray-500">
-                                        <span class="ml-2 text-gray-700">Lainnya</span>
-                                    </label>
                                 </div>
                                 @error('gender')
                                     <p class="form-error">{{ $message }}</p>
@@ -272,12 +268,12 @@
                         <!-- Action Buttons -->
                         <div class="flex flex-col sm:flex-row gap-4 mt-8 pt-6 border-t border-gray-200">
                             <button type="submit" 
-                                    class="flex-1 bg-gradient-to-r from-gray-500 to-gray-500 text-white px-6 py-3 rounded-xl font-bold text-sm hover:from-gray-600 hover:to-gray-600 transition-all duration-300 flex items-center justify-center gap-2">
+                                    class="flex-1 bg-[#1A1A1D] text-white px-6 py-4 rounded-2xl font-bold hover:bg-gray-800 transition-all shadow-lg flex items-center justify-center gap-2">
                                 <i class="fas fa-save"></i>
                                 Simpan Perubahan
                             </button>
                             <a href="{{ route('customer.index') }}" 
-                               class="flex-1 bg-white border-2 border-gray-200 text-gray-700 px-6 py-3 rounded-xl font-bold text-sm hover:border-gray-300 transition-all duration-300 flex items-center justify-center gap-2">
+                               class="flex-1 bg-white border border-gray-300 text-gray-700 px-6 py-4 rounded-2xl font-bold hover:border-[#1A1A1D] hover:text-[#1A1A1D] transition-all shadow-sm flex items-center justify-center gap-2">
                                 <i class="fas fa-times"></i>
                                 Batal
                             </a>
