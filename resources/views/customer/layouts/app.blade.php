@@ -118,12 +118,21 @@
     
     {{-- Push Notification Modal for PWA --}}
     <div id="pushNotificationModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
-        <div class="bg-white rounded-lg shadow-lg p-6 max-w-md mx-4">
-            <h2 class="text-xl font-semibold mb-4">Aktifkan Notifikasi</h2>
-            <p class="text-gray-600 mb-6">Dapatkan notifikasi terbaru tentang pesanan dan promo menarik langsung di aplikasi Anda.</p>
-            <div class="flex justify-end space-x-4">
-                <button id="declinePush" class="px-4 py-2 bg-gray-300 text-gray-700 rounded hover:bg-gray-400">Nanti Saja</button>
-                <button id="allowPush" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">Izinkan</button>
+        <div class="bg-white rounded-[1.5rem] shadow-2xl p-8 max-w-md mx-4 border border-gray-100">
+            <div class="flex items-center gap-3 mb-4">
+                <div class="w-12 h-12 bg-[#1A1A1D] rounded-full flex items-center justify-center flex-shrink-0">
+                    <i class="fas fa-bell text-white text-lg"></i>
+                </div>
+                <h2 class="text-2xl font-black text-[#1A1A1D] tracking-tight">Aktifkan Notifikasi</h2>
+            </div>
+            <p class="text-gray-600 mb-8 leading-relaxed">Dapatkan notifikasi terbaru tentang pesanan dan promo menarik langsung di aplikasi Anda.</p>
+            <div class="flex gap-3">
+                <button id="declinePush" class="flex-1 px-6 py-3 bg-white border border-gray-300 text-gray-700 rounded-xl font-bold hover:border-[#1A1A1D] hover:text-[#1A1A1D] transition-all shadow-sm">
+                    Nanti Saja
+                </button>
+                <button id="allowPush" class="flex-1 px-6 py-3 bg-[#1A1A1D] text-white rounded-xl font-bold hover:bg-gray-800 transition-all shadow-lg">
+                    Izinkan
+                </button>
             </div>
         </div>
     </div>
