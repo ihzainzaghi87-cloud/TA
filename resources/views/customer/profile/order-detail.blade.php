@@ -165,26 +165,28 @@
                 </div>
 
                 <div class="flex flex-wrap gap-3">
+                    @php
+                        $isDelivered = false;
+                        if (isset($trackingData)) {
+                            $isDelivered = ($trackingData['delivered'] ?? false) === true
+                                        || (isset($trackingData['delivery_status']['status']) && $trackingData['delivery_status']['status'] === 'DELIVERED')
+                                        || (isset($trackingData['detail']['status']) && $trackingData['detail']['status'] === 'DELIVERED');
+                        }
+                    @endphp
+
+                    @if($order->status == 'Delivered')
                     <a href="{{ route('customer.print-invoice', $order->id) }}" target="_blank"
                        class="inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-white border border-gray-300 rounded-xl text-gray-700 hover:border-[#1A1A1D] hover:text-[#1A1A1D] transition-all text-sm font-bold shadow-sm">
                         <i class="fas fa-print"></i>
                         <span>Invoice</span>
                     </a>
+                    @endif
                     
                     @if($order->status == 'Shipped')
                         <a href="{{ route('customer.track-order', $order->id) }}" 
                            class="px-5 py-2.5 bg-[#1A1A1D] text-white rounded-xl text-sm font-bold hover:bg-gray-800 transition-all shadow-lg flex items-center gap-2">
                             <i class="fas fa-search-location"></i> Lacak Pesanan
                         </a>
-                        
-                        @php
-                            $isDelivered = false;
-                            if (isset($trackingData)) {
-                                $isDelivered = ($trackingData['delivered'] ?? false) === true
-                                            || (isset($trackingData['delivery_status']['status']) && $trackingData['delivery_status']['status'] === 'DELIVERED')
-                                            || (isset($trackingData['detail']['status']) && $trackingData['detail']['status'] === 'DELIVERED');
-                            }
-                        @endphp
                         
                         @if ($isDelivered)
                         <form action="{{ route('customer.confirm-received', $order->id) }}" method="POST"
@@ -296,7 +298,7 @@
                                 <div class="mt-1 p-2 bg-gray-50 rounded border border-gray-100 inline-block">
                                     <p class="text-xs text-gray-500">Nomor Pelacakan:</p>
                                     <p class="text-sm font-mono font-bold text-[#1A1A1D]">{{ $order->tracking_number }}</p>
-                                    <p class="text-[10px] text-gray-400 mt-1 uppercase">{{ strtoupper($order->courier ?? '') }}</p>
+                                    <p class="text-[10px] text-gray-400 mt-1 uppercase">{{ strtoupper($order->courier ?? '') }} - {{ $order->service }}</p>
                                 </div>
                                 @endif
                             </div>

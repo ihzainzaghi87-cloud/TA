@@ -20,7 +20,7 @@
         
         .header {
             margin-bottom: 40px;
-            border-bottom: 3px solid #FAD470;
+            border-bottom: 3px solid #1A1A1D;
             padding-bottom: 20px;
         }
         
@@ -31,8 +31,9 @@
         
         .company-info h1 {
             font-size: 28px;
-            color: #1f2937;
+            color: #1A1A1D;
             margin-bottom: 5px;
+            font-weight: 900;
         }
         
         .company-info p {
@@ -49,8 +50,8 @@
         
         .invoice-title {
             font-size: 32px;
-            font-weight: bold;
-            color: #1f2937;
+            font-weight: 900;
+            color: #1A1A1D;
             margin-bottom: 10px;
         }
         
@@ -58,6 +59,7 @@
             font-size: 14px;
             color: #6b7280;
             margin-bottom: 5px;
+            font-weight: 700;
         }
         
         .invoice-date {
@@ -77,11 +79,13 @@
         
         .section-title {
             font-size: 14px;
-            font-weight: bold;
-            color: #1f2937;
+            font-weight: 900;
+            color: #1A1A1D;
             margin-bottom: 15px;
             padding-bottom: 8px;
-            border-bottom: 2px solid #f3f4f6;
+            border-bottom: 2px solid #1A1A1D;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
         }
         
         .info-grid {
@@ -106,9 +110,11 @@
         
         .info-box h3 {
             font-size: 12px;
-            font-weight: bold;
-            color: #1f2937;
+            font-weight: 900;
+            color: #1A1A1D;
             margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
         }
         
         .info-box p {
@@ -126,17 +132,20 @@
         .status-badge {
             display: inline-block;
             padding: 4px 12px;
-            border-radius: 12px;
+            border-radius: 9999px;
             font-size: 10px;
-            font-weight: 600;
+            font-weight: 700;
             margin-top: 5px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            border: 1px solid transparent;
         }
         
-        .status-pending { background: #fef3c7; color: #92400e; }
-        .status-processing { background: #dbeafe; color: #1e40af; }
-        .status-shipped { background: #e9d5ff; color: #6b21a8; }
-        .status-delivered { background: #d1fae5; color: #065f46; }
-        .status-cancelled { background: #fee2e2; color: #991b1b; }
+        .status-pending { background: #f3f4f6; color: #4b5563; border-color: #d1d5db; }
+        .status-processing { background: #dbeafe; color: #1e40af; border-color: #93c5fd; }
+        .status-shipped { background: #f3e8ff; color: #6b21a8; border-color: #d8b4fe; }
+        .status-delivered { background: #1A1A1D; color: #ffffff; border-color: #1A1A1D; }
+        .status-cancelled { background: #fee2e2; color: #991b1b; border-color: #fca5a5; }
         
         table {
             width: 100%;
@@ -145,13 +154,14 @@
         }
         
         thead th {
-            background: #1f2937;
+            background: #1A1A1D;
             color: white;
             padding: 12px 8px;
             text-align: left;
-            font-weight: 600;
+            font-weight: 900;
             font-size: 11px;
             text-transform: uppercase;
+            letter-spacing: 0.05em;
         }
         
         tbody td {
@@ -161,12 +171,12 @@
         }
         
         tbody tr:last-child td {
-            border-bottom: 2px solid #1f2937;
+            border-bottom: 2px solid #1A1A1D;
         }
         
         .product-name {
-            font-weight: 600;
-            color: #1f2937;
+            font-weight: 700;
+            color: #1A1A1D;
             margin-bottom: 3px;
         }
         
@@ -201,9 +211,9 @@
         
         .summary-table .total-row td {
             padding-top: 12px;
-            border-top: 2px solid #1f2937;
+            border-top: 2px solid #1A1A1D;
             border-bottom: none;
-            font-weight: bold;
+            font-weight: 900;
             font-size: 14px;
         }
         
@@ -220,9 +230,11 @@
         
         .notes h4 {
             font-size: 12px;
-            font-weight: bold;
-            color: #1f2937;
+            font-weight: 900;
+            color: #1A1A1D;
             margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
         }
         
         .notes p {
@@ -234,15 +246,15 @@
         .footer {
             margin-top: 50px;
             padding-top: 20px;
-            border-top: 2px solid #FAD470;
+            border-top: 2px solid #1A1A1D;
             text-align: center;
             font-size: 10px;
             color: #6b7280;
         }
         
         .highlight-box {
-            background: #fffbeb;
-            border: 1px solid #fef3c7;
+            background: #f9fafb;
+            border: 1px solid #e5e7eb;
             padding: 12px;
             border-radius: 8px;
             margin-top: 20px;
@@ -250,8 +262,9 @@
         
         .highlight-box p {
             font-size: 10px;
-            color: #92400e;
+            color: #1A1A1D;
             margin: 0;
+            font-weight: 700;
         }
     </style>
 </head>
@@ -383,7 +396,7 @@
             @endif
             <tr class="total-row">
                 <td>Total:</td>
-                <td class="text-right" style="color: #FAD470;">Rp {{ number_format($order->total, 0, ',', '.') }}</td>
+                <td class="text-right" style="color: #1A1A1D;">Rp {{ number_format($order->total, 0, ',', '.') }}</td>
             </tr>
         </table>
     </div>
@@ -392,7 +405,7 @@
     @if($order->pointTransactions && $order->pointTransactions->where('type', 'earned')->first())
     <div class="highlight-box clearfix">
         <p>
-            <strong>🎉 Congratulations!</strong> You earned 
+            <strong>Congratulations!</strong> You earned 
             <strong>{{ $order->pointTransactions->where('type', 'earned')->first()->points }} points</strong> 
             from this order!
         </p>

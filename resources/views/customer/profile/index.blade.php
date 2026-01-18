@@ -70,7 +70,7 @@
 
         <!-- Flash Messages -->
         @if(session('success'))
-        <div class="mb-6 bg-green-50 text-white px-6 py-4 rounded-2xl flex items-center shadow-lg">
+        <div class="mb-6 bg-[#1A1A1D] text-white px-6 py-4 rounded-2xl flex items-center shadow-lg">
             <i class="fas fa-check-circle mr-3 text-green-400"></i>
             {{ session('success') }}
         </div>
