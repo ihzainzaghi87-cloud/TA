@@ -23,6 +23,7 @@ use App\Http\Controllers\ArticleController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\AnalyticsController;
 use Te7aHoudini\LaravelTrix\Http\Controllers\TrixAttachmentController;
+use App\Http\Controllers\PushSubscriptionController;
 use Illuminate\Support\Facades\Route;
 
 // ---------- Auth (web session) ----------
@@ -299,4 +300,13 @@ Route::middleware('guest')->group(function () {
     Route::post('/reset-password', [PasswordResetController::class, 'resetPassword'])
         ->middleware('throttle:6,1')
         ->name('password.update');
+});
+
+// Push Notification Routes
+Route::get('/vapid-public-key', [PushSubscriptionController::class, 'getVapidPublicKey']);
+
+// Subscription routes memerlukan auth
+Route::middleware('auth')->group(function () {
+    Route::post('/push-subscriptions', [PushSubscriptionController::class, 'store']);
+    Route::delete('/push-subscriptions', [PushSubscriptionController::class, 'destroy']);
 });

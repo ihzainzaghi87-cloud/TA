@@ -4,298 +4,522 @@
 
 @push('styles')
 <style>
-    .image-thumbnail {
+    [x-cloak] { display: none !important; }
+
+    /* Image Gallery Styles */
+    .thumbnail-image {
+        transition: all 0.3s ease;
         cursor: pointer;
+        border: 2px solid transparent;
+        background: #F3F5F9; /* Abu muda agar kontras dengan putih */
+    }
+
+    .thumbnail-image:hover,
+    .thumbnail-image.active {
+        border-color: #1A1A1D; /* Border HITAM saat aktif */
+        opacity: 1;
+        transform: scale(1.05);
+    }
+
+    .thumbnail-image:not(.active) {
+        opacity: 0.6;
+    }
+
+    /* Variation Button Styles (Black & White) */
+    .variation-btn {
+        background: #fff;
+        border: 1px solid #e5e7eb;
+        color: #1A1A1D;
+        transition: all 0.2s ease;
+    }
+
+    .variation-btn:hover:not(.disabled) {
+        border-color: #1A1A1D;
+        background: #f4f4f5;
+    }
+
+    .variation-btn.selected {
+        background: #1A1A1D; /* Hitam Pekat */
+        border-color: #1A1A1D;
+        color: #fff; /* Teks Putih */
+        font-weight: 700;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    }
+
+    .variation-btn.disabled {
+        opacity: 0.3;
+        cursor: not-allowed;
+        background: #f3f4f6;
+        color: #9ca3af;
+        text-decoration: line-through;
+    }
+
+    /* Quantity Controls */
+    .qty-btn {
+        background: #fff;
+        border: 1px solid #e5e7eb;
+        color: #1A1A1D;
+        transition: all 0.2s ease;
+    }
+
+    .qty-btn:hover:not(:disabled) {
+        background: #1A1A1D;
+        color: #fff;
+        border-color: #1A1A1D;
+    }
+
+    .qty-btn:disabled {
+        opacity: 0.3;
+        cursor: not-allowed;
+    }
+
+    .qty-input {
+        background: #fff;
+        border-top: 1px solid #e5e7eb;
+        border-bottom: 1px solid #e5e7eb;
+        border-left: none;
+        border-right: none;
+        color: #1A1A1D;
+    }
+
+    .qty-input:focus { outline: none; }
+
+    /* Info & Spec Cards */
+    .info-card, .spec-card {
+        background: #fff;
+        border: 1px solid #e5e7eb;
+        border-radius: 20px;
+    }
+
+    /* Feature Card */
+    .feature-card {
+        background: #F3F5F9; /* Abu Sangat Muda */
+        border: 1px solid #e5e7eb;
+        color: #1A1A1D;
+    }
+
+    /* Main Image Container */
+    .main-image-container {
+        cursor: zoom-in;
+        position: relative;
+        background: #F3F5F9;
+        border: 1px solid #f3f4f6;
+    }
+
+    .main-image-container img {
+        mix-blend-mode: multiply;
+    }
+
+    .main-image-container:hover .zoom-hint { opacity: 1; }
+
+    .zoom-hint {
+        position: absolute;
+        bottom: 16px; right: 16px;
+        background: #1A1A1D; color: white;
+        padding: 8px 12px; border-radius: 8px;
+        font-size: 12px; opacity: 0;
+        transition: opacity 0.3s ease;
+        display: flex; align-items: center; gap: 6px;
+    }
+
+    /* Related Product Card */
+    .product-card {
+        background: white;
+        border: 1px solid #f3f4f6;
+        border-radius: 20px;
         transition: all 0.3s ease;
     }
-    .image-thumbnail:hover {
-        transform: scale(1.05);
-        border-color: #f97316;
+    .product-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+        border-color: #e5e7eb;
     }
-    .image-thumbnail.active {
-        border-color: #f97316;
-        border-width: 3px;
+
+    /* Lightbox Styles (Sama seperti sebelumnya) */
+    .lightbox {
+        position: fixed; inset: 0; background: rgba(255, 255, 255, 0.98); z-index: 9999;
+        display: flex; align-items: center; justify-content: center;
+        opacity: 0; visibility: hidden; transition: all 0.3s ease;
+    }
+    .lightbox.active { opacity: 1; visibility: visible; }
+    .lightbox-content {
+        position: relative; max-width: 90vw; max-height: 90vh;
+        transform: scale(0.9); transition: transform 0.3s ease;
+    }
+    .lightbox.active .lightbox-content { transform: scale(1); }
+    .lightbox-image {
+        max-width: 90vw; max-height: 85vh; object-fit: contain;
+        border-radius: 8px;
+    }
+    .lightbox-close, .lightbox-nav {
+        background: #1A1A1D; color: white; border-radius: 50%;
+        cursor: pointer; display: flex; align-items: center; justify-content: center;
+        transition: all 0.2s ease;
+    }
+    .lightbox-close { position: absolute; top: -40px; right: 0; width: 36px; height: 36px; }
+    .lightbox-nav { position: absolute; top: 50%; transform: translateY(-50%); width: 48px; height: 48px; }
+    .lightbox-prev { left: -70px; } .lightbox-next { right: -70px; }
+    .lightbox-counter {
+        position: absolute; bottom: -40px; left: 50%; transform: translateX(-50%);
+        color: #1A1A1D; font-size: 14px; font-weight: bold;
+    }
+    .lightbox-thumbnails {
+        position: absolute; bottom: -80px; left: 50%; transform: translateX(-50%);
+        display: flex; gap: 8px;
+    }
+    .lightbox-thumb {
+        width: 50px; height: 50px; border-radius: 6px; overflow: hidden;
+        cursor: pointer; opacity: 0.5; transition: all 0.2s ease; border: 2px solid transparent;
+    }
+    .lightbox-thumb:hover, .lightbox-thumb.active { opacity: 1; border-color: #1A1A1D; }
+    .lightbox-thumb img { width: 100%; height: 100%; object-fit: cover; }
+
+    @media (max-width: 768px) {
+        .lightbox-nav { width: 40px; height: 40px; }
+        .lightbox-prev { left: 10px; } .lightbox-next { right: 10px; }
+        .lightbox-thumbnails { display: none; }
     }
 </style>
 @endpush
 
 @section('content')
-<!-- Breadcrumb -->
-<section class="bg-gray-50 py-4 px-6 md:px-12">
-    <nav class="text-sm text-gray-600">
-        <a href="{{ route('home') }}" class="hover:text-orange-600">Home</a>
-        <span class="mx-2">/</span>
-        <a href="{{ route('rewards') }}" class="hover:text-orange-600">Rewards</a>
-        <span class="mx-2">/</span>
-        @if($product->category)
-            <a href="{{ route('rewards', ['category' => $product->category_id]) }}" class="hover:text-orange-600">
-                {{ $product->category->name }}
+<div class="min-h-screen bg-white text-[#1A1A1D]">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <nav class="flex items-center mb-8 text-sm">
+            <a href="{{ route('home') }}" class="text-gray-400 hover:text-black transition-colors">
+                <i class="fas fa-home"></i>
             </a>
-            <span class="mx-2">/</span>
-        @endif
-        <span class="text-gray-900 font-medium">{{ $product->name }}</span>
-    </nav>
-</section>
+            <i class="fas fa-chevron-right text-gray-300 mx-3 text-xs"></i>
+            <a href="{{ route('home') }}#products" class="text-gray-400 hover:text-black transition-colors">Products</a>
+            <i class="fas fa-chevron-right text-gray-300 mx-3 text-xs"></i>
+            <span class="text-black font-bold">{{ Str::limit($product->name, 30) }}</span>
+        </nav>
 
-<!-- Product Detail Section -->
-<section class="bg-white py-12 px-6 md:px-12">
-    <div class="max-w-7xl mx-auto">
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
-            <!-- Product Images -->
-            <div>
-                <!-- Main Image -->
-                <div class="mb-4 relative group">
-                    @if($product->images->isNotEmpty())
-                        <img 
-                            id="mainImage" 
-                            src="{{ asset('storage/' . $product->images->first()->image_path) }}" 
-                            alt="{{ $product->name }}"
-                            class="w-full h-[500px] object-cover rounded-2xl shadow-lg"
-                        >
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 mb-16">
+            <div class="space-y-4">
+                <div class="rounded-[30px] overflow-hidden aspect-square shadow-sm border border-gray-100 main-image-container" onclick="openLightbox(0)">
+                    @if($product->images->count() > 0)
+                        <img id="mainImage"
+                             src="{{ asset('storage/products/' . $product->images->first()->image) }}"
+                             alt="{{ $product->name }}"
+                             class="w-full h-full object-contain p-8 transition-transform duration-500 hover:scale-105">
+                        <div class="zoom-hint">
+                            <i class="fas fa-search-plus"></i>
+                            <span>Click to enlarge</span>
+                        </div>
                     @else
-                        <div class="w-full h-[500px] bg-gray-200 flex items-center justify-center rounded-2xl">
-                            <p class="text-gray-400 text-lg">Tidak ada gambar</p>
+                        <div class="w-full h-full flex items-center justify-center bg-[#F3F5F9]">
+                            <div class="text-center">
+                                <i class="fas fa-image text-6xl text-gray-300 mb-4"></i>
+                                <p class="text-gray-400 text-sm">No images available</p>
+                            </div>
                         </div>
                     @endif
                 </div>
 
-                <!-- Image Thumbnails -->
                 @if($product->images->count() > 1)
-                    <div class="grid grid-cols-4 gap-3">
-                        @foreach($product->images as $index => $image)
-                            <img 
-                                src="{{ asset('storage/' . $image->image_path) }}" 
-                                alt="{{ $product->name }}"
-                                class="image-thumbnail w-full h-24 object-cover rounded-lg border-2 border-gray-200 {{ $index == 0 ? 'active' : '' }}"
-                                onclick="changeMainImage('{{ asset('storage/' . $image->image_path) }}', this)"
-                            >
-                        @endforeach
+                <div class="grid grid-cols-4 sm:grid-cols-5 gap-3">
+                    @foreach($product->images as $index => $image)
+                    <div class="aspect-square rounded-2xl overflow-hidden {{ $index == 0 ? 'active' : '' }} thumbnail-image cursor-pointer"
+                         onclick="changeMainImage('{{ asset('storage/products/' . $image->image) }}', this)">
+                        <img src="{{ asset('storage/products/' . $image->image) }}"
+                             alt="{{ $product->name }} - {{ $index + 1 }}"
+                             class="w-full h-full object-contain p-1 mix-blend-multiply">
                     </div>
+                    @endforeach
+                </div>
                 @endif
             </div>
 
-            <!-- Product Info -->
-            <div>
-                <!-- Category Badge -->
-                @if($product->category)
-                    <span class="inline-block bg-red-100 text-red-700 text-sm font-semibold px-4 py-1 rounded-full mb-4">
+            @php
+                $colors = $product->variations->pluck('color')->filter()->unique()->values();
+                $sizes = $product->variations->pluck('size')->filter()->unique()->values();
+                $variationsData = $product->variations->map(function($v) {
+                    return [
+                        'id' => $v->id,
+                        'color' => $v->color,
+                        'size' => $v->size,
+                        'stock' => $v->stock,
+                    ];
+                });
+            @endphp
+
+            <div x-data="{
+                selectedColor: '{{ request('color') ?? '' }}',
+                selectedSize: '{{ request('size') ?? '' }}',
+                selectedVariation: null,
+                quantity: 1,
+                errorMessage: '',
+                variations: {{ $variationsData->toJson() }},
+                get currentStock() { return this.selectedVariation ? this.selectedVariation.stock : {{ $totalStock }}; },
+                get hasSelection() { return this.selectedColor || this.selectedSize; },
+                get hasBothSelections() { return this.selectedColor && this.selectedSize; },
+                selectColor(color) { this.selectedColor = color; this.updateVariation(); },
+                selectSize(size) { this.selectedSize = size; this.updateVariation(); },
+                updateVariation() {
+                    const match = this.variations.find(v => {
+                        const colorMatch = this.selectedColor ? v.color === this.selectedColor : true;
+                        const sizeMatch = this.selectedSize ? v.size === this.selectedSize : true;
+                        return colorMatch && sizeMatch;
+                    });
+                    if (match) {
+                        this.selectedVariation = match;
+                        this.errorMessage = '';
+                        document.getElementById('variation_id').value = match.id;
+                        if (this.quantity > match.stock) { this.quantity = Math.max(1, match.stock); }
+                    } else {
+                        this.selectedVariation = null;
+                        document.getElementById('variation_id').value = '';
+                        if (this.selectedColor && this.selectedSize) { this.errorMessage = 'Kombinasi tidak tersedia'; }
+                    }
+                },
+                incrementQuantity() { if (this.currentStock > 0 && this.quantity < this.currentStock) { this.quantity++; } },
+                decrementQuantity() { if (this.quantity > 1) { this.quantity--; } },
+                validateForm() {
+                    this.errorMessage = '';
+                    const hasVariations = {{ $product->variations->count() }} > 0;
+                    if (hasVariations) {
+                        if (!this.selectedColor) { this.errorMessage = 'Silakan pilih warna'; return false; }
+                        if (!this.selectedSize) { this.errorMessage = 'Silakan pilih ukuran'; return false; }
+                        if (!this.selectedVariation) { this.errorMessage = 'Kombinasi tidak tersedia'; return false; }
+                    }
+                    if (this.currentStock <= 0) { this.errorMessage = 'Stok habis'; return false; }
+                    if (this.quantity < 1 || this.quantity > this.currentStock) { this.errorMessage = 'Jumlah tidak valid'; return false; }
+                    return true;
+                },
+                init() { if (this.selectedColor || this.selectedSize) { this.updateVariation(); } }
+            }" 
+            x-init="init()"
+            class="space-y-6">
+                
+                <div>
+                    <span class="inline-flex items-center px-3 py-1 rounded-md text-xs font-bold bg-[#1A1A1D] text-white tracking-wide uppercase">
                         {{ $product->category->name }}
                     </span>
-                @endif
-
-                <!-- Product Name -->
-                <h1 class="text-4xl font-bold text-gray-900 mb-4">{{ $product->name }}</h1>
-
-                <!-- Price -->
-                <div class="mb-6">
-                    <p class="text-5xl font-black text-gray-900">
-                        {{ number_format($product->point_price, 0, ',', '.') }} Points
-                    </p>
                 </div>
 
-                <!-- Stock Status -->
-                <div class="mb-6 p-4 {{ $totalStock > 0 ? 'bg-green-50 border-green-200' : 'bg-red-50 border-red-200' }} border-2 rounded-lg">
-                    <p class="text-sm font-semibold {{ $totalStock > 0 ? 'text-green-700' : 'text-red-700' }}">
-                        @if($totalStock > 0)
-                            ✓ In Stock ({{ $totalStock }} items available)
-                        @else
-                            ✕ Out of Stock
-                        @endif
-                    </p>
+                <h1 class="text-3xl lg:text-5xl font-black text-[#1A1A1D] leading-tight tracking-tight">{{ $product->name }}</h1>
+
+                <div class="flex items-baseline gap-3">
+                    @if($product->point_price > 0)
+                        <span class="text-3xl lg:text-4xl font-black text-[#1A1A1D] flex items-center gap-2">
+                             <i class="fas fa-coins text-yellow-500"></i> {{ number_format($product->point_price) }} Point
+                        </span>
+                    @else
+                        <span class="text-3xl lg:text-4xl font-black text-[#1A1A1D]">
+                            Rp {{ number_format($product->price, 0, ',', '.') }}
+                        </span>
+                    @endif
                 </div>
 
-                <!-- Variations -->
-                <form method="POST" action="{{ route('cart.store') }}" id="addToCartForm" class="mb-6">
-                    @csrf
-                    <input type="hidden" name="product_id" value="{{ $product->id }}">
-                    <input type="hidden" name="variation_id" id="selectedVariationId">
-                    <input type="hidden" name="quantity" value="1">
-
-                    <!-- Color Selection -->
-                    @if($colors->count() > 0)
-                        <div class="mb-6">
-                            <label class="block text-sm font-semibold text-gray-700 mb-3">Color:</label>
-                            <div class="flex flex-wrap gap-3">
-                                @foreach($colors as $color)
-                                    <button 
-                                        type="button"
-                                        onclick="selectColor('{{ $color }}')"
-                                        class="color-option px-6 py-3 border-2 border-gray-300 rounded-lg hover:border-orange-500 transition-all"
-                                        data-color="{{ $color }}"
-                                    >
-                                        {{ $color }}
-                                    </button>
-                                @endforeach
-                            </div>
+                <div class="flex items-center gap-2 text-sm font-medium">
+                    <template x-if="currentStock > 0">
+                        <div class="flex items-center gap-2 text-green-600">
+                            <div class="w-2 h-2 bg-green-600 rounded-full animate-pulse"></div>
+                            Ready Stock <span class="text-gray-400" x-text="'(' + currentStock + ' items)'"></span>
                         </div>
-                    @endif
-
-                    <!-- Size Selection -->
-                    @if($sizes->count() > 0)
-                        <div class="mb-6">
-                            <label class="block text-sm font-semibold text-gray-700 mb-3">Size:</label>
-                            <div class="flex flex-wrap gap-3">
-                                @foreach($sizes as $size)
-                                    <button 
-                                        type="button"
-                                        onclick="selectSize('{{ $size }}')"
-                                        class="size-option px-6 py-3 border-2 border-gray-300 rounded-lg hover:border-orange-500 transition-all"
-                                        data-size="{{ $size }}"
-                                    >
-                                        {{ $size }}
-                                    </button>
-                                @endforeach
-                            </div>
-                        </div>
-                    @endif
-
-                    <!-- Add to Cart Button -->
-                    <button 
-                        type="submit"
-                        class="w-full bg-gradient-to-r from-red-600 to-orange-500 text-white font-bold py-4 rounded-xl hover:from-red-700 hover:to-orange-600 active:scale-95 transition-all duration-200 shadow-lg hover:shadow-xl mb-4"
-                        @if($totalStock == 0) disabled @endif
-                    >
-                        @if($totalStock > 0)
-                            🎁 Redeem with Points
-                        @else
+                    </template>
+                    <template x-if="currentStock <= 0">
+                        <div class="flex items-center gap-2 text-red-600">
+                            <div class="w-2 h-2 bg-red-600 rounded-full"></div>
                             Out of Stock
+                        </div>
+                    </template>
+                </div>
+
+                <div class="p-5 border-l-4 border-[#1A1A1D] bg-gray-50">
+                    <p class="text-gray-600 leading-relaxed text-sm">
+                        {{ $product->description ?? 'No description available for this product.' }}
+                    </p>
+                </div>
+
+                <div x-show="errorMessage" x-cloak
+                     class="p-3 bg-red-50 border border-red-200 text-red-600 rounded-lg text-sm transition-all">
+                    <div class="flex items-start">
+                        <i class="fas fa-exclamation-circle mt-0.5 mr-2"></i>
+                        <span x-text="errorMessage"></span>
+                    </div>
+                </div>
+
+                <form action="{{ route('cart.store') }}" method="POST" id="addToCartForm" @submit.prevent="if(validateForm()) $el.submit()">
+                    @csrf
+                    <input type="hidden" name="variation_id" id="variation_id" value="">
+                    
+                    @if($product->variations->count() > 0)
+                    <div class="space-y-6">
+                        @if($colors->count() > 0)
+                        <div>
+                            <label class="block text-xs font-bold text-gray-400 mb-2 uppercase tracking-wide">Select Color</label>
+                            <div class="flex flex-wrap gap-2">
+                                @foreach($colors as $color)
+                                <button type="button"
+                                        @click.prevent="selectColor('{{ $color }}')"
+                                        :class="selectedColor === '{{ $color }}' ? 'selected' : ''"
+                                        class="variation-btn px-6 py-3 rounded-xl text-sm font-bold capitalize">
+                                    {{ $color }}
+                                </button>
+                                @endforeach
+                            </div>
+                        </div>
                         @endif
-                    </button>
+
+                        @if($sizes->count() > 0)
+                        <div>
+                            <label class="block text-xs font-bold text-gray-400 mb-2 uppercase tracking-wide">Select Size</label>
+                            <div class="flex flex-wrap gap-2">
+                                @foreach($sizes as $size)
+                                <button type="button"
+                                        @click.prevent="selectSize('{{ $size }}')"
+                                        :class="selectedSize === '{{ $size }}' ? 'selected' : ''"
+                                        class="variation-btn px-6 py-3 rounded-xl text-sm font-bold uppercase min-w-[60px]">
+                                    {{ $size }}
+                                </button>
+                                @endforeach
+                            </div>
+                        </div>
+                        @endif
+                    </div>
+                    @endif
+
+                    <div class="space-y-5 pt-6 mt-6">
+                        <div class="flex flex-col sm:flex-row gap-4">
+                            <div class="flex items-center">
+                                <button type="button" @click.prevent="decrementQuantity()" :disabled="quantity <= 1"
+                                        class="qty-btn w-12 h-14 rounded-l-xl flex items-center justify-center">
+                                    <i class="fas fa-minus text-xs"></i>
+                                </button>
+                                <input type="number" name="quantity" id="quantity" x-model="quantity" :max="currentStock" min="1"
+                                       class="qty-input w-16 h-14 text-center text-base font-bold" readonly>
+                                <button type="button" @click.prevent="incrementQuantity()" :disabled="quantity >= currentStock || currentStock <= 0"
+                                        class="qty-btn w-12 h-14 rounded-r-xl flex items-center justify-center">
+                                    <i class="fas fa-plus text-xs"></i>
+                                </button>
+                            </div>
+
+                            <button type="submit" id="addToCartBtn"
+                                    :disabled="currentStock <= 0 || ({{ $product->variations->count() }} > 0 && (!selectedColor || !selectedSize))"
+                                    :class="currentStock <= 0 || ({{ $product->variations->count() }} > 0 && (!selectedColor || !selectedSize)) ? 'opacity-50 cursor-not-allowed bg-gray-200 text-gray-400' : 'bg-[#1A1A1D] text-white hover:bg-gray-800 hover:scale-[1.02] shadow-lg'"
+                                    class="flex-1 px-6 py-4 rounded-xl font-bold text-base transition-all duration-300 transform flex items-center justify-center gap-3">
+                                <i class="fas fa-shopping-cart"></i>
+                                <span x-text="currentStock > 0 ? 'ADD TO CART' : 'OUT OF STOCK'"></span>
+                            </button>
+                        </div>
+                    </div>
                 </form>
 
-                <!-- Product Features -->
-                <div class="grid grid-cols-3 gap-4 mb-8">
-                    <div class="text-center p-4 bg-orange-50 rounded-lg">
-                        <svg class="w-8 h-8 mx-auto mb-2 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
-                        </svg>
-                        <p class="text-xs font-semibold text-gray-700">Pengiriman Cepat</p>
+                <div class="grid grid-cols-3 gap-3 pt-5">
+                    <div class="feature-card rounded-xl p-4 text-center">
+                        <i class="fas fa-truck text-[#1A1A1D] text-xl mb-2"></i>
+                        <p class="text-xs font-bold text-gray-600">Fast Delivery</p>
                     </div>
-                    <div class="text-center p-4 bg-orange-50 rounded-lg">
-                        <svg class="w-8 h-8 mx-auto mb-2 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                        </svg>
-                        <p class="text-xs font-semibold text-gray-700">Produk Original</p>
+                    <div class="feature-card rounded-xl p-4 text-center">
+                        <i class="fas fa-shield-alt text-[#1A1A1D] text-xl mb-2"></i>
+                        <p class="text-xs font-bold text-gray-600">Original</p>
                     </div>
-                    <div class="text-center p-4 bg-orange-50 rounded-lg">
-                        <svg class="w-8 h-8 mx-auto mb-2 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-5 0a4 4 0 11-8 0 4 4 0 018 0z"/>
-                        </svg>
-                        <p class="text-xs font-semibold text-gray-700">Support 24/7</p>
-                    </div>
-                </div>
-
-                <!-- Product Description -->
-                <div class="border-t pt-6">
-                    <h3 class="text-xl font-bold text-gray-900 mb-4">Product Description</h3>
-                    <div class="text-gray-700 leading-relaxed prose max-w-none">
-                        {{ $product->description ?? 'Tidak ada deskripsi untuk produk ini.' }}
+                    <div class="feature-card rounded-xl p-4 text-center">
+                        <i class="fas fa-headset text-[#1A1A1D] text-xl mb-2"></i>
+                        <p class="text-xs font-bold text-gray-600">24/7 Support</p>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-</section>
 
-<!-- Related Products -->
-@if($relatedProducts->count() > 0)
-<section class="bg-gray-50 py-12 px-6 md:px-12">
-    <div class="max-w-7xl mx-auto">
-        <h2 class="text-3xl font-bold text-gray-900 mb-8">Related Reward Products</h2>
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            @foreach($relatedProducts as $relatedProduct)
-                <div class="group bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden">
-                    <div class="relative overflow-hidden">
-                        @if($relatedProduct->images->isNotEmpty())
-                            <img 
-                                src="{{ asset('storage/' . $relatedProduct->images->first()->image_path) }}" 
-                                alt="{{ $relatedProduct->name }}"
-                                class="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-500"
-                            >
+        <div class="spec-card p-6 lg:p-8 mb-16 shadow-sm border border-gray-100">
+            <h2 class="text-xl font-bold text-[#1A1A1D] mb-6 flex items-center gap-3">
+                <i class="fas fa-list-alt text-gray-400"></i> Specifications
+            </h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="flex items-center justify-between p-4 bg-gray-50 rounded-xl border border-gray-100">
+                    <span class="text-gray-500 text-sm">Category</span>
+                    <span class="text-[#1A1A1D] font-bold">{{ $product->category->name }}</span>
+                </div>
+                <div class="flex items-center justify-between p-4 bg-gray-50 rounded-xl border border-gray-100">
+                    <span class="text-gray-500 text-sm">Weight</span>
+                    <span class="text-[#1A1A1D] font-bold">{{ $product->weight }}g</span>
+                </div>
+                @if($product->variations->count() > 0)
+                <div class="flex items-center justify-between p-4 bg-gray-50 rounded-xl border border-gray-100">
+                    <span class="text-gray-500 text-sm">Variations</span>
+                    <span class="text-[#1A1A1D] font-bold">{{ $product->variations->count() }} options</span>
+                </div>
+                <div class="flex items-center justify-between p-4 bg-gray-50 rounded-xl border border-gray-100">
+                    <span class="text-gray-500 text-sm">Total Stock</span>
+                    <span class="text-[#1A1A1D] font-bold">{{ $totalStock }} items</span>
+                </div>
+                @endif
+            </div>
+        </div>
+
+        @if($relatedProducts->count() > 0)
+        <div class="mb-8">
+            <div class="flex items-center justify-between mb-8">
+                <h2 class="text-2xl font-bold text-[#1A1A1D] flex items-center gap-3">
+                    Related Products
+                </h2>
+                <a href="{{ route('products') }}" class="text-gray-500 hover:text-black text-sm font-semibold flex items-center gap-2 transition-colors">
+                    View All <i class="fas fa-arrow-right"></i>
+                </a>
+            </div>
+            
+            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+                @foreach($relatedProducts as $relatedProduct)
+                <a href="{{ route('product.detail', $relatedProduct->slug) }}" class="product-card overflow-hidden group block">
+                    <div class="aspect-square bg-[#F3F5F9] overflow-hidden p-4 relative">
+                        @if($relatedProduct->images->count() > 0)
+                            <img src="{{ asset('storage/products/' . $relatedProduct->images->first()->image) }}"
+                                 alt="{{ $relatedProduct->name }}"
+                                 class="w-full h-full object-contain mix-blend-multiply group-hover:scale-110 transition-transform duration-500">
                         @else
-                            <div class="w-full h-48 bg-gray-200 flex items-center justify-center">
-                                <span class="text-gray-400">No Image</span>
+                            <div class="w-full h-full flex items-center justify-center">
+                                <i class="fas fa-image text-4xl text-gray-300"></i>
                             </div>
                         @endif
                     </div>
                     <div class="p-4">
-                        <h3 class="text-lg font-bold text-gray-900 mb-2 line-clamp-2">{{ $relatedProduct->name }}</h3>
-                        <p class="text-xl font-black text-gray-900 mb-3">
-                            {{ number_format($relatedProduct->price, 0, ',', '.') }} Points
-                        </p>
-                        <a href="{{ route('reward.detail', $relatedProduct->slug) }}" 
-                           class="block w-full bg-gradient-to-r from-red-600 to-orange-500 text-white font-semibold py-2 rounded-lg hover:from-red-700 hover:to-orange-600 transition-all text-center text-sm">
-                            View Details
-                        </a>
+                        <h3 class="font-bold text-[#1A1A1D] text-sm mb-1 line-clamp-2 group-hover:text-gray-600 transition-colors">
+                            {{ $relatedProduct->name }}
+                        </h3>
+                        <div class="text-lg font-black text-[#1A1A1D]">
+                            <i class="fas fa-coins text-yellow-500"></i>
+                            {{ number_format($relatedProduct->point_price, 0, ',', '.') }}
+                        </div>
                     </div>
-                </div>
+                </a>
+                @endforeach
+            </div>
+        </div>
+        @endif
+    </div>
+</div>
+
+@if($product->images->count() > 0)
+<div id="lightbox" class="lightbox" onclick="closeLightbox(event)">
+    <div class="lightbox-content" onclick="event.stopPropagation()">
+        <button class="lightbox-close" onclick="closeLightbox(event)">
+            <i class="fas fa-times text-lg"></i>
+        </button>
+        @if($product->images->count() > 1)
+        <button class="lightbox-nav lightbox-prev" onclick="navigateLightbox(-1)">
+            <i class="fas fa-chevron-left text-lg"></i>
+        </button>
+        <button class="lightbox-nav lightbox-next" onclick="navigateLightbox(1)">
+            <i class="fas fa-chevron-right text-lg"></i>
+        </button>
+        @endif
+        <img id="lightboxImage" class="lightbox-image" src="" alt="{{ $product->name }}">
+        @if($product->images->count() > 1)
+        <div class="lightbox-counter">
+            <span id="lightboxCounter">1</span> / {{ $product->images->count() }}
+        </div>
+        <div class="lightbox-thumbnails">
+            @foreach($product->images as $index => $image)
+            <div class="lightbox-thumb {{ $index == 0 ? 'active' : '' }}" onclick="goToImage({{ $index }})">
+                <img src="{{ asset('storage/products/' . $image->image) }}" alt="Thumbnail">
+            </div>
             @endforeach
         </div>
-    </div>
-</section>
-@endif
-
-@push('scripts')
-<script>
-    // Change main image on thumbnail click
-    function changeMainImage(imageSrc, element) {
-        document.getElementById('mainImage').src = imageSrc;
-        document.querySelectorAll('.image-thumbnail').forEach(thumb => {
-            thumb.classList.remove('active');
-        });
-        element.classList.add('active');
-    }
-
-    let selectedColor = null;
-    let selectedSize = null;
-
-    // Color selection
-    function selectColor(color) {
-        selectedColor = color;
-        document.querySelectorAll('.color-option').forEach(btn => {
-            btn.classList.remove('border-orange-600', 'bg-orange-50');
-            btn.classList.add('border-gray-300');
-        });
-        event.target.classList.add('border-orange-600', 'bg-orange-50');
-        event.target.classList.remove('border-gray-300');
-        updateVariation();
-    }
-
-    // Size selection
-    function selectSize(size) {
-        selectedSize = size;
-        document.querySelectorAll('.size-option').forEach(btn => {
-            btn.classList.remove('border-orange-600', 'bg-orange-50');
-            btn.classList.add('border-gray-300');
-        });
-        event.target.classList.add('border-orange-600', 'bg-orange-50');
-        event.target.classList.remove('border-gray-300');
-        updateVariation();
-    }
-
-    // Update variation based on selection
-    function updateVariation() {
-        @if($availableVariations->count() > 0)
-            const variations = @json($availableVariations->values());
-            const selected = variations.find(v => 
-                (selectedColor === null || v.color === selectedColor) &&
-                (selectedSize === null || v.size === selectedSize)
-            );
-            
-            if (selected) {
-                document.getElementById('selectedVariationId').value = selected.id;
-            }
         @endif
-    }
-
-    // Form submission validation
-    document.getElementById('addToCartForm')?.addEventListener('submit', function(e) {
-        const variationId = document.getElementById('selectedVariationId').value;
-        if (!variationId) {
-            e.preventDefault();
-            alert('Please select product variations (color/size)');
-        }
-    });
-</script>
-@endpush
+    </div>
+</div>
+@endif
 @endsection

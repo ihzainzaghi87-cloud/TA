@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Services\RajaOngkirService;
+use App\Events\OrderShipped;
 use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware as ControllerMiddleware;
 
@@ -137,38 +138,46 @@ class AdminOrderController extends Controller
             DB::beginTransaction();
 
             // Update status
-            $order->status = $validated['status'];
+            $oldStatus = $order->status;
+            $newStatus = $validated['status'];
+
+            // Update order
+            $order->status = $newStatus;
             
-            // Update tracking number if provided
-            if (!empty($validated['tracking_number'])) {
+            if ($request->filled('tracking_number')) {
                 $order->tracking_number = $validated['tracking_number'];
             }
 
-            // Set shipped_at timestamp when status changes to Shipped
-            if ($validated['status'] === Order::STATUS_SHIPPED && !$order->shipped_at) {
+            // Set timestamp based on status
+            if ($newStatus === 'Shipped' && $oldStatus !== 'Shipped') {
                 $order->shipped_at = now();
-            }
-
-            // Set delivered_at timestamp when status changes to Delivered
-            if ($validated['status'] === Order::STATUS_DELIVERED && !$order->delivered_at) {
+            } elseif ($newStatus === 'Delivered' && $oldStatus !== 'Delivered') {
                 $order->delivered_at = now();
-                
-                // Also set shipped_at if not set yet
-                if (!$order->shipped_at) {
-                    $order->shipped_at = now();
-                }
             }
 
             $order->save();
 
             DB::commit();
 
-            Log::info("Order {$order->order_number} updated by admin", [
+            Log::info('Order ' . $order->order_number . ' updated by admin', [
                 'order_id' => $order->id,
-                'new_status' => $validated['status'],
-                'tracking_number' => $validated['tracking_number'] ?? null,
+                'old_status' => $oldStatus,
+                'new_status' => $newStatus,
+                'tracking_number' => $order->tracking_number,
                 'admin_id' => auth()->id(),
             ]);
+
+            // ✅ TRIGGER EVENT SAAT STATUS BERUBAH KE SHIPPED
+            if ($newStatus === 'Shipped' && $oldStatus !== 'Shipped') {
+                Log::info('🚀 Triggering OrderShipped event', [
+                    'order_id' => $order->id,
+                    'order_number' => $order->order_number,
+                ]);
+                
+                event(new OrderShipped($order));
+                
+                Log::info('✅ OrderShipped event triggered');
+            }
 
             return redirect()->route('admin.orders.show', $order)
                            ->with('success', 'Informasi pengiriman berhasil diupdate');

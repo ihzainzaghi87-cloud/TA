@@ -95,4 +95,10 @@ class User extends Authenticatable implements CanResetPasswordContract
         
         return $this->activeAddresses()->first();
     }
+    
+    public function pushSubscriptions()
+    {
+        return $this->hasMany(PushSubscription::class);
+    }
+
 }

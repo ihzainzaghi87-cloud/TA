@@ -4,21 +4,25 @@
 
 @push('styles')
 <style>
+    /* Card Styling - Sharp & Clean */
     .profile-card {
         background: #fff;
         border: 1px solid #e5e7eb;
-        border-radius: 16px;
+        border-radius: 1.5rem; /* 24px */
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
         transition: all 0.3s ease;
     }
 
     .profile-card:hover {
-        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.1);
+        border-color: #1A1A1D;
+        transform: translateY(-2px);
     }
 
     .stat-card {
-        background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
-        border: 1px solid #fcd34d;
-        border-radius: 16px;
+        background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
+        border: 1px solid #d1d5db;
+        border-radius: 1.5rem;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
     }
 
     .menu-item {
@@ -27,70 +31,73 @@
         padding: 16px 20px;
         border-radius: 12px;
         transition: all 0.2s ease;
-        color: #374151;
+        color: #6b7280;
     }
 
     .menu-item:hover {
-        background: #fffbeb;
-        color: #92400e;
+        background: #f9fafb;
+        color: #1A1A1D;
     }
 
     .menu-item.active {
-        background: #FAD470;
-        color: #92400e;
+        background: #1A1A1D;
+        color: #ffffff;
         font-weight: 600;
     }
 
     .avatar-ring {
-        background: linear-gradient(135deg, #FAD470 0%, #F8B500 100%);
+        background: linear-gradient(135deg, #1A1A1D 0%, #374151 100%);
     }
 
     .address-card {
         background: #fff;
         border: 1px solid #e5e7eb;
-        border-radius: 16px;
+        border-radius: 1.5rem;
         transition: all 0.3s ease;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.02);
     }
 
     .address-card:hover {
-        border-color: #FAD470;
+        border-color: #1A1A1D;
         box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+        transform: translateY(-2px);
     }
 
     .address-card.primary {
-        border-color: #FAD470;
-        background: linear-gradient(135deg, #fffbeb 0%, #ffffff 100%);
+        border-color: #1A1A1D;
+        border-width: 2px;
+        background: linear-gradient(135deg, #f9fafb 0%, #ffffff 100%);
     }
 </style>
 @endpush
 
 @section('content')
-<div class="min-h-screen bg-gray-50 py-8">
+<div class="min-h-screen bg-gray-50 py-10">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <!-- Breadcrumb -->
         <nav class="flex items-center mb-8 text-sm">
-            <a href="{{ route('home') }}" class="text-gray-500 hover:text-amber-600 transition-colors">
+            <a href="{{ route('home') }}" class="text-gray-400 hover:text-black transition-colors">
                 <i class="fas fa-home"></i>
             </a>
             <i class="fas fa-chevron-right text-gray-300 mx-3 text-xs"></i>
-            <a href="{{ route('customer.index') }}" class="text-gray-500 hover:text-amber-600 transition-colors">
-                Profil
+            <a href="{{ route('customer.index') }}" class="text-gray-400 hover:text-black transition-colors">
+                Profile
             </a>
             <i class="fas fa-chevron-right text-gray-300 mx-3 text-xs"></i>
-            <span class="text-gray-900 font-medium">Alamat</span>
+            <span class="text-[#1A1A1D] font-bold">Alamat</span>
         </nav>
 
         <!-- Flash Messages -->
         @if(session('success'))
-        <div class="mb-6 bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded-lg flex items-center">
-            <i class="fas fa-check-circle mr-2"></i>
+        <div class="mb-6 bg-[#1A1A1D] text-white px-6 py-4 rounded-2xl flex items-center shadow-lg">
+            <i class="fas fa-check-circle mr-3 text-green-400"></i>
             {{ session('success') }}
         </div>
         @endif
 
         @if(session('error'))
-        <div class="mb-6 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg flex items-center">
-            <i class="fas fa-exclamation-circle mr-2"></i>
+        <div class="mb-6 bg-red-50 border border-red-200 text-red-600 px-6 py-4 rounded-2xl flex items-center">
+            <i class="fas fa-exclamation-circle mr-3"></i>
             {{ session('error') }}
         </div>
         @endif
@@ -146,11 +153,11 @@
                 <!-- Header with Add Button -->
                 <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                     <div>
-                        <h1 class="text-2xl font-bold text-gray-900">Daftar Alamat</h1>
+                        <h1 class="text-2xl font-black text-[#1A1A1D] tracking-tight uppercase">Daftar Alamat</h1>
                         <p class="text-gray-500 text-sm mt-1">Kelola alamat pengiriman Anda</p>
                     </div>
                     <a href="{{ route('addresses.create') }}" 
-                       class="inline-flex items-center justify-center gap-2 px-6 py-3 bg-gradient-to-r from-amber-500 to-yellow-500 text-white rounded-xl font-semibold hover:from-amber-600 hover:to-yellow-600 transition-all duration-300 shadow-lg hover:shadow-xl">
+                       class="inline-flex items-center justify-center gap-2 px-6 py-4 bg-[#1A1A1D] text-white rounded-2xl font-bold hover:bg-gray-800 transition-all shadow-lg hover:shadow-xl">
                         <i class="fas fa-plus"></i>
                         Tambah Alamat
                     </a>
@@ -160,10 +167,10 @@
                 <div class="stat-card p-6">
                     <div class="flex items-center justify-between">
                         <div>
-                            <p class="text-amber-800 text-sm font-medium">Total Alamat Tersimpan</p>
-                            <p class="text-3xl font-bold text-amber-900">{{ $addresses->count() }}</p>
+                            <p class="text-gray-700 text-sm font-bold uppercase tracking-wide">Total Alamat Tersimpan</p>
+                            <p class="text-3xl font-black text-[#1A1A1D]">{{ $addresses->count() }}</p>
                         </div>
-                        <div class="w-12 h-12 bg-amber-400 rounded-full flex items-center justify-center">
+                        <div class="w-12 h-12 bg-[#1A1A1D] rounded-full flex items-center justify-center">
                             <i class="fas fa-map-marker-alt text-white text-xl"></i>
                         </div>
                     </div>
@@ -172,15 +179,15 @@
                 @if($addresses->isEmpty())
                     <!-- Empty State -->
                     <div class="profile-card p-12 text-center">
-                        <div class="w-20 h-20 bg-amber-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                            <i class="fas fa-map-marker-alt text-amber-600 text-3xl"></i>
+                        <div class="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                            <i class="fas fa-map-marker-alt text-[#1A1A1D] text-3xl"></i>
                         </div>
-                        <h3 class="text-xl font-bold text-gray-900 mb-2">Belum Ada Alamat</h3>
+                        <h3 class="text-xl font-black text-[#1A1A1D] mb-2 uppercase">Belum Ada Alamat</h3>
                         <p class="text-gray-500 max-w-md mx-auto mb-6">
                             Tambahkan alamat pengiriman Anda untuk memudahkan proses checkout.
                         </p>
                         <a href="{{ route('addresses.create') }}" 
-                           class="inline-flex items-center gap-2 text-amber-600 font-semibold hover:text-amber-700">
+                           class="inline-flex items-center gap-2 text-[#1A1A1D] font-bold hover:text-gray-800">
                             <i class="fas fa-plus-circle"></i>
                             Tambah Alamat Sekarang
                         </a>
@@ -194,13 +201,13 @@
                                 <!-- Address Info -->
                                 <div class="flex-1">
                                     <div class="flex items-center gap-3 mb-3">
-                                        <div class="w-10 h-10 bg-amber-100 rounded-lg flex items-center justify-center">
-                                            <i class="fas fa-map-marker-alt text-amber-600"></i>
+                                        <div class="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center">
+                                            <i class="fas fa-map-marker-alt text-[#1A1A1D]"></i>
                                         </div>
                                         <div>
-                                            <h3 class="font-bold text-gray-900">{{ $address->label ?? 'Alamat' }}</h3>
+                                            <h3 class="font-black text-[#1A1A1D] uppercase tracking-wide">{{ $address->label ?? 'Alamat' }}</h3>
                                             @if($address->is_primary)
-                                                <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-amber-100 text-amber-800">
+                                                <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-[#1A1A1D] text-white uppercase tracking-wide border border-[#1A1A1D]">
                                                     <i class="fas fa-star mr-1 text-xs"></i> Utama
                                                 </span>
                                             @endif
@@ -235,13 +242,13 @@
                                 <!-- Actions -->
                                 <div class="flex flex-row md:flex-col items-center gap-2">
                                     <a href="{{ route('addresses.show', $address->id) }}" 
-                                       class="w-10 h-10 bg-yellow-100 hover:bg-yellow-200 rounded-lg flex items-center justify-center text-yellow-600 hover:text-yellow-700 transition-colors"
+                                       class="w-10 h-10 bg-gray-100 hover:bg-[#1A1A1D] rounded-xl flex items-center justify-center text-gray-600 hover:text-white transition-all shadow-sm"
                                        title="Lihat Detail">
                                         <i class="fas fa-eye"></i>
                                     </a>
                                     
                                     <a href="{{ route('addresses.edit', $address->id) }}" 
-                                       class="w-10 h-10 bg-gray-100 hover:bg-amber-100 rounded-lg flex items-center justify-center text-gray-600 hover:text-amber-600 transition-colors"
+                                       class="w-10 h-10 bg-gray-100 hover:bg-[#1A1A1D] rounded-xl flex items-center justify-center text-gray-600 hover:text-white transition-all shadow-sm"
                                        title="Edit">
                                         <i class="fas fa-edit"></i>
                                     </a>
@@ -250,7 +257,7 @@
                                         <form action="{{ route('addresses.setPrimary', $address->id) }}" method="POST">
                                             @csrf
                                             <button type="submit" 
-                                                    class="w-10 h-10 bg-gray-100 hover:bg-amber-100 rounded-lg flex items-center justify-center text-gray-600 hover:text-amber-600 transition-colors"
+                                                    class="w-10 h-10 bg-gray-100 hover:bg-[#1A1A1D] rounded-xl flex items-center justify-center text-gray-600 hover:text-white transition-all shadow-sm"
                                                     title="Jadikan Utama">
                                                 <i class="fas fa-star"></i>
                                             </button>
@@ -262,7 +269,7 @@
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit" 
-                                                class="w-10 h-10 bg-gray-100 hover:bg-red-100 rounded-lg flex items-center justify-center text-gray-600 hover:text-red-600 transition-colors"
+                                                class="w-10 h-10 bg-gray-100 hover:bg-red-100 rounded-xl flex items-center justify-center text-gray-600 hover:text-red-600 transition-all shadow-sm"
                                                 title="Hapus">
                                             <i class="fas fa-trash"></i>
                                         </button>

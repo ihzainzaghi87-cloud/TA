@@ -34,7 +34,7 @@
                 <div class="text-center border-t border-gray-200 pt-4">
                     <div class="space-y-1">
                         <p class="text-xs text-gray-700 font-medium">+1 (999) 999-99-99</p>
-                        <p class="text-xs text-gray-600">info@theparanoia.com</p>
+                        <p class="text-xs text-gray-600">theparanoia1@gmail.com</p>
                     </div>
                 </div>
             </div>
@@ -73,7 +73,7 @@
                     <td class="align-top text-right w-1/4 pl-6 border-l border-gray-200">
                         <div class="space-y-1">
                             <p style="font-size: 11px;" class="text-gray-800 font-medium">+1 (999) 999-99-99</p>
-                            <p style="font-size: 11px;" class="text-gray-600">info@theparanoia.com</p>
+                            <p style="font-size: 11px;" class="text-gray-600">theparanoia1@gmail.com</p>
                         </div>
                     </td>
                 </tr>
@@ -140,15 +140,18 @@
                 </p>
 
                 <div class="flex w-full max-w-md">
-                    <input
-                        type="email"
-                        placeholder="Enter your email"
-                        class="flex-1 min-w-0 bg-gray-900 border border-gray-700 text-white px-3 md:px-4 py-2.5 md:py-3 rounded-l-lg focus:outline-none focus:border-white placeholder-gray-500 text-sm md:text-base transition-colors"
-                    >
-                    <button class="bg-white hover:bg-gray-200 text-black font-bold px-4 md:px-6 py-2.5 md:py-3 rounded-r-lg transition duration-300 flex-shrink-0">
-                        <i class="fas fa-paper-plane md:hidden"></i>
-                        <span class="hidden md:inline">Submit</span>
-                    </button>
+                    <form action="mailto:theparanoia1@gmail.com" method="post" enctype="text/plain" class="flex w-full">
+                        <input
+                            type="email"
+                            name="email"
+                            placeholder="Enter your email"
+                            class="flex-1 min-w-0 bg-gray-900 border border-gray-700 text-white px-3 md:px-4 py-2.5 md:py-3 rounded-l-lg focus:outline-none focus:border-white placeholder-gray-500 text-sm md:text-base transition-colors"
+                        >
+                        <button type="submit" class="bg-white hover:bg-gray-200 text-black font-bold px-4 md:px-6 py-2.5 md:py-3 rounded-r-lg transition duration-300 flex-shrink-0">
+                            <i class="fas fa-paper-plane md:hidden"></i>
+                            <span class="hidden md:inline">Submit</span>
+                        </button>
+                    </form>
                 </div>
             </div>
         </div>

@@ -124,15 +124,15 @@
     .related-card {
         background: #fff;
         border: 1px solid #e5e7eb;
-        border-radius: 16px;
+        border-radius: 1.5rem;
         transition: all 0.3s ease;
         overflow: hidden;
     }
 
     .related-card:hover {
-        border-color: #E5E7EB;
+        border-color: #1A1A1D;
         transform: translateY(-4px);
-        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.1);
+        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
     }
 
     .related-card .card-image {
@@ -160,23 +160,13 @@
     <section class="relative">
         {{-- Header Background --}}
         <div class="relative h-[400px] md:h-[500px] overflow-hidden">
-            @if($article->trixRichText && $article->trixRichText->first())
-                @php
-                    preg_match('/<img[^>]+src="([^">]+)"/', $article->trixRichText->first()->content ?? '', $matches);
-                    $imageUrl = $matches[1] ?? null;
-                @endphp
-                @if($imageUrl)
-                    <img src="{{ $imageUrl }}" 
-                         alt="{{ $article->title }}" 
-                         class="w-full h-full object-cover">
-                    <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent"></div>
-                @else
-                    <div class="w-full h-full bg-[#E5DECC]">
-                        <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
-                    </div>
-                @endif
+            @if($article->thumbnail)
+                <img src="{{ asset('storage/' . $article->thumbnail) }}" 
+                     alt="{{ $article->title }}" 
+                     class="w-full h-full object-cover">
+                <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent"></div>
             @else
-                <div class="w-full h-full bg-[#E5DECC]">
+                <div class="w-full h-full bg-[#374151]">
                     <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
                 </div>
             @endif
@@ -232,7 +222,7 @@
             </a>
 
             {{-- Main Content Card --}}
-            <article class="bg-white rounded-2xl shadow-sm p-8 md:p-12">
+            <article class="bg-white rounded-[1.5rem] shadow-lg p-8 md:p-12">
                 {{-- Article Body --}}
                 <div class="article-content prose prose-lg max-w-none">
                     {!! $article->content !!}
@@ -244,21 +234,21 @@
                     <div class="flex flex-wrap gap-3">
                         <a href="https://www.facebook.com/sharer/sharer.php?u={{ urlencode(request()->url()) }}" 
                            target="_blank"
-                           class="share-btn w-12 h-12 bg-blue-600 text-white rounded-full flex items-center justify-center hover:bg-blue-700">
+                           class="share-btn w-12 h-12 bg-blue-600 text-white rounded-full flex items-center justify-center hover:bg-blue-700 shadow-md">
                             <i class="fab fa-facebook-f"></i>
                         </a>
                         <a href="https://twitter.com/intent/tweet?url={{ urlencode(request()->url()) }}&text={{ urlencode($article->title) }}" 
                            target="_blank"
-                           class="share-btn w-12 h-12 bg-black text-white rounded-full flex items-center justify-center hover:bg-gray-800">
+                           class="share-btn w-12 h-12 bg-[#1A1A1D] text-white rounded-full flex items-center justify-center hover:bg-gray-800 shadow-md">
                             <i class="fab fa-x-twitter"></i>
                         </a>
                         <a href="https://wa.me/?text={{ urlencode($article->title . ' ' . request()->url()) }}" 
                            target="_blank"
-                           class="share-btn w-12 h-12 bg-green-500 text-white rounded-full flex items-center justify-center hover:bg-green-600">
+                           class="share-btn w-12 h-12 bg-green-500 text-white rounded-full flex items-center justify-center hover:bg-green-600 shadow-md">
                             <i class="fab fa-whatsapp"></i>
                         </a>
                         <button onclick="copyToClipboard('{{ request()->url() }}')"
-                                class="share-btn w-12 h-12 bg-gray-700 text-white rounded-full flex items-center justify-center hover:bg-gray-800">
+                                class="share-btn w-12 h-12 bg-gray-700 text-white rounded-full flex items-center justify-center hover:bg-gray-800 shadow-md">
                             <i class="fas fa-link"></i>
                         </button>
                     </div>
@@ -319,20 +309,10 @@
                 <a href="{{ route('articles.show', $related->slug) }}" class="related-card group">
                     {{-- Image --}}
                     <div class="relative h-48 overflow-hidden">
-                        @if($related->trixRichText && $related->trixRichText->first())
-                            @php
-                                preg_match('/<img[^>]+src="([^">]+)"/', $related->trixRichText->first()->content ?? '', $relatedMatches);
-                                $relatedImageUrl = $relatedMatches[1] ?? null;
-                            @endphp
-                            @if($relatedImageUrl)
-                                <img src="{{ $relatedImageUrl }}" 
-                                     alt="{{ $related->title }}" 
-                                     class="w-full h-full object-cover card-image">
-                            @else
-                                <div class="w-full h-full bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center">
-                                    <i class="fas fa-newspaper text-gray-400 text-4xl"></i>
-                                </div>
-                            @endif
+                        @if($related->thumbnail)
+                            <img src="{{ asset('storage/' . $related->thumbnail) }}" 
+                                 alt="{{ $related->title }}" 
+                                 class="w-full h-full object-cover card-image">
                         @else
                             <div class="w-full h-full bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center">
                                 <i class="fas fa-newspaper text-gray-400 text-4xl"></i>

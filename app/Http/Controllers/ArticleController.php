@@ -50,6 +50,7 @@ class ArticleController extends Controller implements HasMiddleware
         // Validasi tanpa content dulu
         $validated = $request->validate([
             'title' => 'required|max:255',
+            'thumbnail' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
             'is_published' => 'boolean'
         ]);
 
@@ -63,6 +64,12 @@ class ArticleController extends Controller implements HasMiddleware
 
         // Tambahkan content ke validated data
         $validated['content'] = $trixContent;
+
+        // Handle thumbnail upload
+        if ($request->hasFile('thumbnail')) {
+            $thumbnailPath = $request->file('thumbnail')->store('articles/thumbnails', 'public');
+            $validated['thumbnail'] = $thumbnailPath;
+        }
 
         // Auto set published_at jika artikel dipublikasikan
         if ($request->has('is_published') && $request->is_published) {
@@ -108,6 +115,7 @@ class ArticleController extends Controller implements HasMiddleware
         // Validasi tanpa content dulu
         $validated = $request->validate([
             'title' => 'required|max:255',
+            'thumbnail' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
             'is_published' => 'boolean'
         ]);
 
@@ -121,6 +129,16 @@ class ArticleController extends Controller implements HasMiddleware
 
         // Tambahkan content ke validated data
         $validated['content'] = $trixContent;
+
+        // Handle thumbnail upload
+        if ($request->hasFile('thumbnail')) {
+            // Delete old thumbnail if exists
+            if ($article->thumbnail && \Storage::disk('public')->exists($article->thumbnail)) {
+                \Storage::disk('public')->delete($article->thumbnail);
+            }
+            $thumbnailPath = $request->file('thumbnail')->store('articles/thumbnails', 'public');
+            $validated['thumbnail'] = $thumbnailPath;
+        }
 
         // Set published_at jika status berubah menjadi published
         if ($request->has('is_published') && $request->is_published && !$article->is_published) {
@@ -150,6 +168,11 @@ class ArticleController extends Controller implements HasMiddleware
      */
     public function destroy(Article $article)
     {
+        // Hapus thumbnail jika ada
+        if ($article->thumbnail && \Storage::disk('public')->exists($article->thumbnail)) {
+            \Storage::disk('public')->delete($article->thumbnail);
+        }
+
         // Hapus rich text content dan attachments
         $article->trixRichText()->delete();
         

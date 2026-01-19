@@ -300,6 +300,13 @@
 
         <!-- Article Content -->
         <div class="p-6">
+            @if($article->thumbnail)
+            <div class="mb-6">
+                <img src="{{ asset('storage/' . $article->thumbnail) }}" 
+                     alt="{{ $article->title }}"
+                     class="w-full max-w-3xl mx-auto rounded-xl shadow-lg border border-gray-200 dark:border-gray-600">
+            </div>
+            @endif
             <div class="article-content">
                 @if($article->trixRichText->isNotEmpty())
                     {!! $article->trixRender('content') !!}

@@ -129,12 +129,14 @@
                          x-transition:leave-end="opacity-0">
                         <div class="text-center px-6 max-w-4xl">
                             @if($banner->title)
-                                <h1 class="text-4xl md:text-5xl lg:text-7xl font-black text-white leading-[1.1] mb-8 drop-shadow-lg">
+                                <h1 class="text-2xl md:text-3xl lg:text-5xl font-black text-white leading-[1.1] mb-8 drop-shadow-lg">
                                     {{ $banner->title }}
                                 </h1>
-                                <p class="text-base md:text-2xl lg:text-5xl font-medium text-white leading-[1.1] mb-8 drop-shadow-lg">
-                                    {{ $banner->title }}
-                                </p>
+                                @if($banner->subtitle)
+                                    <p class="text-sm md:text-lg lg:text-2xl font-medium text-white leading-[1.1] mb-8 drop-shadow-lg">
+                                        {{ $banner->subtitle }}
+                                    </p>
+                                @endif
                             @else
                                 <span class="text-gray-300 text-xs md:text-sm font-bold tracking-[0.2em] uppercase mb-5 block">
                                     New Season Highlight

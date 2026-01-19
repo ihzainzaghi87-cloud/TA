@@ -4,15 +4,18 @@
 
 @push('styles')
 <style>
+    /* Card Styling - Sharp & Clean */
     .profile-card {
         background: #fff;
         border: 1px solid #e5e7eb;
-        border-radius: 16px;
+        border-radius: 1.5rem; /* 24px */
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
         transition: all 0.3s ease;
     }
 
     .profile-card:hover {
-        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.1);
+        border-color: #1A1A1D;
+        transform: translateY(-2px);
     }
 
     .menu-item {
@@ -21,49 +24,53 @@
         padding: 16px 20px;
         border-radius: 12px;
         transition: all 0.2s ease;
-        color: #374151;
+        color: #6b7280;
     }
 
     .menu-item:hover {
-        background: #fffbeb;
-        color: #92400e;
+        background: #f9fafb;
+        color: #1A1A1D;
     }
 
     .menu-item.active {
-        background: #FAD470;
-        color: #92400e;
+        background: #1A1A1D;
+        color: #ffffff;
         font-weight: 600;
     }
 
     .avatar-ring {
-        background: linear-gradient(135deg, #FAD470 0%, #F8B500 100%);
+        background: linear-gradient(135deg, #1A1A1D 0%, #374151 100%);
     }
 
     .form-input {
         width: 100%;
         padding: 12px 16px;
-        border: 1px solid #e5e7eb;
+        border: 2px solid #e5e7eb;
         border-radius: 12px;
         font-size: 14px;
         transition: all 0.2s ease;
+        background: #f9fafb;
     }
 
     .form-input:focus {
         outline: none;
-        border-color: #FAD470;
-        box-shadow: 0 0 0 3px rgba(250, 212, 112, 0.2);
+        border-color: #1A1A1D;
+        background: #fff;
+        box-shadow: 0 0 0 3px rgba(26, 26, 29, 0.1);
     }
 
     .form-input:disabled {
-        background-color: #f9fafb;
+        background-color: #f3f4f6;
     }
 
     .form-label {
         display: block;
         font-size: 14px;
-        font-weight: 500;
-        color: #374151;
+        font-weight: 700;
+        color: #1A1A1D;
         margin-bottom: 8px;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
     }
 
     .form-label .required {
@@ -73,23 +80,23 @@
 @endpush
 
 @section('content')
-<div class="min-h-screen bg-gray-50 py-8">
+<div class="min-h-screen bg-gray-50 py-10">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <!-- Breadcrumb -->
         <nav class="flex items-center mb-8 text-sm">
-            <a href="{{ route('home') }}" class="text-gray-500 hover:text-amber-600 transition-colors">
+            <a href="{{ route('home') }}" class="text-gray-400 hover:text-black transition-colors">
                 <i class="fas fa-home"></i>
             </a>
             <i class="fas fa-chevron-right text-gray-300 mx-3 text-xs"></i>
-            <a href="{{ route('customer.index') }}" class="text-gray-500 hover:text-amber-600 transition-colors">
-                Profil
+            <a href="{{ route('customer.index') }}" class="text-gray-400 hover:text-black transition-colors">
+                Profile
             </a>
             <i class="fas fa-chevron-right text-gray-300 mx-3 text-xs"></i>
-            <a href="{{ route('addresses.index') }}" class="text-gray-500 hover:text-amber-600 transition-colors">
+            <a href="{{ route('addresses.index') }}" class="text-gray-400 hover:text-black transition-colors">
                 Alamat
             </a>
             <i class="fas fa-chevron-right text-gray-300 mx-3 text-xs"></i>
-            <span class="text-gray-900 font-medium">Edit</span>
+            <span class="text-[#1A1A1D] font-bold">Edit</span>
         </nav>
 
         <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
@@ -144,15 +151,15 @@
                     <!-- Header -->
                     <div class="flex items-center gap-4 mb-8">
                         <a href="{{ route('addresses.index') }}" 
-                           class="w-10 h-10 bg-gray-100 hover:bg-amber-100 rounded-lg flex items-center justify-center text-gray-600 hover:text-amber-600 transition-colors">
+                           class="w-10 h-10 bg-gray-100 hover:bg-[#1A1A1D] rounded-xl flex items-center justify-center text-gray-600 hover:text-white transition-all shadow-sm">
                             <i class="fas fa-arrow-left"></i>
                         </a>
                         <div>
-                            <h1 class="text-2xl font-bold text-gray-900">Edit Alamat</h1>
+                            <h1 class="text-2xl font-black text-[#1A1A1D] tracking-tight uppercase">Edit Alamat</h1>
                             <p class="text-gray-500 text-sm">Ubah detail alamat pengiriman Anda</p>
                         </div>
                         @if($address->is_primary)
-                            <span class="ml-auto inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-amber-100 text-amber-800">
+                            <span class="ml-auto inline-flex items-center px-3 py-1 rounded-full text-sm font-bold bg-[#1A1A1D] text-white uppercase tracking-wide border border-[#1A1A1D]">
                                 <i class="fas fa-star mr-1"></i> Alamat Utama
                             </span>
                         @endif
@@ -302,19 +309,19 @@
                             <div class="md:col-span-2">
                                 <label class="inline-flex items-center gap-3 cursor-pointer">
                                     <input type="checkbox" name="is_primary" value="1" {{ old('is_primary', $address->is_primary) ? 'checked' : '' }}
-                                           class="w-5 h-5 rounded border-gray-300 text-amber-500 focus:ring-amber-500">
-                                    <span class="text-gray-700 font-medium">Jadikan sebagai alamat utama</span>
+                                           class="w-5 h-5 rounded border-gray-300 text-[#1A1A1D] focus:ring-[#1A1A1D]">
+                                    <span class="text-gray-700 font-bold">Jadikan sebagai alamat utama</span>
                                 </label>
                             </div>
                         </div>
 
-                        <div class="mt-8 pt-6 border-t border-gray-100 flex flex-col sm:flex-row justify-end gap-4">
+                        <div class="mt-8 pt-6 border-t border-gray-200 flex flex-col sm:flex-row justify-end gap-4">
                             <a href="{{ route('addresses.index') }}" 
-                               class="px-6 py-3 rounded-xl border border-gray-300 text-gray-700 font-semibold hover:bg-gray-50 transition text-center">
+                               class="px-6 py-4 rounded-2xl border border-gray-300 text-gray-700 font-bold hover:bg-gray-50 hover:border-[#1A1A1D] hover:text-[#1A1A1D] transition-all shadow-sm text-center">
                                 Batal
                             </a>
                             <button type="submit" 
-                                    class="px-6 py-3 rounded-xl bg-gradient-to-r from-amber-500 to-yellow-500 text-white font-semibold hover:from-amber-600 hover:to-yellow-600 shadow-lg hover:shadow-xl transition">
+                                    class="px-6 py-4 rounded-2xl bg-[#1A1A1D] text-white font-bold hover:bg-gray-800 shadow-lg hover:shadow-xl transition-all">
                                 <i class="fas fa-save mr-2"></i>
                                 Simpan Perubahan
                             </button>

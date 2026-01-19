@@ -4,21 +4,30 @@
 
 @push('styles')
 <style>
+    /* Card Styling - Sharp & Clean */
     .profile-card {
         background: #fff;
         border: 1px solid #e5e7eb;
-        border-radius: 16px;
+        border-radius: 1.5rem; /* Rounded 24px */
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
         transition: all 0.3s ease;
     }
 
     .profile-card:hover {
-        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.1);
+        border-color: #1A1A1D;
+        transform: translateY(-2px);
     }
 
     .stat-card {
-        background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
-        border: 1px solid #fcd34d;
-        border-radius: 16px;
+        background: linear-gradient(135deg, #F9FAFB 0%, #F3F4F6 100%);
+        border: 1px solid #E5E7EB;
+        border-radius: 1rem;
+        transition: all 0.3s ease;
+    }
+
+    .stat-card:hover {
+        border-color: #1A1A1D;
+        transform: translateY(-2px);
     }
 
     .menu-item {
@@ -27,49 +36,49 @@
         padding: 16px 20px;
         border-radius: 12px;
         transition: all 0.2s ease;
-        color: #374151;
+        color: #6b7280;
     }
 
     .menu-item:hover {
-        background: #fffbeb;
-        color: #92400e;
+        background: #f9fafb;
+        color: #1A1A1D;
     }
 
     .menu-item.active {
-        background: #FAD470;
-        color: #92400e;
+        background: #1A1A1D;
+        color: #ffffff;
         font-weight: 600;
     }
 
     .avatar-ring {
-        background: linear-gradient(135deg, #FAD470 0%, #F8B500 100%);
+        background: linear-gradient(135deg, #1A1A1D 0%, #374151 100%);
     }
 </style>
 @endpush
 
 @section('content')
-<div class="min-h-screen bg-gray-50 py-8">
+<div class="min-h-screen bg-gray-50 py-10">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <!-- Breadcrumb -->
         <nav class="flex items-center mb-8 text-sm">
-            <a href="{{ route('home') }}" class="text-gray-500 hover:text-amber-600 transition-colors">
+            <a href="{{ route('home') }}" class="text-gray-400 hover:text-black transition-colors">
                 <i class="fas fa-home"></i>
             </a>
             <i class="fas fa-chevron-right text-gray-300 mx-3 text-xs"></i>
-            <span class="text-gray-900 font-medium">Profil Saya</span>
+            <span class="text-[#1A1A1D] font-bold">Profil Saya</span>
         </nav>
 
         <!-- Flash Messages -->
         @if(session('success'))
-        <div class="mb-6 bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded-lg flex items-center">
-            <i class="fas fa-check-circle mr-2"></i>
+        <div class="mb-6 bg-[#1A1A1D] text-white px-6 py-4 rounded-2xl flex items-center shadow-lg">
+            <i class="fas fa-check-circle mr-3 text-green-400"></i>
             {{ session('success') }}
         </div>
         @endif
 
         @if(session('error'))
-        <div class="mb-6 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg flex items-center">
-            <i class="fas fa-exclamation-circle mr-2"></i>
+        <div class="mb-6 bg-red-50 border border-red-200 text-red-600 px-6 py-4 rounded-2xl flex items-center">
+            <i class="fas fa-exclamation-circle mr-3"></i>
             {{ session('error') }}
         </div>
         @endif
@@ -123,16 +132,16 @@
             <!-- Main Content -->
             <div class="lg:col-span-3 space-y-6">
                 <!-- Stats Cards -->
-                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
                     <!-- Points Card -->
                     <div class="stat-card p-6">
                         <div class="flex items-center justify-between">
                             <div>
-                                <p class="text-amber-800 text-sm font-medium">Total Poin</p>
-                                <p class="text-3xl font-bold text-amber-900">{{ number_format($userPoint->total_points ?? 0) }}</p>
+                                <p class="text-gray-500 text-xs font-semibold uppercase tracking-wide mb-2">Total Poin</p>
+                                <p class="text-4xl font-black text-[#1A1A1D] tracking-tight">{{ number_format($userPoint->total_points ?? 0) }}</p>
                             </div>
-                            <div class="w-12 h-12 bg-amber-400 rounded-full flex items-center justify-center">
-                                <i class="fas fa-coins text-white text-xl"></i>
+                            <div class="w-14 h-14 bg-[#1A1A1D] rounded-full flex items-center justify-center">
+                                <i class="fas fa-coins text-white text-2xl"></i>
                             </div>
                         </div>
                     </div>
@@ -141,11 +150,11 @@
                     <div class="stat-card p-6">
                         <div class="flex items-center justify-between">
                             <div>
-                                <p class="text-amber-800 text-sm font-medium">Total Pesanan</p>
-                                <p class="text-3xl font-bold text-amber-900">{{ $totalOrders }}</p>
+                                <p class="text-gray-500 text-xs font-semibold uppercase tracking-wide mb-2">Total Pesanan</p>
+                                <p class="text-4xl font-black text-[#1A1A1D] tracking-tight">{{ $totalOrders }}</p>
                             </div>
-                            <div class="w-12 h-12 bg-amber-400 rounded-full flex items-center justify-center">
-                                <i class="fas fa-shopping-bag text-white text-xl"></i>
+                            <div class="w-14 h-14 bg-[#1A1A1D] rounded-full flex items-center justify-center">
+                                <i class="fas fa-shopping-bag text-white text-2xl"></i>
                             </div>
                         </div>
                     </div>
@@ -154,85 +163,83 @@
                     <div class="stat-card p-6">
                         <div class="flex items-center justify-between">
                             <div>
-                                <p class="text-amber-800 text-sm font-medium">Pesanan Selesai</p>
-                                <p class="text-3xl font-bold text-amber-900">{{ $completedOrders }}</p>
+                                <p class="text-gray-500 text-xs font-semibold uppercase tracking-wide mb-2">Pesanan Selesai</p>
+                                <p class="text-4xl font-black text-[#1A1A1D] tracking-tight">{{ $completedOrders }}</p>
                             </div>
-                            <div class="w-12 h-12 bg-amber-400 rounded-full flex items-center justify-center">
-                                <i class="fas fa-check-circle text-white text-xl"></i>
+                            <div class="w-14 h-14 bg-[#1A1A1D] rounded-full flex items-center justify-center">
+                                <i class="fas fa-check-circle text-white text-2xl"></i>
                             </div>
                         </div>
                     </div>
                 </div>
 
                 <!-- Profile Information Card -->
-                <div class="profile-card p-6">
-                    <div class="flex items-center justify-between mb-6">
-                        <h3 class="text-xl font-bold text-gray-900 flex items-center gap-3">
-                            <div class="w-10 h-10 bg-amber-100 rounded-xl flex items-center justify-center">
-                                <i class="fas fa-user text-amber-600"></i>
-                            </div>
+                <div class="profile-card p-8">
+                    <div class="flex items-center justify-between mb-8">
+                        <h3 class="text-xl font-bold text-[#1A1A1D] flex items-center gap-2 uppercase tracking-wide">
+                            <i class="fas fa-user"></i>
                             Informasi Profil
                         </h3>
                         <a href="{{ route('customer.edit') }}" 
-                           class="inline-flex items-center px-4 py-2 bg-gradient-to-r from-amber-500 to-yellow-500 text-white rounded-lg font-semibold text-sm hover:from-amber-600 hover:to-yellow-600 transition-all duration-300">
-                            <i class="fas fa-edit mr-2"></i>
+                           class="inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-[#1A1A1D] text-white rounded-xl font-bold hover:bg-gray-800 transition-all shadow-lg text-sm">
+                            <i class="fas fa-edit"></i>
                             Edit Profil
                         </a>
                     </div>
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div class="space-y-4">
-                            <div class="flex items-center p-4 bg-gray-50 rounded-xl">
-                                <div class="w-10 h-10 bg-amber-100 rounded-lg flex items-center justify-center mr-4">
-                                    <i class="fas fa-user text-amber-600"></i>
+                            <div class="flex items-center p-4 bg-gray-50 rounded-xl border border-gray-100">
+                                <div class="w-12 h-12 bg-[#1A1A1D] rounded-lg flex items-center justify-center mr-4">
+                                    <i class="fas fa-user text-white"></i>
                                 </div>
                                 <div>
-                                    <p class="text-xs text-gray-500 uppercase tracking-wide">Nama Lengkap</p>
-                                    <p class="text-gray-900 font-semibold">{{ $user->name }}</p>
+                                    <p class="text-xs text-gray-500 uppercase tracking-wide font-semibold">Nama Lengkap</p>
+                                    <p class="text-[#1A1A1D] font-bold">{{ $user->name }}</p>
                                 </div>
                             </div>
 
-                            <div class="flex items-center p-4 bg-gray-50 rounded-xl">
-                                <div class="w-10 h-10 bg-amber-100 rounded-lg flex items-center justify-center mr-4">
-                                    <i class="fas fa-envelope text-amber-600"></i>
+                            <div class="flex items-center p-4 bg-gray-50 rounded-xl border border-gray-100">
+                                <div class="w-12 h-12 bg-[#1A1A1D] rounded-lg flex items-center justify-center mr-4">
+                                    <i class="fas fa-envelope text-white"></i>
                                 </div>
                                 <div>
-                                    <p class="text-xs text-gray-500 uppercase tracking-wide">Email</p>
-                                    <p class="text-gray-900 font-semibold">{{ $user->email }}</p>
+                                    <p class="text-xs text-gray-500 uppercase tracking-wide font-semibold">Email</p>
+                                    <p class="text-[#1A1A1D] font-bold">{{ $user->email }}</p>
                                 </div>
                             </div>
 
-                            <div class="flex items-center p-4 bg-gray-50 rounded-xl">
-                                <div class="w-10 h-10 bg-amber-100 rounded-lg flex items-center justify-center mr-4">
-                                    <i class="fas fa-phone text-amber-600"></i>
+                            <div class="flex items-center p-4 bg-gray-50 rounded-xl border border-gray-100">
+                                <div class="w-12 h-12 bg-[#1A1A1D] rounded-lg flex items-center justify-center mr-4">
+                                    <i class="fas fa-phone text-white"></i>
                                 </div>
                                 <div>
-                                    <p class="text-xs text-gray-500 uppercase tracking-wide">Nomor Telepon</p>
-                                    <p class="text-gray-900 font-semibold">{{ $user->phone ?? 'Belum diatur' }}</p>
+                                    <p class="text-xs text-gray-500 uppercase tracking-wide font-semibold">Nomor Telepon</p>
+                                    <p class="text-[#1A1A1D] font-bold">{{ $user->phone ?? 'Belum diatur' }}</p>
                                 </div>
                             </div>
                         </div>
 
                         <div class="space-y-4">
-                            <div class="flex items-center p-4 bg-gray-50 rounded-xl">
-                                <div class="w-10 h-10 bg-amber-100 rounded-lg flex items-center justify-center mr-4">
-                                    <i class="fas fa-birthday-cake text-amber-600"></i>
+                            <div class="flex items-center p-4 bg-gray-50 rounded-xl border border-gray-100">
+                                <div class="w-12 h-12 bg-[#1A1A1D] rounded-lg flex items-center justify-center mr-4">
+                                    <i class="fas fa-birthday-cake text-white"></i>
                                 </div>
                                 <div>
-                                    <p class="text-xs text-gray-500 uppercase tracking-wide">Tanggal Lahir</p>
-                                    <p class="text-gray-900 font-semibold">
+                                    <p class="text-xs text-gray-500 uppercase tracking-wide font-semibold">Tanggal Lahir</p>
+                                    <p class="text-[#1A1A1D] font-bold">
                                         {{ $user->date_of_birth ? \Carbon\Carbon::parse($user->date_of_birth)->format('d F Y') : 'Belum diatur' }}
                                     </p>
                                 </div>
                             </div>
 
-                            <div class="flex items-center p-4 bg-gray-50 rounded-xl">
-                                <div class="w-10 h-10 bg-amber-100 rounded-lg flex items-center justify-center mr-4">
-                                    <i class="fas fa-venus-mars text-amber-600"></i>
+                            <div class="flex items-center p-4 bg-gray-50 rounded-xl border border-gray-100">
+                                <div class="w-12 h-12 bg-[#1A1A1D] rounded-lg flex items-center justify-center mr-4">
+                                    <i class="fas fa-venus-mars text-white"></i>
                                 </div>
                                 <div>
-                                    <p class="text-xs text-gray-500 uppercase tracking-wide">Jenis Kelamin</p>
-                                    <p class="text-gray-900 font-semibold">
+                                    <p class="text-xs text-gray-500 uppercase tracking-wide font-semibold">Jenis Kelamin</p>
+                                    <p class="text-[#1A1A1D] font-bold">
                                         @if($user->gender == 'male')
                                             Laki-laki
                                         @elseif($user->gender == 'female')
@@ -244,13 +251,13 @@
                                 </div>
                             </div>
 
-                            <div class="flex items-center p-4 bg-gray-50 rounded-xl">
-                                <div class="w-10 h-10 bg-amber-100 rounded-lg flex items-center justify-center mr-4">
-                                    <i class="fas fa-calendar-alt text-amber-600"></i>
+                            <div class="flex items-center p-4 bg-gray-50 rounded-xl border border-gray-100">
+                                <div class="w-12 h-12 bg-[#1A1A1D] rounded-lg flex items-center justify-center mr-4">
+                                    <i class="fas fa-calendar-alt text-white"></i>
                                 </div>
                                 <div>
-                                    <p class="text-xs text-gray-500 uppercase tracking-wide">Bergabung Sejak</p>
-                                    <p class="text-gray-900 font-semibold">{{ $user->created_at->format('d F Y') }}</p>
+                                    <p class="text-xs text-gray-500 uppercase tracking-wide font-semibold">Bergabung Sejak</p>
+                                    <p class="text-[#1A1A1D] font-bold">{{ $user->created_at->format('d F Y') }}</p>
                                 </div>
                             </div>
                         </div>
@@ -258,27 +265,27 @@
                 </div>
 
                 <!-- Quick Actions -->
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <a href="{{ route('customer.orders') }}" class="profile-card p-6 flex items-center hover:border-amber-400 group">
-                        <div class="w-14 h-14 bg-blue-100 rounded-xl flex items-center justify-center mr-4 group-hover:bg-blue-200 transition-colors">
-                            <i class="fas fa-box text-blue-600 text-xl"></i>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                    <a href="{{ route('customer.orders') }}" class="profile-card p-6 flex items-center hover:border-[#1A1A1D] group">
+                        <div class="w-16 h-16 bg-black rounded-xl flex items-center justify-center mr-4 group-hover:bg-black transition-colors">
+                            <i class="fas fa-box text-white text-2xl"></i>
                         </div>
-                        <div>
-                            <h4 class="font-bold text-gray-900">Lihat Pesanan</h4>
-                            <p class="text-gray-500 text-sm">Cek status pesanan Anda</p>
+                        <div class="flex-1">
+                            <h4 class="font-black text-[#1A1A1D] text-base">Lihat Pesanan</h4>
+                            <p class="text-gray-500 text-sm mt-1">Cek status pesanan Anda</p>
                         </div>
-                        <i class="fas fa-chevron-right text-gray-400 ml-auto"></i>
+                        <i class="fas fa-chevron-right text-gray-400 ml-2"></i>
                     </a>
 
-                    <a href="{{ route('addresses.index') }}" class="profile-card p-6 flex items-center hover:border-amber-400 group">
-                        <div class="w-14 h-14 bg-green-100 rounded-xl flex items-center justify-center mr-4 group-hover:bg-green-200 transition-colors">
-                            <i class="fas fa-map-marker-alt text-green-600 text-xl"></i>
+                    <a href="{{ route('addresses.index') }}" class="profile-card p-6 flex items-center hover:border-[#1A1A1D] group">
+                        <div class="w-16 h-16 bg-black rounded-xl flex items-center justify-center mr-4 group-hover:bg-black transition-colors">
+                            <i class="fas fa-map-marker-alt text-white text-2xl"></i>
                         </div>
-                        <div>
-                            <h4 class="font-bold text-gray-900">Kelola Alamat</h4>
-                            <p class="text-gray-500 text-sm">Atur alamat pengiriman</p>
+                        <div class="flex-1">
+                            <h4 class="font-black text-[#1A1A1D] text-base">Kelola Alamat</h4>
+                            <p class="text-gray-500 text-sm mt-1">Atur alamat pengiriman</p>
                         </div>
-                        <i class="fas fa-chevron-right text-gray-400 ml-auto"></i>
+                        <i class="fas fa-chevron-right text-gray-400 ml-2"></i>
                     </a>
                 </div>
             </div>

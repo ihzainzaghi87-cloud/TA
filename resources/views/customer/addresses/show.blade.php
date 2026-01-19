@@ -4,15 +4,18 @@
 
 @push('styles')
 <style>
+    /* Card Styling - Sharp & Clean */
     .profile-card {
         background: #fff;
         border: 1px solid #e5e7eb;
-        border-radius: 16px;
+        border-radius: 1.5rem; /* 24px */
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
         transition: all 0.3s ease;
     }
 
     .profile-card:hover {
-        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.1);
+        border-color: #1A1A1D;
+        transform: translateY(-2px);
     }
 
     .menu-item {
@@ -21,22 +24,22 @@
         padding: 16px 20px;
         border-radius: 12px;
         transition: all 0.2s ease;
-        color: #374151;
+        color: #6b7280;
     }
 
     .menu-item:hover {
-        background: #fffbeb;
-        color: #92400e;
+        background: #f9fafb;
+        color: #1A1A1D;
     }
 
     .menu-item.active {
-        background: #FAD470;
-        color: #92400e;
+        background: #1A1A1D;
+        color: #ffffff;
         font-weight: 600;
     }
 
     .avatar-ring {
-        background: linear-gradient(135deg, #FAD470 0%, #F8B500 100%);
+        background: linear-gradient(135deg, #1A1A1D 0%, #374151 100());
     }
 
     .info-row {
@@ -45,12 +48,19 @@
         padding: 16px;
         background: #f9fafb;
         border-radius: 12px;
+        border: 1px solid #e5e7eb;
+        transition: all 0.2s ease;
+    }
+
+    .info-row:hover {
+        border-color: #1A1A1D;
+        background: #ffffff;
     }
 
     .info-icon {
         width: 40px;
         height: 40px;
-        background: #fef3c7;
+        background: #1A1A1D;
         border-radius: 10px;
         display: flex;
         align-items: center;
@@ -60,29 +70,29 @@
     }
 
     .info-icon i {
-        color: #d97706;
+        color: #ffffff;
     }
 </style>
 @endpush
 
 @section('content')
-<div class="min-h-screen bg-gray-50 py-8">
+<div class="min-h-screen bg-gray-50 py-10">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <!-- Breadcrumb -->
         <nav class="flex items-center mb-8 text-sm">
-            <a href="{{ route('home') }}" class="text-gray-500 hover:text-amber-600 transition-colors">
+            <a href="{{ route('home') }}" class="text-gray-400 hover:text-black transition-colors">
                 <i class="fas fa-home"></i>
             </a>
             <i class="fas fa-chevron-right text-gray-300 mx-3 text-xs"></i>
-            <a href="{{ route('customer.index') }}" class="text-gray-500 hover:text-amber-600 transition-colors">
-                Profil
+            <a href="{{ route('customer.index') }}" class="text-gray-400 hover:text-black transition-colors">
+                Profile
             </a>
             <i class="fas fa-chevron-right text-gray-300 mx-3 text-xs"></i>
-            <a href="{{ route('addresses.index') }}" class="text-gray-500 hover:text-amber-600 transition-colors">
+            <a href="{{ route('addresses.index') }}" class="text-gray-400 hover:text-black transition-colors">
                 Alamat
             </a>
             <i class="fas fa-chevron-right text-gray-300 mx-3 text-xs"></i>
-            <span class="text-gray-900 font-medium">Detail</span>
+            <span class="text-[#1A1A1D] font-bold">Detail</span>
         </nav>
 
         <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
@@ -137,15 +147,15 @@
                     <!-- Header -->
                     <div class="flex items-center gap-4 mb-8">
                         <a href="{{ route('addresses.index') }}" 
-                           class="w-10 h-10 bg-gray-100 hover:bg-amber-100 rounded-lg flex items-center justify-center text-gray-600 hover:text-amber-600 transition-colors">
+                           class="w-10 h-10 bg-gray-100 hover:bg-[#1A1A1D] rounded-xl flex items-center justify-center text-gray-600 hover:text-white transition-all shadow-sm">
                             <i class="fas fa-arrow-left"></i>
                         </a>
                         <div class="flex-1">
-                            <h1 class="text-2xl font-bold text-gray-900">Detail Alamat</h1>
+                            <h1 class="text-2xl font-black text-[#1A1A1D] tracking-tight uppercase">Detail Alamat</h1>
                             <p class="text-gray-500 text-sm">{{ $address->label ?? 'Alamat' }}</p>
                         </div>
                         @if($address->is_primary)
-                            <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-amber-100 text-amber-800">
+                            <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-bold bg-[#1A1A1D] text-white uppercase tracking-wide border border-[#1A1A1D]">
                                 <i class="fas fa-star mr-1"></i> Alamat Utama
                             </span>
                         @endif
@@ -158,8 +168,8 @@
                                 <i class="fas fa-tag"></i>
                             </div>
                             <div>
-                                <p class="text-xs text-gray-500 uppercase tracking-wide mb-1">Label</p>
-                                <p class="text-gray-900 font-semibold">{{ $address->label ?? 'Tidak ada label' }}</p>
+                                <p class="text-xs text-gray-500 uppercase tracking-wide mb-1 font-bold">Label</p>
+                                <p class="text-[#1A1A1D] font-black">{{ $address->label ?? 'Tidak ada label' }}</p>
                             </div>
                         </div>
 
@@ -169,8 +179,8 @@
                                     <i class="fas fa-user"></i>
                                 </div>
                                 <div>
-                                    <p class="text-xs text-gray-500 uppercase tracking-wide mb-1">Penerima</p>
-                                    <p class="text-gray-900 font-semibold">{{ $address->recipient_name }}</p>
+                                    <p class="text-xs text-gray-500 uppercase tracking-wide mb-1 font-bold">Penerima</p>
+                                    <p class="text-[#1A1A1D] font-black">{{ $address->recipient_name }}</p>
                                 </div>
                             </div>
 
@@ -179,8 +189,8 @@
                                     <i class="fas fa-phone"></i>
                                 </div>
                                 <div>
-                                    <p class="text-xs text-gray-500 uppercase tracking-wide mb-1">Telepon</p>
-                                    <p class="text-gray-900 font-semibold">{{ $address->phone }}</p>
+                                    <p class="text-xs text-gray-500 uppercase tracking-wide mb-1 font-bold">Telepon</p>
+                                    <p class="text-[#1A1A1D] font-black">{{ $address->phone }}</p>
                                 </div>
                             </div>
                         </div>
@@ -190,8 +200,8 @@
                                 <i class="fas fa-map-marker-alt"></i>
                             </div>
                             <div>
-                                <p class="text-xs text-gray-500 uppercase tracking-wide mb-1">Alamat Lengkap</p>
-                                <p class="text-gray-900 font-semibold leading-relaxed">
+                                <p class="text-xs text-gray-500 uppercase tracking-wide mb-1 font-bold">Alamat Lengkap</p>
+                                <p class="text-[#1A1A1D] font-black leading-relaxed">
                                     {{ $address->address }}<br>
                                     {{ $address->city_name }}, {{ $address->province_name }} {{ $address->postal_code }}
                                 </p>
@@ -204,17 +214,17 @@
                                 <i class="fas fa-sticky-note"></i>
                             </div>
                             <div>
-                                <p class="text-xs text-gray-500 uppercase tracking-wide mb-1">Catatan</p>
-                                <p class="text-gray-700 italic">"{{ $address->note }}"</p>
+                                <p class="text-xs text-gray-500 uppercase tracking-wide mb-1 font-bold">Catatan</p>
+                                <p class="text-gray-700 italic font-semibold">"{{ $address->note }}"</p>
                             </div>
                         </div>
                         @endif
                     </div>
 
                     <!-- Actions -->
-                    <div class="mt-8 pt-6 border-t border-gray-100 flex flex-col sm:flex-row gap-4">
+                    <div class="mt-8 pt-6 border-t border-gray-200 flex flex-col sm:flex-row gap-4">
                         <a href="{{ route('addresses.edit', $address->id) }}" 
-                           class="flex-1 flex items-center justify-center gap-2 px-6 py-3 bg-gradient-to-r from-amber-500 to-yellow-500 text-white rounded-xl font-semibold hover:from-amber-600 hover:to-yellow-600 shadow-lg hover:shadow-xl transition">
+                           class="flex-1 flex items-center justify-center gap-2 px-6 py-4 bg-[#1A1A1D] text-white rounded-2xl font-bold hover:bg-gray-800 shadow-lg hover:shadow-xl transition-all">
                             <i class="fas fa-edit"></i>
                             Edit Alamat
                         </a>
@@ -223,7 +233,7 @@
                             <form action="{{ route('addresses.setPrimary', $address->id) }}" method="POST" class="flex-1">
                                 @csrf
                                 <button type="submit" 
-                                        class="w-full flex items-center justify-center gap-2 px-6 py-3 bg-amber-50 text-amber-700 rounded-xl font-semibold hover:bg-amber-100 transition">
+                                        class="w-full flex items-center justify-center gap-2 px-6 py-4 bg-gray-100 text-[#1A1A1D] rounded-2xl font-bold hover:bg-gray-200 transition-all shadow-sm">
                                     <i class="fas fa-star"></i>
                                     Jadikan Utama
                                 </button>
@@ -235,7 +245,7 @@
                             @csrf
                             @method('DELETE')
                             <button type="submit" 
-                                    class="w-full flex items-center justify-center gap-2 px-6 py-3 bg-red-50 text-red-600 rounded-xl font-semibold hover:bg-red-100 transition">
+                                    class="w-full flex items-center justify-center gap-2 px-6 py-4 bg-red-50 border border-red-200 text-red-600 rounded-2xl font-bold hover:bg-red-100 transition-all shadow-sm">
                                 <i class="fas fa-trash"></i>
                                 Hapus Alamat
                             </button>
