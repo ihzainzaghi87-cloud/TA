@@ -79,11 +79,11 @@
 
                 <div class="text-white space-y-6 self-center pb-16 lg:pb-0">
                     <h1 class="text-5xl lg:text-7xl font-bold leading-tight">
-                        Tentang Kami
+                        About Us
                     </h1>
                     <p class="text-lg lg:text-xl font-medium leading-relaxed opacity-90 max-w-lg text-gray-300">
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus hendrerit suscipit
-                        egestas. Nunc eget congue ante. Vivamus ut sapien et ex volutpat tincidunt eget at felis.
+                        The Paranoia is not just a clothing brand; it’s a state of mind. Born from the shadows of the concrete jungle, 
+                        we craft monochrome aesthetics for those who dare to embrace the unknown. Silence the noise, wear the statement.
                     </p>
                     <div class="pt-4">
                         <a href="#" class="inline-block bg-white text-black text-lg font-semibold px-10 py-4 rounded-full shadow-lg hover:bg-gray-200 transition duration-300 transform hover:scale-105">
@@ -137,12 +137,10 @@
 
                 <div>
                     <h2 class="text-5xl lg:text-7xl font-bold text-black mb-6 leading-tight">
-                        Belanja
+                        Shopping
                     </h2>
                     <p class="text-gray-500 text-lg leading-relaxed mb-12 max-w-lg">
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus hendrerit
-                        suscipit egestas. Nunc eget congue ante. Vivamus ut sapien et ex volutpat
-                        tincidunt eget at felis vivamus hendrerit.
+                        Explore our premium selection. From heavy-weight tees to structured outerwear. Crafted for those who find color in the darkness.
                     </p>
 
                     <div class="grid grid-cols-2 gap-6">
@@ -200,12 +198,11 @@
                 <div class="lg:col-span-4 space-y-8 sticky top-10">
                     <h2 class="text-5xl lg:text-6xl font-bold text-black leading-tight">
                         What can our <br>
-                        <span class="text-gray-400">Belanja <br> Offers?</span>
+                        <span class="text-gray-400">Shopping <br> Offers?</span>
                     </h2>
                     <div class="space-y-6 text-gray-500 text-lg leading-relaxed">
                         <p>
-                            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus hendrerit
-                            suscipit egestas. Nunc eget congue ante. Vivamus ut sapien et ex volutpat.
+                            Heavy-weight fabrics and precision cuts. Built to last in the concrete jungle.
                         </p>
                     </div>
                 </div>
@@ -220,7 +217,7 @@
                             </div>
                             <h3 class="text-2xl font-bold mb-3">Get many product</h3>
                             <p class="text-white/80 leading-relaxed text-sm px-2">
-                                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ut diam sapien.
+                                Explore our vast arsenal of monochrome aesthetics. From heavy-weight tees to technical outerwear, we curate the chaos for you.
                             </p>
                         </div>
 
@@ -230,9 +227,9 @@
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
                                 </svg>
                             </div>
-                            <h3 class="text-2xl font-bold text-gray-900 mb-3">Tukarkan Point!</h3>
+                            <h3 class="text-2xl font-bold text-gray-900 mb-3">Earn Rewards</h3>
                             <p class="text-gray-500 leading-relaxed text-sm px-2">
-                                Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                                Don't just spend, invest. Accumulate points with every acquisition and redeem them for exclusive gear. Join the inner circle.
                             </p>
                         </div>
 
@@ -242,9 +239,9 @@
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                                 </svg>
                             </div>
-                            <h3 class="text-2xl font-bold text-gray-900 mb-3">Pengantaran Cepat</h3>
+                            <h3 class="text-2xl font-bold text-gray-900 mb-3">Rapid Dispatch</h3>
                             <p class="text-gray-500 leading-relaxed text-sm px-2">
-                                Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                                We move fast. Orders are processed with urgency and shipped worldwide directly to your doorstep. No delays, no excuses.
                             </p>
                         </div>
 
@@ -254,9 +251,9 @@
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                                 </svg>
                             </div>
-                            <h3 class="text-2xl font-bold text-gray-900 mb-3">Terpercaya</h3>
+                            <h3 class="text-2xl font-bold text-gray-900 mb-3">100% Authentic</h3>
                             <p class="text-gray-500 leading-relaxed text-sm px-2">
-                                Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                                No fakes, no compromises. Every piece is guaranteed original. Shop securely with encrypted transactions.
                             </p>
                         </div>
                     </div>
@@ -465,11 +462,11 @@
         <div class="container mx-auto px-6 lg:px-12">
             <div class="text-center max-w-3xl mx-auto mb-20">
                 <h2 class="text-4xl lg:text-6xl font-bold text-black leading-tight mb-6">
-                    Listen to what our <br>
-                    <span class="text-gray-400">customers say</span>
+                    Hear The<br>
+                    <span class="text-gray-400">Noise</span>
                 </h2>
                 <p class="text-gray-500 text-lg leading-relaxed">
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                    Real words from the underground. See why the community chooses The Paranoia.
                 </p>
             </div>
 
@@ -480,7 +477,7 @@
                     </div>
                     <h4 class="text-xl font-bold text-white mb-4">Pedro Beatty</h4>
                     <p class="text-gray-300 text-sm leading-relaxed mb-8">
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ut diam sapien.
+                        The heavy-weight fabric is insane. Fits perfectly oversized without looking sloppy. Finally, a brand that understands the architecture of streetwear.
                     </p>
                     <div class="flex justify-center gap-1.5 text-white">
                         @for($i=0; $i<5; $i++)
@@ -495,7 +492,7 @@
                     </div>
                     <h4 class="text-xl font-bold text-black mb-4">Justin Gerhold Jr.</h4>
                     <p class="text-gray-500 text-sm leading-relaxed mb-8">
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ut diam sapien.
+                        Monochrome perfection. No loud logos, just pure silhouette and texture. My daily uniform for the concrete jungle.
                     </p>
                     <div class="flex justify-center gap-1.5 text-black">
                         @for($i=0; $i<5; $i++)
@@ -510,7 +507,7 @@
                     </div>
                     <h4 class="text-xl font-bold text-black mb-4">Rufus Mohr</h4>
                     <p class="text-gray-500 text-sm leading-relaxed mb-8">
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ut diam sapien.
+                        Packaging was an experience in itself. Fast dispatch, zero hassle. The Paranoia sets a new standard for local brands.
                     </p>
                     <div class="flex justify-center gap-1.5 text-black">
                         @for($i=0; $i<5; $i++)

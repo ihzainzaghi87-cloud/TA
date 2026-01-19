@@ -204,8 +204,6 @@
                 <i class="fas fa-shopping-cart mr-2"></i> Cart
             </a>
             @endauth
->>>>>>> e761db4b7ec29175f2e8244e640ff8ad57b94338
-
             <div class="border-t border-gray-100 pt-4">
                 @guest
                     <div class="grid grid-cols-2 gap-3">
@@ -241,7 +239,6 @@
                         <a href="{{ route('customer.orders') }}"
                            class="block px-3 py-2 text-gray-700 hover:bg-gray-100 hover:text-gray-500 rounded-md transition duration-150">
                             <i class="fas fa-box mr-2"></i> Pesanan Saya
->>>>>>> e761db4b7ec29175f2e8244e640ff8ad57b94338
                         </a>
                         <a href="{{ route('cart.index') }}"
                             class="block px-4 py-3 text-gray-600 hover:bg-gray-50 hover:text-[#1A1A1D] rounded-xl font-medium transition">
