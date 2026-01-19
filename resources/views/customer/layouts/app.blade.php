@@ -77,12 +77,12 @@
         }
         
         ::-webkit-scrollbar-thumb {
-            background: #374151;
+            background: #000000;
             border-radius: 5px;
         }
         
         ::-webkit-scrollbar-thumb:hover {
-            background: #000000;
+            background: #374151;
         }
         
         /* Animation Classes */
