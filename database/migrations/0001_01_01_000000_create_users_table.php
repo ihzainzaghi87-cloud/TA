@@ -19,6 +19,8 @@ return new class extends Migration
             $table->string('password');
             $table->string('username')->unique()->nullable();
             $table->string('phone_number', 15)->nullable();
+            $table->date('date_of_birth')->nullable();
+            $table->enum('gender', ['male', 'female'])->nullable();
             $table->rememberToken();
             $table->timestamps();
         });

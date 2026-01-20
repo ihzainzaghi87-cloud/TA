@@ -100,7 +100,7 @@ class CustomerProfileController extends Controller
             return view('customer.profile.edit', compact('user'));
         } catch (\Exception $e) {
             Log::error('Error loading edit profile: ' . $e->getMessage());
-            return redirect()->route('profile.index')
+            return redirect()->route('customer.profile.index')
                 ->with('error', 'Gagal memuat halaman edit profil');
         }
     }
@@ -113,7 +113,7 @@ class CustomerProfileController extends Controller
             $validated = $request->validate([
                 'name' => 'required|string|max:255',
                 'email' => 'required|email|max:255|unique:users,email,' . $user->id,
-                'phone' => 'nullable|string|max:20',
+                'phone_number' => 'nullable|string|max:20',
                 'date_of_birth' => 'nullable|date|before:today',
                 'gender' => 'nullable|in:male,female,other',
             ], [
@@ -126,7 +126,7 @@ class CustomerProfileController extends Controller
 
             $user->update($validated);
 
-            return redirect()->route('profile.index')
+            return redirect()->route('customer.index')
                 ->with('success', 'Profil berhasil diperbarui');
         } catch (\Illuminate\Validation\ValidationException $e) {
             return redirect()->back()
@@ -134,6 +134,7 @@ class CustomerProfileController extends Controller
                 ->withInput();
         } catch (\Exception $e) {
             Log::error('Error updating profile: ' . $e->getMessage());
+            dd($e);
             return redirect()->back()
                 ->with('error', 'Gagal memperbarui profil')
                 ->withInput();
@@ -170,7 +171,7 @@ class CustomerProfileController extends Controller
                 'password' => Hash::make($validated['password'])
             ]);
 
-            return redirect()->route('profile.index')
+            return redirect()->route('customer.index')
                 ->with('success', 'Password berhasil diubah');
         } catch (\Illuminate\Validation\ValidationException $e) {
             return redirect()->back()
@@ -266,7 +267,7 @@ class CustomerProfileController extends Controller
                 ->where('user_id', Auth::id())
                 ->orderBy('created_at', 'desc');
 
-            // ✅ FIXED: Accept both lowercase and capitalized
+            // Accept both lowercase and capitalized
             if ($status) {
                 $query->where('status', $status);
             }
@@ -281,7 +282,7 @@ class CustomerProfileController extends Controller
                 }
             }
 
-            // ✅ Stats dengan format yang benar
+            // Stats dengan format yang benar
             $orderStats = [
                 'total' => Order::where('user_id', Auth::id())->count(),
                 'pending' => Order::where('user_id', Auth::id())->where('status', 'Pending')->count(),
@@ -312,7 +313,7 @@ class CustomerProfileController extends Controller
                 ->where('user_id', Auth::id())
                 ->findOrFail($orderId);
 
-            // ✅ ADD TRACKING DATA
+            // ADD TRACKING DATA
             $trackingData = null;
             if ($order->status == Order::STATUS_SHIPPED && $order->hasTracking()) {
                 $trackingData = $this->getTrackingData($order);

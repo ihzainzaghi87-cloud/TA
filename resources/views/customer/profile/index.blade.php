@@ -215,7 +215,7 @@
                                 </div>
                                 <div>
                                     <p class="text-xs text-gray-500 uppercase tracking-wide font-semibold">Nomor Telepon</p>
-                                    <p class="text-[#1A1A1D] font-bold">{{ $user->phone ?? 'Belum diatur' }}</p>
+                                    <p class="text-[#1A1A1D] font-bold">{{ $user->phone_number ?? 'Belum diatur' }}</p>
                                 </div>
                             </div>
                         </div>

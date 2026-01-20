@@ -52,12 +52,12 @@
         }
 
         ::-webkit-scrollbar-thumb {
-            background: #FAD470;
+            background: #000000;
             border-radius: 4px;
         }
 
         ::-webkit-scrollbar-thumb:hover {
-            background: #F59E0B;
+            background: #374151;
         }
 
         /* Animation */

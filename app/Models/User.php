@@ -26,12 +26,15 @@ class User extends Authenticatable implements CanResetPasswordContract
         'password',
         'username',
         'phone_number',
+        'date_of_birth',
+        'gender',
     ];
 
     protected $hidden = ['password', 'remember_token'];
 
     protected $casts = [
         'email_verified_at' => 'datetime',
+        'birth_date' => 'date',
     ];
 
     /**
@@ -101,4 +104,8 @@ class User extends Authenticatable implements CanResetPasswordContract
         return $this->hasMany(PushSubscription::class);
     }
 
+    public function setDateOfBirthAttribute($value)
+    {
+        $this->attributes['date_of_birth'] = $value ? \Carbon\Carbon::parse($value)->format('Y-m-d') : null;
+    }
 }

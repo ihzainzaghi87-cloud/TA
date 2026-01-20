@@ -203,17 +203,17 @@
 
                             <!-- Phone -->
                             <div>
-                                <label for="phone" class="form-label">
+                                <label for="phone_number" class="form-label">
                                     <i class="fas fa-phone text-gray-500 mr-2"></i>
                                     Nomor Telepon
                                 </label>
                                 <input type="tel" 
-                                       id="phone" 
-                                       name="phone" 
-                                       value="{{ old('phone', $user->phone) }}"
-                                       class="form-input @error('phone') error @enderror"
+                                       id="phone_number" 
+                                       name="phone_number" 
+                                       value="{{ old('phone_number', $user->phone_number) }}"
+                                       class="form-input @error('phone_number') error @enderror"
                                        placeholder="Contoh: 081234567890">
-                                @error('phone')
+                                @error('phone_number')
                                     <p class="form-error">{{ $message }}</p>
                                 @enderror
                             </div>
