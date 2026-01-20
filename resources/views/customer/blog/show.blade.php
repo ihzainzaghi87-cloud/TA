@@ -190,7 +190,7 @@
                     {{-- Article Meta --}}
                     <div class="flex flex-wrap items-center gap-4 mb-4">
                         <span class="bg-gray-200 text-black px-4 py-1 rounded-full text-sm font-semibold">
-                            Article
+                            Blog
                         </span>
                         <span class="text-white/80 text-sm flex items-center gap-2">
                             <i class="far fa-calendar-alt"></i>
@@ -230,7 +230,7 @@
 
                 {{-- Share Section --}}
                 <div class="mt-12 pt-8 border-t border-gray-200">
-                    <h4 class="text-lg font-semibold text-gray-900 mb-4">Share this article</h4>
+                    <h4 class="text-lg font-semibold text-gray-900 mb-4">Share this blog</h4>
                     <div class="flex flex-wrap gap-3">
                         <a href="https://www.facebook.com/sharer/sharer.php?u={{ urlencode(request()->url()) }}" 
                            target="_blank"

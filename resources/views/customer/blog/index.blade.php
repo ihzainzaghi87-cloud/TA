@@ -179,7 +179,7 @@
                         {{ Str::limit(strip_tags($featuredArticle->content), 200) }}
                     </p>
                     <div class="inline-flex items-center text-white font-bold text-lg group-hover:gap-3 transition-all">
-                        Read Article <i class="fas fa-arrow-right ml-2"></i>
+                        Read Blog <i class="fas fa-arrow-right ml-2"></i>
                     </div>
                 </div>
             </div>
@@ -197,7 +197,7 @@
                 <p class="text-gray-500 mt-1">Explore our latest fashion insights</p>
             </div>
             <div class="text-gray-900 font-medium bg-gray-100 px-4 py-1 rounded-full text-sm">
-                {{ $articles->total() }} Articles
+                {{ $articles->total() }} Blogs
             </div>
         </div>
 
@@ -207,7 +207,7 @@
                 <div class="w-24 h-24 bg-gray-50 rounded-full flex items-center justify-center mx-auto mb-6">
                     <i class="fas fa-pen-fancy text-gray-300 text-4xl"></i>
                 </div>
-                <h3 class="text-xl font-black text-gray-900 mb-2">No Articles Yet</h3>
+                <h3 class="text-xl font-black text-gray-900 mb-2">No Blogs Yet</h3>
                 <p class="text-gray-500 mb-8 max-w-md mx-auto">We are currently crafting amazing content for you. Please check back later!</p>
                 <a href="{{ route('home') }}"
                    class="inline-block bg-[#1A1A1D] text-white px-8 py-3 rounded-full font-black hover:bg-gray-800 transition-colors">
