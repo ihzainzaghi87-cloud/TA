@@ -1,6 +1,6 @@
 @extends('customer.layouts.app')
 
-@section('title', 'Home')
+@section('title', 'The Paranoia')
 
 @push('styles')
     <link

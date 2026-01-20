@@ -13,11 +13,11 @@
     
     {{-- Open Graph Meta Tags --}}
     <meta property="og:title" content="@yield('title', 'The Paranoia - E-Commerce Platform')">
-    <meta property="og:description" content="Your trusted e-commerce destination">
+    <meta property="og:description" content="Your trusted e-commerce destination for quality products and exceptional service. Shop with confidence.">
     <meta property="og:type" content="website">
     <meta property="og:url" content="{{ url()->current() }}">
     
-    <title>@yield('title', 'Home') - The Paranoia</title>
+    <title>@yield('title', 'The Paranoia Store') - The Paranoia</title>
 
     <meta name="theme-color" content="#6777ef">
     <meta name="user-authenticated" content="{{ auth()->check() ? 'true' : 'false' }}">

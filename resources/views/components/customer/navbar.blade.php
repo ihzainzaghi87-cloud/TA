@@ -23,7 +23,7 @@
             <div class="flex-shrink-0 flex items-center">
                 <a href="{{ route('home') }}" class="flex items-center gap-2 group">
                     <img src="{{ asset('ui/logo1.png') }}" alt="The Paranoia Logo"
-                        class="h-10 md:h-16 w-auto object-contain transition-transform duration-300 group-hover:scale-105">
+                        class="h-12 md:h-20 w-auto object-contain transition-transform duration-300 group-hover:scale-105">
                 </a>
             </div>
 
