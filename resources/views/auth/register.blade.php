@@ -8,7 +8,7 @@
 
     <div class="flex flex-col items-center justify-center mb-8">
         <div class="flex items-center gap-4">
-            <img src="{{ asset('ui/logo.png') }}" alt="Logo" class="w-12 h-12 object-contain">
+            <!-- <img src="{{ asset('ui/logo.png') }}" alt="Logo" class="w-12 h-12 object-contain"> -->
             <h1 class="text-[28px] font-extrabold text-black tracking-tight font-['Poppins']">The Paranoia</h1>
         </div>
     </div>
