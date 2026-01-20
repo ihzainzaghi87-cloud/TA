@@ -280,7 +280,7 @@
                 <h3 class="text-xl font-semibold text-gray-700 mb-2">No Products Found</h3>
                 <p class="text-gray-500 mb-6">Try adjusting your filters or search terms</p>
                 <a href="{{ route('products') }}"
-                    class="inline-block px-6 py-3 bg-orange-500 text-white rounded-lg hover:bg-orange-600">
+                    class="inline-block px-6 py-3 bg-black text-white rounded-lg hover:bg-black/80 transition-all">
                     Clear Filters
                 </a>
             </div>
