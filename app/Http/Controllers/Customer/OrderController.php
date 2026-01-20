@@ -317,21 +317,6 @@ class OrderController extends Controller
                 ]);
             }
 
-            // Add earned points
-            if ($pointsEarned > 0) {
-                $userPoint->increment('total_points', $pointsEarned);
-                
-                PointTransaction::create([
-                    'user_id' => Auth::id(),
-                    'transactionable_type' => Order::class,
-                    'transactionable_id' => $order->id,
-                    'type' => 'earned',
-                    'points' => $pointsEarned,
-                    'balance_after' => $userPoint->fresh()->total_points,
-                    'description' => "Mendapatkan {$pointsEarned} poin dari order #{$order->order_number}",
-                ]);
-            }
-
             // Prepare Midtrans transaction
             $user = Auth::user();
 
@@ -442,11 +427,17 @@ class OrderController extends Controller
                     } else {
                         $order->payment_status = 'Paid';
                         $order->status = 'Processing';
+
+                        // Give earned points when paid
+                        $this->giveEarnedPoints($order);
                     }
                 }
             } elseif ($status == 'settlement') {
                 $order->payment_status = 'Paid';
                 $order->status = 'Processing';
+
+                // Give earned points when paid
+                $this->giveEarnedPoints($order);
             } elseif ($status == 'pending') {
                 $order->payment_status = 'Pending';
             } elseif (in_array($status, ['deny', 'expire', 'cancel'])) {
@@ -473,6 +464,47 @@ class OrderController extends Controller
     }
 
     /**
+     * Give earned points when payment is successful
+     */
+    private function giveEarnedPoints(Order $order)
+    {
+        // Cek apakah poin sudah pernah diberikan sebelumnya
+        $alreadyGiven = PointTransaction::where('user_id', $order->user_id)
+            ->where('transactionable_type', Order::class)
+            ->where('transactionable_id', $order->id)
+            ->where('type', 'earned')
+            ->exists();
+
+        // Jika sudah diberikan, jangan berikan lagi (prevent double earning)
+        if ($alreadyGiven) {
+            Log::info("Points already given for order #{$order->order_number}");
+            return;
+        }
+
+        // Berikan poin jika ada
+        if ($order->points_earned > 0) {
+            $userPoint = UserPoint::firstOrCreate(
+                ['user_id' => $order->user_id],
+                ['total_points' => 0]
+            );
+
+            $userPoint->increment('total_points', $order->points_earned);
+
+            PointTransaction::create([
+                'user_id' => $order->user_id,
+                'transactionable_type' => Order::class,
+                'transactionable_id' => $order->id,
+                'type' => 'earned',
+                'points' => $order->points_earned,
+                'balance_after' => $userPoint->fresh()->total_points,
+                'description' => "Mendapatkan {$order->points_earned} poin dari order #{$order->order_number}",
+            ]);
+
+            Log::info("Earned points given: {$order->points_earned} for order #{$order->order_number}");
+        }
+    }
+
+    /**
      * Rollback points if payment failed
      */
     private function rollbackPoints(Order $order)
@@ -483,11 +515,6 @@ class OrderController extends Controller
             if ($userPoint) {
                 // Kembalikan poin yang digunakan
                 $userPoint->increment('total_points', $order->total_points_used);
-                
-                // Kurangi poin yang didapat
-                if ($order->points_earned > 0) {
-                    $userPoint->decrement('total_points', $order->points_earned);
-                }
 
                 // Create rollback transaction
                 PointTransaction::create([
