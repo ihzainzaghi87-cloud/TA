@@ -24,10 +24,10 @@ class DatabaseSeeder extends Seeder
             PermissionAndRoleSeeder::class,
             // LocationsSeeder::class,
             UserSeeder::class,
-            CategorySeeder::class,
-            ProductSeeder::class,
+            // CategorySeeder::class,
+            // ProductSeeder::class,
             // OrderSeeder::class,
-            ArticleSeeder::class,
+            // ArticleSeeder::class,
         ]);
     }
 }
