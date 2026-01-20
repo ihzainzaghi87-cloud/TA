@@ -212,7 +212,7 @@
                             Login
                         </a>
                         <a href="{{ route('register') }}"
-                           class="block w-full text-center text-white px-4 py-2 rounded-lg font-medium hover:opacity-90 transition-opacity duration-200" style="background: linear-gradient(135deg, #E5E7EB 0%, #374151 100%);">
+                           class="block w-full text-center text-white px-4 py-2 rounded-lg font-medium hover:opacity-90 transition-opacity duration-200" style="background: linear-gradient(135deg, #1A1A1D 0%, #374151 100%);">
                             Sign Up
                         </a>
                     </div>
