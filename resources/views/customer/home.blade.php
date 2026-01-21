@@ -69,7 +69,10 @@
                     autoplay: null,
                     startX: 0,
                     isDragging: false,
-                    start() { this.autoplay = setInterval(() => this.next(), 5000); },
+                    start() {
+                        clearInterval(this.autoplay);
+                        this.autoplay = setInterval(() => this.next(), 5000);
+                    },
                     stop() { clearInterval(this.autoplay); },
                     next() { this.current = (this.current + 1) % this.total; },
                     prev() { this.current = (this.current - 1 + this.total) % this.total; },
