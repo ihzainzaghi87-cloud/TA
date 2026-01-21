@@ -494,7 +494,7 @@
 @if($product->images->count() > 0)
 <div id="lightbox" class="lightbox" onclick="closeLightbox(event)">
     <div class="lightbox-content" onclick="event.stopPropagation()">
-        <button class="lightbox-close" onclick="closeLightbox(event)">
+        <button class="lightbox-close" onclick="event.stopPropagation(); closeLightbox(event)">
             <i class="fas fa-times text-lg"></i>
         </button>
         @if($product->images->count() > 1)
@@ -521,4 +521,76 @@
     </div>
 </div>
 @endif
+@push('scripts')
+<script>
+    let currentImageIndex = 0;
+    const images = @json($product->images->pluck('image')->toArray());
+
+    function changeMainImage(url, element) {
+        document.getElementById('mainImage').src = url;
+        document.querySelectorAll('.thumbnail-image').forEach(thumb => thumb.classList.remove('active'));
+        element.classList.add('active');
+        currentImageIndex = Array.from(element.parentNode.children).indexOf(element);
+    }
+
+    function openLightbox(index) {
+        currentImageIndex = index;
+        const lightbox = document.getElementById('lightbox');
+        const lightboxImage = document.getElementById('lightboxImage');
+        const imageSrc = '{{ asset('storage/products') }}/' + images[currentImageIndex];
+        lightboxImage.src = imageSrc;
+        updateLightboxCounter();
+        updateLightboxThumbnails();
+        lightbox.classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeLightbox(event) {
+        if (event.target.id === 'lightbox' || event.target.classList.contains('lightbox-close')) {
+            document.getElementById('lightbox').classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+    }
+
+    function navigateLightbox(direction) {
+        currentImageIndex = (currentImageIndex + direction + images.length) % images.length;
+        document.getElementById('lightboxImage').src = '{{ asset('storage/products') }}/' + images[currentImageIndex];
+        updateLightboxCounter();
+        updateLightboxThumbnails();
+    }
+
+    function goToImage(index) {
+        currentImageIndex = index;
+        document.getElementById('lightboxImage').src = '{{ asset('storage/products') }}/' + images[currentImageIndex];
+        updateLightboxCounter();
+        updateLightboxThumbnails();
+    }
+
+    function updateLightboxCounter() {
+        const counter = document.getElementById('lightboxCounter');
+        if (counter) {
+            counter.textContent = currentImageIndex + 1;
+        }
+    }
+
+    function updateLightboxThumbnails() {
+        document.querySelectorAll('.lightbox-thumb').forEach((thumb, index) => {
+            thumb.classList.toggle('active', index === currentImageIndex);
+        });
+    }
+
+    document.addEventListener('keydown', function(e) {
+        const lightbox = document.getElementById('lightbox');
+        if (lightbox.classList.contains('active')) {
+            if (e.key === 'Escape') {
+                closeLightbox({ target: { id: 'lightbox' } });
+            } else if (e.key === 'ArrowLeft') {
+                navigateLightbox(-1);
+            } else if (e.key === 'ArrowRight') {
+                navigateLightbox(1);
+            }
+        }
+    });
+</script>
+@endpush
 @endsection

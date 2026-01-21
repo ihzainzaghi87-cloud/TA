@@ -166,9 +166,9 @@
                             <a href="{{ route('product.detail', $product->slug) }}"
                                 class="w-full h-full flex items-center justify-center">
                                 @if ($product->images->isNotEmpty())
-                                    <img src="{{ asset('storage/' . $product->images->first()->image_path) }}"
+                                    <img src="{{ asset('storage/products/' . $product->images->first()->image) }}"
                                         alt="{{ $product->name }}"
-                                        class="w-full h-full object-contain p-5 group-hover:scale-110 transition-transform duration-500 mix-blend-multiply">
+                                        class="w-full h-full group-hover:scale-110 transition-transform duration-500 mix-blend-multiply">
                                 @else
                                     <div class="flex flex-col items-center justify-center text-gray-400">
                                         <i class="fas fa-image text-3xl mb-2"></i>
