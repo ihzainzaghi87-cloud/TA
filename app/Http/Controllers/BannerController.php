@@ -54,6 +54,7 @@ class BannerController extends Controller implements HasMiddleware
     {
         $request->validate([
             'image' => 'required|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
+            'image_mobile' => 'required|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
             'title' => 'nullable|string|max:255',
             'subtitle' => 'nullable|string|max:255',
             'is_active' => 'nullable|boolean'
@@ -61,9 +62,11 @@ class BannerController extends Controller implements HasMiddleware
 
         // Upload image
         $imagePath = $request->file('image')->store('banners', 'public');
+        $imageMobilePath = $request->file('image_mobile')->store('banners', 'public');
 
         Banner::create([
             'image' => $imagePath,
+            'image_mobile' => $imageMobilePath,
             'title' => $request->title,
             'subtitle' => $request->subtitle,
             'is_active' => $request->has('is_active') ? true : false
@@ -96,6 +99,7 @@ class BannerController extends Controller implements HasMiddleware
     {
         $request->validate([
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
+            'image_mobile' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
             'title' => 'nullable|string|max:255',
             'subtitle' => 'nullable|string|max:255',
             'is_active' => 'nullable|boolean'
@@ -110,6 +114,13 @@ class BannerController extends Controller implements HasMiddleware
             
             // Upload new image
             $banner->image = $request->file('image')->store('banners', 'public');
+        }
+
+        if ($request->hasFile('image_mobile')) {
+            if ($banner->image_mobile && Storage::disk('public')->exists($banner->image_mobile)) {
+                Storage::disk('public')->delete($banner->image_mobile);
+            }
+            $banner->image_mobile = $request->file('image_mobile')->store('banners', 'public');
         }
 
         $banner->title = $request->title;

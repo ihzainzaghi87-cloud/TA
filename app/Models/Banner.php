@@ -24,6 +24,7 @@ class Banner extends Model
      */
     protected $fillable = [
         'image',
+        'image_mobile',
         'title',
         'subtitle',
         'is_active',

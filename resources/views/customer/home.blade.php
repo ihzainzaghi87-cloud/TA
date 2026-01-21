@@ -63,7 +63,7 @@
         @if($banners && $banners->count() > 0)
             {{-- Banner Slider --}}
             <div class="relative w-full my-8 md:my-12 rounded-[2.5rem] overflow-hidden min-h-[550px] md:min-h-[650px] select-none"
-                 x-data="{ 
+                x-data="{ 
                     current: 0, 
                     total: {{ $banners->count() }},
                     autoplay: null,
@@ -74,45 +74,53 @@
                     next() { this.current = (this.current + 1) % this.total; },
                     prev() { this.current = (this.current - 1 + this.total) % this.total; },
                     handleTouchStart(e) {
+                        e.preventDefault(); // Prevent default drag behavior
                         this.startX = e.touches ? e.touches[0].clientX : e.clientX;
                         this.isDragging = true;
                         this.stop();
                     },
                     handleTouchEnd(e) {
                         if (!this.isDragging) return;
+                        e.preventDefault();
                         const endX = e.changedTouches ? e.changedTouches[0].clientX : e.clientX;
                         const diff = this.startX - endX;
-                        if (Math.abs(diff) > 50) {
+                        if (Math.abs(diff) > 50) { // Threshold for swipe
                             if (diff > 0) this.next();
                             else this.prev();
                         }
                         this.isDragging = false;
                         this.start();
                     }
-                 }" 
-                 x-init="start()" 
-                 @mouseenter="stop()" 
-                 @mouseleave="start()"
-                 @touchstart="handleTouchStart($event)"
-                 @touchend="handleTouchEnd($event)"
-                 @mousedown="handleTouchStart($event)"
-                 @mouseup="handleTouchEnd($event)">
+                }" 
+                x-init="start()" 
+                @mouseenter="stop()" 
+                @mouseleave="start(); handleTouchEnd($event)" // Handle mouse leave during drag
+                @touchstart="handleTouchStart($event)"
+                @touchend="handleTouchEnd($event)"
+                @mousedown="handleTouchStart($event)"
+                @mouseup="handleTouchEnd($event)">
+                :class="isDragging ? 'cursor-grabbing select-none' : 'cursor-grab'">
                 
                 {{-- Banner Slides --}}
                 @foreach($banners as $index => $banner)
                     <div class="absolute inset-0 transition-opacity duration-700 pointer-events-none"
-                         x-show="current === {{ $index }}"
-                         x-transition:enter="transition ease-out duration-500"
-                         x-transition:enter-start="opacity-0"
-                         x-transition:enter-end="opacity-100"
-                         x-transition:leave="transition ease-in duration-500"
-                         x-transition:leave-start="opacity-100"
-                         x-transition:leave-end="opacity-0">
+                        x-show="current === {{ $index }}"
+                        x-transition:enter="transition ease-out duration-500"
+                        x-transition:enter-start="opacity-0"
+                        x-transition:enter-end="opacity-100"
+                        x-transition:leave="transition ease-in duration-500"
+                        x-transition:leave-start="opacity-100"
+                        x-transition:leave-end="opacity-0">
                         {{-- Background Image --}}
+                        @if($banner->image_mobile)
+                            <img src="{{ Storage::url($banner->image_mobile) }}" 
+                                alt="{{ $banner->title ?? 'Banner' }}"
+                                class="w-full h-full object-cover pointer-events-none md:hidden">
+                        @endif
                         <img src="{{ Storage::url($banner->image) }}" 
-                             alt="{{ $banner->title ?? 'Banner' }}"
-                             class="w-full h-full object-cover pointer-events-none">
-                        {{-- Overlay (ringan untuk keterbacaan) --}}
+                            alt="{{ $banner->title ?? 'Banner' }}"
+                            class="w-full h-full object-cover pointer-events-none {{ $banner->image_mobile ? 'hidden md:block' : '' }}">
+                        {{-- Overlay --}}
                         <div class="absolute inset-0 bg-black/30"></div>
                     </div>
                 @endforeach
@@ -128,7 +136,7 @@
                          x-transition:leave-start="opacity-100"
                          x-transition:leave-end="opacity-0">
                         <div class="text-center px-6 max-w-4xl">
-                            @if($banner->title)
+                            @if($banner->title || $banner->subtitle)
                                 <h1 class="text-2xl md:text-3xl lg:text-5xl font-black text-white leading-[1.1] mb-8 drop-shadow-lg">
                                     {{ $banner->title }}
                                 </h1>
@@ -151,11 +159,16 @@
                             @endif
                             <div class="flex flex-col sm:flex-row gap-5 justify-center pointer-events-auto">
                                 <a href="{{ route('products') }}"
-                                    class="inline-flex justify-center items-center bg-white text-black px-9 py-4 rounded-full font-bold text-base hover:bg-gray-200 transition-all duration-300 transform hover:scale-105 shadow-lg">
+                                    class="inline-flex justify-center items-center 
+                                            bg-transparent border border-white text-white
+                                            md:bg-white md:text-black md:border-0
+                                            px-9 py-4 rounded-full font-bold text-base
+                                            hover:bg-white/10 md:hover:bg-gray-200
+                                            transition-all duration-300 transform hover:scale-105 shadow-lg">
                                     Explore Collection
                                 </a>
                                 <a href="{{ route('articles.index') }}"
-                                    class="inline-flex justify-center items-center px-9 py-4 rounded-full font-bold text-base border border-gray-300 text-white hover:border-white hover:bg-white/10 transition-all duration-300">
+                                    class="hidden md:block inline-flex justify-center items-center px-9 py-4 rounded-full font-bold text-base border border-white text-white hover:border-white hover:bg-white/10 transition-all duration-300">
                                     Discover More
                                 </a>
                             </div>

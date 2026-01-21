@@ -69,6 +69,37 @@
                 </div>
             </div>
 
+            <!-- Banner Mobile Image -->
+            @if($banner->image_mobile)
+            <div class="bg-white dark:bg-gray-800 shadow rounded-xl border border-gray-200 dark:border-gray-700 overflow-hidden">
+                <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
+                    <h2 class="text-lg font-semibold text-gray-900 dark:text-white">Banner Image (Mobile)</h2>
+                </div>
+                <div class="p-6">
+                    <div class="relative">
+                        <img src="{{ asset('storage/' . $banner->image_mobile) }}" 
+                             alt="{{ $banner->title }} (Mobile)" 
+                             class="w-full rounded-lg border-2 border-gray-200 dark:border-gray-600 object-cover">
+                        
+                        <!-- Status Badge on Image -->
+                        <div class="absolute top-4 right-4">
+                            @if($banner->is_active)
+                            <span class="inline-flex items-center px-3 py-1.5 rounded-full text-sm font-medium bg-green-100 text-green-800 border-2 border-green-200 backdrop-blur-sm">
+                                <span class="w-2 h-2 mr-2 rounded-full bg-green-500"></span>
+                                Active
+                            </span>
+                            @else
+                            <span class="inline-flex items-center px-3 py-1.5 rounded-full text-sm font-medium bg-gray-100 text-gray-800 border-2 border-gray-200 backdrop-blur-sm">
+                                <span class="w-2 h-2 mr-2 rounded-full bg-gray-500"></span>
+                                Inactive
+                            </span>
+                            @endif
+                        </div>
+                    </div>
+                </div>
+            </div>
+            @endif
+
             <!-- Banner Information -->
             <div class="bg-white dark:bg-gray-800 shadow rounded-xl border border-gray-200 dark:border-gray-700 overflow-hidden">
                 <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
@@ -110,6 +141,29 @@
                                 </a>
                             </dd>
                         </div>
+
+                        @if($banner->image_mobile)
+                        <div class="p-4 bg-gray-50 dark:bg-gray-900/40 rounded-lg">
+                            <dt class="text-sm font-medium text-gray-500 dark:text-gray-400 mb-2">Image Path (Mobile)</dt>
+                            <dd class="text-sm text-gray-900 dark:text-white font-mono break-all bg-white dark:bg-gray-800 px-3 py-2 rounded border border-gray-200 dark:border-gray-600">
+                                {{ $banner->image_mobile }}
+                            </dd>
+                        </div>
+
+                        <div class="p-4 bg-gray-50 dark:bg-gray-900/40 rounded-lg">
+                            <dt class="text-sm font-medium text-gray-500 dark:text-gray-400 mb-2">Full URL (Mobile)</dt>
+                            <dd class="text-sm break-all">
+                                <a href="{{ asset('storage/' . $banner->image_mobile) }}" 
+                                   target="_blank" 
+                                   class="text-blue-600 dark:text-blue-400 hover:underline inline-flex items-center gap-1">
+                                    {{ asset('storage/' . $banner->image_mobile) }}
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/>
+                                    </svg>
+                                </a>
+                            </dd>
+                        </div>
+                        @endif
                     </dl>
                 </div>
             </div>
