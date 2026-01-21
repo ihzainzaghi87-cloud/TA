@@ -177,7 +177,7 @@
             </div>
         @else
             {{-- Default Hero --}}
-            <div class="bg-[#1A1A1D] rounded-[2.5rem] overflow-hidden min-h-[550px] md:min-h-[650px] relative w-full my-8 md:my-12 flex items-stretch">
+            <div class="bg-[#1A1A1D] rounded-[2.5rem] overflow-hidden min-h-[220px] md:min-h-[550px] relative w-full my-8 md:my-12 flex items-stretch">
                 <div class="container mx-auto px-6 lg:px-16 relative z-10 w-full">
                     <div class="grid grid-cols-1 lg:grid-cols-2 h-full items-stretch">
                         <div class="py-16 lg:py-0 text-center lg:text-left self-center">
@@ -193,19 +193,24 @@
                             </p>
                             <div class="flex flex-col sm:flex-row gap-5 justify-center lg:justify-start">
                                 <a href="{{ route('products') }}"
-                                    class="inline-flex justify-center items-center bg-white text-black px-9 py-4 rounded-full font-bold text-base hover:bg-gray-200 transition-all duration-300 transform hover:scale-105 shadow-lg">
+                                    class="inline-flex justify-center items-center 
+                                            bg-transparent border border-white text-white
+                                            md:bg-white md:text-black md:border-0
+                                            px-9 py-4 rounded-full font-bold text-base
+                                            hover:bg-white/10 md:hover:bg-gray-200
+                                            transition-all duration-300 transform hover:scale-105 shadow-lg">
                                     Explore Collection
                                 </a>
                                 <a href="{{ route('articles.index') }}"
-                                    class="inline-flex justify-center items-center px-9 py-4 rounded-full font-bold text-base border border-gray-600 text-white hover:border-white hover:bg-white/10 transition-all duration-300">
+                                    class="hidden md:block inline-flex justify-center items-center px-9 py-4 rounded-full font-bold text-base border border-gray-600 text-white hover:border-white hover:bg-white/10 transition-all duration-300">
                                     Discover More
                                 </a>
                             </div>
                         </div>
-                        <div class="relative w-full h-full min-h-[400px] lg:min-h-full flex items-end justify-center lg:justify-end pb-0">
+                        <div class="relative w-full h-full min-h-[10px] md:min-h-[350px] lg:min-h-full flex items-end justify-center lg:justify-end pb-0">
                             <div class="relative w-full max-w-[550px] flex items-end justify-center">
                                 <img src="{{ asset('ui/hero.png') }}" alt="Fashion Model"
-                                    class="w-auto h-auto max-h-[500px] md:max-h-[650px] object-contain object-bottom relative z-10 drop-shadow-2xl block">
+                                    class="hidden md:block w-auto h-auto max-h-[500px] md:max-h-[650px] object-contain object-bottom relative z-10 drop-shadow-2xl block">
                             </div>
                         </div>
                     </div>
