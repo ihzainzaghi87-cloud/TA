@@ -72,7 +72,7 @@
 }" x-init="setTimeout(() => animateStats(), 500)">
 
     <section class="w-full px-4 md:px-8 font-sans">
-    <div class="bg-[#1A1A1D] rounded-[2.5rem] overflow-hidden min-h-[120px] flex items-stretch pt-4 md:pt-16 md:pb-0 my-8 md:my-12 relative w-full">
+    <div class="bg-[#1A1A1D] rounded-[2.5rem] overflow-hidden min-h-[80px] flex items-stretch pt-2 pb-2 md:min-h-[320px] md:pt-16 md:pb-0 my-8 md:my-12 relative w-full">
 
         <div class="container mx-auto px-6 lg:px-12 flex flex-col justify-center h-full relative z-10">
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 h-full items-center">

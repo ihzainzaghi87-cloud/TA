@@ -76,12 +76,12 @@
 <div class="min-h-screen bg-gray-50">
 
     <section class="w-full px-4 md:px-8 font-sans">
-        <div class="bg-[#1A1A1D] rounded-[2.5rem] overflow-hidden min-h-[500px] flex items-stretch pt-16 pb-0 my-8 md:my-10 relative w-full">
+        <div class="bg-[#1A1A1D] rounded-[2.5rem] overflow-hidden min-h-[140px] flex items-stretch pt-4 pb-2 md:pt-16 md:pb-0 my-8 md:my-10 relative w-full">
 
             <div class="container mx-auto px-6 lg:px-12 flex flex-col justify-center h-full relative z-10">
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 h-full items-center">
 
-                    <div class="text-white space-y-6 self-center pb-16 lg:pb-0">
+                    <div class="text-white space-y-6 self-center lg:pb-0">
                         <span class="text-gray-400 text-xs md:text-sm font-bold tracking-[0.2em] uppercase block">
                             Latest Updates
                         </span>
@@ -103,10 +103,10 @@
 
                             <img src="{{ asset('ui/hero.png') }}"
                                  alt="Model Fashion"
-                                 class="w-full h-auto object-cover relative z-10 block"
+                                 class="hidden md:block w-full h-auto object-cover relative z-10 block"
                             >
 
-                            <div class="absolute top-10 -left-4 lg:-left-20 z-20 bg-white p-3 pr-6 rounded-2xl shadow-xl flex items-center gap-4 animate-bounce-slow">
+                            <!-- <div class="absolute top-10 -left-4 lg:-left-20 z-20 bg-white p-3 pr-6 rounded-2xl shadow-xl flex items-center gap-4 animate-bounce-slow">
                                 <div class="w-12 h-12 bg-black rounded-full flex items-center justify-center text-white flex-shrink-0">
                                     <i class="fas fa-pen-nib"></i>
                                 </div>
@@ -123,7 +123,7 @@
                                 <div class="text-xs font-bold text-gray-900 leading-tight">
                                     Daily<br>Updates
                                 </div>
-                            </div>
+                            </div> -->
 
                         </div>
                     </div>
