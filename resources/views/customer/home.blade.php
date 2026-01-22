@@ -148,7 +148,7 @@
                                         {{ $banner->subtitle }}
                                     </p>
                                 @endif
-                            @else
+                            <!-- @else
                                 <span class="text-gray-300 text-xs md:text-sm font-bold tracking-[0.2em] uppercase mb-5 block">
                                     New Season Highlight
                                 </span>
@@ -158,7 +158,7 @@
                                 </h1>
                                 <p class="text-gray-300 text-base md:text-lg mb-10 max-w-lg mx-auto leading-relaxed">
                                     Discover curated fashion that defines your style — effortless, bold, and always on trend.
-                                </p>
+                                </p> -->
                             @endif
                             <div class="flex flex-col sm:flex-row gap-5 justify-center pointer-events-auto">
                                 <a href="{{ route('products') }}"
@@ -193,7 +193,7 @@
             </div>
         @else
             {{-- Default Hero --}}
-            <div class="bg-[#1A1A1D] rounded-[2.5rem] overflow-hidden min-h-[220px] md:min-h-[550px] relative w-full my-8 md:my-12 flex items-stretch">
+            <div class="bg-[#1A1A1D] rounded-[2.5rem] overflow-hidden min-h-[220px] md:min-h-[450px] relative w-full my-8 md:my-12 flex items-stretch">
                 <div class="container mx-auto px-6 lg:px-16 relative z-10 w-full">
                     <div class="grid grid-cols-1 lg:grid-cols-2 h-full items-stretch">
                         <div class="py-16 lg:py-0 text-center lg:text-left self-center">

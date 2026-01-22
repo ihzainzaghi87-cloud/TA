@@ -72,12 +72,12 @@
 }" x-init="setTimeout(() => animateStats(), 500)">
 
     <section class="w-full px-4 md:px-8 font-sans">
-    <div class="bg-[#1A1A1D] rounded-[2.5rem] overflow-hidden min-h-[600px] flex items-stretch pt-16 pb-0 my-8 md:my-12 relative w-full">
+    <div class="bg-[#1A1A1D] rounded-[2.5rem] overflow-hidden min-h-[120px] flex items-stretch pt-4 md:pt-16 md:pb-0 my-8 md:my-12 relative w-full">
 
         <div class="container mx-auto px-6 lg:px-12 flex flex-col justify-center h-full relative z-10">
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 h-full items-center">
 
-                <div class="text-white space-y-6 self-center pb-16 lg:pb-0">
+                <div class="text-white space-y-6 self-center lg:pb-0">
                     <h1 class="text-5xl lg:text-7xl font-bold leading-tight">
                         About Us
                     </h1>
@@ -97,7 +97,7 @@
 
                         <img src="{{ asset('ui/hero.png') }}"
                              alt="Model Fashion"
-                             class="w-full h-auto object-cover relative z-10 block"
+                             class="hidden md:block w-full h-auto object-cover relative z-10 block"
                         >
 
                         <!-- <div class="absolute top-10 -left-4 lg:-left-20 z-20 bg-white p-3 pr-6 rounded-2xl shadow-xl flex items-center gap-4 animate-bounce-slow">
