@@ -463,12 +463,12 @@
             
             <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
                 @foreach($relatedProducts as $relatedProduct)
-                <a href="{{ route('product.detail', $relatedProduct->slug) }}" class="product-card overflow-hidden group block">
-                    <div class="aspect-square bg-[#F3F5F9] overflow-hidden p-4 relative">
+                <a href="{{ route('product.detail', $relatedProduct->slug) }}" class="product-card overflow-hidden group block border-gray-200 shadow-sm">
+                    <div class="relative bg-[#F3F5F9] overflow-hidden aspect-[4/3] p-0">
                         @if($relatedProduct->images->count() > 0)
                             <img src="{{ asset('storage/products/' . $relatedProduct->images->first()->image) }}"
                                  alt="{{ $relatedProduct->name }}"
-                                 class="w-full h-full object-contain mix-blend-multiply group-hover:scale-110 transition-transform duration-500">
+                                 class="w-full h-full object-cover p-0 mix-blend-multiply group-hover:scale-110 transition-transform duration-500">
                         @else
                             <div class="w-full h-full flex items-center justify-center">
                                 <i class="fas fa-image text-4xl text-gray-300"></i>

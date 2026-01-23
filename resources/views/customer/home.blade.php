@@ -622,15 +622,15 @@
 
             <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-4 gap-y-8 md:gap-x-6 md:gap-y-10">
                  @forelse($rewardProducts as $product)
-                    <div class="group flex flex-col gap-3">
+                    <div class="group flex flex-col gap-3 border border-gray-200 bg-white rounded-[30px] p-4 hover:shadow-2xl transition-all duration-300 shadow-sm">
 
                         <a href="{{ route('reward.detail', $product->slug) }}"
-                            class="block relative w-full bg-[#f4f4f4] rounded-[20px] md:rounded-[30px] overflow-hidden aspect-square shadow-sm">
+                            class="block relative w-full bg-[#f4f4f4] rounded-[20px] md:rounded-[30px] overflow-hidden aspect-[4/3] shadow-sm flex items-center justify-center">
 
                             @if ($product->images->count() > 0)
-                                <img src="{{ asset('storage/' . $product->images->first()->image_path) }}"
+                                <img src="{{ asset('storage/products/' . $product->images->first()->image) }}"
                                     alt="{{ $product->name }}"
-                                    class="w-full h-full object-contain p-4 md:p-6 group-hover:scale-110 transition-transform duration-500 mix-blend-multiply">
+                                    class="w-full h-full object-cover p-0 group-hover:scale-110 transition-transform duration-500 mix-blend-multiply">
                             @else
                                 <div class="w-full h-full flex items-center justify-center text-gray-400">
                                     <i class="fas fa-gift text-3xl"></i>

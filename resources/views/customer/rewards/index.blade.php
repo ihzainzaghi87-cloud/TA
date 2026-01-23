@@ -146,15 +146,15 @@
     @if($products->count() > 0)
         <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6 mb-12">
             @foreach($products as $product)
-                <div class="group bg-white rounded-[30px] p-4 hover:shadow-2xl transition-all duration-300 border border-gray-100">
+                <div class="group bg-white rounded-[30px] p-4 hover:shadow-2xl transition-all duration-300 border border-gray-200 shadow-sm">
                     
                     <div class="relative w-full h-48 bg-[#F3F5F9] rounded-[20px] overflow-hidden flex items-center justify-center">
                         <a href="{{ route('reward.detail', $product->slug) }}" class="w-full h-full flex items-center justify-center">
                             @if($product->images->isNotEmpty())
                                 <img 
-                                    src="{{ asset('storage/' . $product->images->first()->image_path) }}" 
+                                    src="{{ asset('storage/products/' . $product->images->first()->image) }}" 
                                     alt="{{ $product->name }}" 
-                                    class="w-full h-full object-contain p-5 group-hover:scale-110 transition-transform duration-500 mix-blend-multiply"
+                                    class="w-full h-full group-hover:scale-110 transition-transform duration-500 mix-blend-multiply"
                                 >
                             @else
                                 <div class="flex flex-col items-center justify-center text-gray-400">
