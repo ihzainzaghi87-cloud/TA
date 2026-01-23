@@ -154,9 +154,15 @@
                                 {{ $product->category->name }}
                             </span>
                         </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-300">
-                            Rp {{ number_format($product->price, 0, ',', '.') }}
-                        </td>
+                        @if($product->point_price > 0)
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-300">
+                                {{ number_format($product->point_price, 0, ',', '.') }} points
+                            </td>
+                        @else
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-300">
+                                Rp {{ number_format($product->price, 0, ',', '.') }}
+                            </td>
+                        @endif
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-300">
                             @if($product->variations->count() > 0)
                                 {{ $product->variations->sum('stock') }} units

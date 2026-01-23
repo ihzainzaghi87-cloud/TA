@@ -358,4 +358,38 @@ function removeNewVariation(button) {
         document.getElementById('point_price').required = true;
     }
 </script>
+<script>
+    // Toggle point price field based on is_reward checkbox
+    document.getElementById('is_reward').addEventListener('change', function() {
+        const pointPriceField = document.getElementById('point_price_field');
+        const pointPriceInput = document.getElementById('point_price');
+        const priceInput = document.querySelector('input[name="price"]');
+        
+        if (this.checked) {
+            pointPriceField.style.display = 'block';
+            pointPriceInput.required = true;
+            // Set price to 0 and make readonly
+            priceInput.value = '0';
+            priceInput.readOnly = true;
+            priceInput.classList.add('bg-gray-100', 'cursor-not-allowed');
+        } else {
+            pointPriceField.style.display = 'none';
+            pointPriceInput.required = false;
+            pointPriceInput.value = '';
+            // Enable price input
+            priceInput.readOnly = false;
+            priceInput.classList.remove('bg-gray-100', 'cursor-not-allowed');
+        }
+    });
+
+    // Check on page load
+    if (document.getElementById('is_reward').checked) {
+        document.getElementById('point_price_field').style.display = 'block';
+        document.getElementById('point_price').required = true;
+        const priceInput = document.querySelector('input[name="price"]');
+        priceInput.value = '0';
+        priceInput.readOnly = true;
+        priceInput.classList.add('bg-gray-100', 'cursor-not-allowed');
+    }
+</script>
 @endsection
