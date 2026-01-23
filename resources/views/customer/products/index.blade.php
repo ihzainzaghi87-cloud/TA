@@ -159,7 +159,7 @@
             <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6 mb-12">
                 @foreach ($products as $product)
                     <div
-                        class="group bg-white rounded-[30px] p-4 hover:shadow-2xl transition-all duration-300 border border-gray-100">
+                        class="group bg-white rounded-[30px] p-4 hover:shadow-2xl transition-all duration-300 border border-gray-200 shadow-sm">
 
                         <div
                             class="relative w-full h-48 bg-[#F3F5F9] rounded-[20px] overflow-hidden flex items-center justify-center">
