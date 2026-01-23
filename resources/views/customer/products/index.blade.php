@@ -162,7 +162,7 @@
                         class="group bg-white rounded-[30px] p-4 hover:shadow-2xl transition-all duration-300 border border-gray-200 shadow-sm">
 
                         <div
-                            class="relative w-full h-48 bg-[#F3F5F9] rounded-[20px] overflow-hidden flex items-center justify-center">
+                            class="relative w-full h-28 md:h-48 bg-[#F3F5F9] rounded-[20px] overflow-hidden flex items-center justify-center">
                             <a href="{{ route('product.detail', $product->slug) }}"
                                 class="w-full h-full flex items-center justify-center">
                                 @if ($product->images->isNotEmpty())

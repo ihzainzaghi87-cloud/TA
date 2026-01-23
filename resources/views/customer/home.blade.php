@@ -487,7 +487,7 @@
                                 <span class="text-xs text-gray-500" x-text="product.category_name || 'Gaya Hidup'"></span>
                             </div>
                             <div class="flex-shrink-0">
-                                <p class="text-sm md:text-base font-bold text-[#0c0c25] whitespace-nowrap"
+                                <p class="text-xs sm:text-sm md:text-base font-bold text-[#0c0c25] whitespace-nowrap"
                                     x-text="'Rp ' + product.price_formatted"></p>
                             </div>
                         </div>
@@ -657,7 +657,7 @@
 
                             <div class="flex-shrink-0">
                                 <p
-                                    class="text-sm md:text-base font-bold text-[#0c0c25] whitespace-nowrap flex items-center">
+                                    class="text-xs sm:text-sm md:text-base font-bold text-[#0c0c25] whitespace-nowrap flex items-center">
                                     <i class="fas fa-coins mr-1 text-yellow-500 text-xs"></i>
                                     {{ number_format($product->point_price ?? 0, 0, ',', '.') }}
                                 </p>
