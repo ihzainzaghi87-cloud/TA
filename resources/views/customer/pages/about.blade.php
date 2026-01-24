@@ -86,7 +86,7 @@
                         we craft monochrome aesthetics for those who dare to embrace the unknown. Silence the noise, wear the statement.
                     </p>
                     <div class="pt-4">
-                        <a href="#" class="inline-block bg-white text-black text-lg font-semibold px-10 py-4 rounded-full shadow-lg hover:bg-gray-200 transition duration-300 transform hover:scale-105">
+                        <a href="#" class="hidden lg:inline-block bg-white text-black text-lg font-semibold px-10 py-4 rounded-full shadow-lg hover:bg-gray-200 transition duration-300 transform hover:scale-105">
                             Learn More
                         </a>
                     </div>

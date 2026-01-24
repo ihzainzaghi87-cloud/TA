@@ -92,7 +92,7 @@
                             Discover the latest trends, tips, and stories from The Paranoia fashion experts.
                         </p>
                         <div class="pt-4">
-                            <a href="#latest-posts" class="inline-block bg-white text-black text-lg font-semibold px-10 py-4 rounded-full shadow-lg hover:bg-gray-200 transition duration-300 transform hover:scale-105">
+                            <a href="#latest-posts" class="hidden lg:inline-block bg-white text-black text-lg font-semibold px-10 py-4 rounded-full shadow-lg hover:bg-gray-200 transition duration-300 transform hover:scale-105">
                                 Start Reading
                             </a>
                         </div>
