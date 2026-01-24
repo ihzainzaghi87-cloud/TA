@@ -62,7 +62,7 @@
     <section class="w-full px-4 md:px-8">
         @if($banners && $banners->count() > 0)
             {{-- Banner Slider --}}
-            <div class="relative w-full my-8 md:my-12 rounded-[2.5rem] overflow-hidden min-h-[550px] md:min-h-[600px] select-none"
+            <div class="relative w-full my-8 md:my-12 rounded-[2.5rem] overflow-hidden min-h-[550px] md:min-h-[400px] select-none"
                 x-data="{ 
                     current: 0, 
                     total: {{ $banners->count() }},
@@ -237,31 +237,21 @@
 
     {{-- Brand Carousel Section --}}
     <section class="py-4 overflow-hidden">
-        <div class="relative">
-            <div class="flex items-center overflow-hidden">
-                {{-- First Set --}}
-                <div class="flex items-center space-x-24 animate-scroll">
-                    @for ($i = 0; $i < 10; $i++)
-                        <span
-                            class="text-3xl md:text-4xl font-bold tracking-widest uppercase text-black opacity-80 hover:opacity-100 transition-opacity duration-300 whitespace-nowrap leading-none">
-                            THE PARANOIA
-                        </span>
-                    @endfor
-                </div>
-                {{-- Spacer --}}
-                <div class="w-24 flex-shrink-0"></div>
-                {{-- Duplicate Set --}}
-                <div class="flex items-center space-x-24 animate-scroll">
-                    @for ($i = 0; $i < 10; $i++)
-                        <span
-                            class="text-3xl md:text-4xl font-bold tracking-widest uppercase text-black opacity-80 hover:opacity-100 transition-opacity duration-300 whitespace-nowrap leading-none">
-                            THE PARANOIA
-                        </span>
-                    @endfor
-                </div>
+    <div class="relative">
+        <div class="flex items-center overflow-hidden">
+            {{-- First Set --}}
+            <div class="flex items-center space-x-24 animate-scroll">
+                @for ($i = 0; $i < 10; $i++)
+                    <img 
+                        src="{{ asset('ui/logoo1.png') }}" 
+                        alt="Logo"
+                        class="h-10 md:h-12 opacity-80 hover:opacity-100 transition-opacity duration-300 whitespace-nowrap"
+                    >
+                @endfor
             </div>
         </div>
-    </section>
+    </div>
+</section>
 
     <style>
         @keyframes scroll {
@@ -285,70 +275,51 @@
 
     {{-- Categories Section --}}
     <section id="categories" class="py-16">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <a href="{{ route('products', ['sort' => 'bestseller']) }}" class="block">
-                    <div class="relative rounded-3xl shadow-md cursor-pointer overflow-hidden group w-full"
-                        style="height: 0; padding-bottom: 108.69%; max-width: 564px; aspect-ratio: 564/600;">
-                        <div class="absolute inset-0 bg-cover bg-center"
-                            style="background-image: url('{{ asset('ui/main1.jpg') }}');">
-                            <div
-                                class="absolute inset-0 bg-black/40 group-hover:bg-black/50 transition-colors duration-300">
-                            </div>
-                        </div>
-                        <div class="absolute inset-0 flex items-center justify-center p-8">
-                            <div class="text-center">
-                                <h3 class="font-bold text-white text-xl md:text-2xl drop-shadow-lg">CHECK OUR BEST
-                                </h3>
-                                <h3 class="font-bold text-white text-xl md:text-2xl mb-4 drop-shadow-lg">SELLER COLLECTION
-                                </h3>
-                                <span
-                                    class="bg-white font-bold text-black px-6 py-2 rounded-full text-sm hover:bg-gray-200 transition-colors duration-200">
-                                    View More
-                                </span>
-                            </div>
-                        </div>
-                    </div>
-                </a>
+  <div class="max-w-9xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
 
-                <a href="{{ route('products') }}" class="block">
-                    <div class="relative rounded-3xl shadow-md cursor-pointer overflow-hidden group w-full"
-                        style="height: 0; padding-bottom: 108.69%; max-width: 564px; aspect-ratio: 564/600;">
-                        <div class="absolute inset-0 bg-cover bg-center"
-                            style="background-image: url('{{ asset('ui/main2.jpg') }}');">
-                            <div
-                                class="absolute inset-0 bg-black/40 group-hover:bg-black/50 transition-colors duration-300">
-                            </div>
-                        </div>
-                        <div class="absolute inset-0 flex items-center justify-center p-8">
-                            <div class="text-center">
-                                <h3 class="font-bold text-white text-xl md:text-2xl mb-4 drop-shadow-lg">NEW ARRIVALS</h3>
-                                <span
-                                    class="bg-white font-bold text-black px-6 py-2 rounded-full text-sm hover:bg-gray-200 transition-colors duration-200">
-                                    View More
-                                </span>
-                            </div>
-                        </div>
-                    </div>
-                </a>
+      <a href="{{ route('products', ['sort' => 'bestseller']) }}" class="block">
+        <div class="relative rounded-3xl overflow-hidden group w-full aspect-[16/9] shadow-[8px_8px_3px_0px_rgba(0,_0,_0,_0.1)]">
+          <div class="absolute inset-0 bg-contain bg-center" style="background-image: url('{{ asset('ui/baju-1.jpg') }}');">
+            <div class="absolute inset-0 bg-black/40 group-hover:bg-black/50 transition"></div>
+          </div>
+          <div class="absolute inset-0 flex items-center justify-center text-center p-8">
+            <div>
+              <h3 class="font-bold text-white text-2xl drop-shadow">CHECK OUR BEST</h3>
+              <h3 class="font-bold text-white text-2xl mb-4 drop-shadow">SELLER COLLECTION</h3>
+              <span class="bg-white font-bold px-6 py-2 rounded-full text-sm">View More</span>
             </div>
+          </div>
         </div>
-    </section>
+      </a>
 
+      <a href="{{ route('products') }}" class="block">
+        <div class="relative rounded-3xl overflow-hidden group w-full aspect-[16/9] shadow-[8px_8px_3px_0px_rgba(0,_0,_0,_0.1)]">
+          <div class="absolute inset-0 bg-contain bg-center" style="background-image: url('{{ asset('ui/baju-2.jpg    ') }}');">
+            <div class="absolute inset-0 bg-black/40 group-hover:bg-black/50 transition"></div>
+          </div>
+          <div class="absolute inset-0 flex items-center justify-center text-center p-8">
+            <div>
+              <h3 class="font-bold text-white text-2xl mb-4 drop-shadow">NEW ARRIVALS</h3>
+              <span class="bg-white font-bold px-6 py-2 rounded-full text-sm">View More</span>
+            </div>
+          </div>
+        </div>
+      </a>
+
+    </div>
+  </div>
+</section>
     {{-- Bottom Full Width Section --}}
     <section class="w-full">
-        <div class="min-h-80 flex items-center justify-center bg-[#1A1A1D]">
+        <div class="min-h-4 flex items-center justify-center bg-[#1A1A1D]">
             <div class="text-center text-white px-4">
-                <h2 class="font-bebas text-4xl md:text-6xl mb-4 text-white">
-                    UP TO 60% OFF ONLINE & IN-STORE
+                <h2 class="font-bebas text-2xl md:text-6xl mt-7 mb-0 text-white">
+                    FOR MIND THAT NEVER REALLY REST
                 </h2>
-                <p class="text-xl md:text-2xl mb-8 text-gray-300">
-                    Further markdowns for our biggest sale
+                <p class="text-xl md:text-xl mb-8 text-gray-300">
+                    DISCOVER THE STORY
                 </p>
-                <a href="{{ route('products') }}"
-                    class="bg-white text-black px-8 py-4 rounded-[2vw] font-semibold hover:bg-gray-200 transition-colors duration-200">
-                    Get Started
-                </a>
             </div>
         </div>
     </section>
