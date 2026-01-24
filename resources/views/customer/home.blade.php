@@ -354,7 +354,7 @@
     </section>
 
     {{-- Browse Product Category --}}
-    <section id="products" class="py-12 md:py-16 bg-gray-50">
+    {{-- <section id="products" class="py-12 md:py-16 bg-gray-50">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8 md:mb-12">
                 <h2 class="text-2xl sm:text-3xl md:text-4xl font-bold text-black">
@@ -430,7 +430,7 @@
                 </div>
             </div>
         </div>
-    </section>
+    </section> --}}
 
     {{-- Category Navigation Bar & Catalog Section --}}
     <section class="pt-8 pb-8 bg-gray-50">
