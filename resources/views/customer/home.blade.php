@@ -62,7 +62,7 @@
     <section class="w-full px-4 md:px-8">
         @if($banners && $banners->count() > 0)
             {{-- Banner Slider --}}
-            <div class="relative w-full my-8 md:my-12 rounded-[2.5rem] overflow-hidden min-h-[550px] md:min-h-[650px] select-none"
+            <div class="relative w-full my-8 md:my-12 rounded-[2.5rem] overflow-hidden min-h-[550px] md:min-h-[600px] select-none"
                 x-data="{ 
                     current: 0, 
                     total: {{ $banners->count() }},
