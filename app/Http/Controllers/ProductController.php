@@ -101,6 +101,11 @@ class ProductController extends Controller
             'variations.*.color' => 'required_with:variations|string|max:255',
             'variations.*.size' => 'required_with:variations|string|max:255',
             'variations.*.stock' => 'required_with:variations|integer|min:0',
+        ], [
+            'images.max' => 'Maksimal 5 gambar dapat diunggah.',
+            'images.*.image' => 'Setiap file harus berupa gambar.',
+            'images.*.mimes' => 'Format gambar harus jpeg, png, jpg, gif, atau webp.',
+            'images.*.max' => 'Ukuran gambar maksimal 2MB.',
         ]);
 
         // Custom validation: Pastikan tidak ada duplikat kombinasi color-size
@@ -245,6 +250,11 @@ class ProductController extends Controller
             'variations.*.stock' => 'required_with:variations|integer|min:0',
             'delete_variations' => 'nullable|array',
             'delete_variations.*' => 'exists:variations,id',
+        ], [
+            'images.max' => 'Maksimal 5 gambar dapat diunggah.',
+            'images.*.image' => 'Setiap file harus berupa gambar.',
+            'images.*.mimes' => 'Format gambar harus jpeg, png, jpg, gif, atau webp.',
+            'images.*.max' => 'Ukuran gambar maksimal 2MB.',
         ]);
 
         // Validasi duplikat kombinasi color-size

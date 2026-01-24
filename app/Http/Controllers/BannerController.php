@@ -58,6 +58,15 @@ class BannerController extends Controller implements HasMiddleware
             'title' => 'nullable|string|max:255',
             'subtitle' => 'nullable|string|max:255',
             'is_active' => 'nullable|boolean'
+        ], [
+            'image.required' => 'Gambar utama wajib diunggah.',
+            'image.image' => 'File gambar utama harus berupa gambar.',
+            'image.mimes' => 'Format gambar utama harus jpeg, png, jpg, gif, atau webp.',
+            'image.max' => 'Ukuran gambar utama maksimal 2MB.',
+            'image_mobile.required' => 'Gambar mobile wajib diunggah.',
+            'image_mobile.image' => 'File gambar mobile harus berupa gambar.',
+            'image_mobile.mimes' => 'Format gambar mobile harus jpeg, png, jpg, gif, atau webp.',
+            'image_mobile.max' => 'Ukuran gambar mobile maksimal 2MB.',
         ]);
 
         // Upload image
@@ -103,6 +112,15 @@ class BannerController extends Controller implements HasMiddleware
             'title' => 'nullable|string|max:255',
             'subtitle' => 'nullable|string|max:255',
             'is_active' => 'nullable|boolean'
+        ], [
+            'image.required' => 'Gambar utama wajib diunggah.',
+            'image.image' => 'File gambar utama harus berupa gambar.',
+            'image.mimes' => 'Format gambar utama harus jpeg, png, jpg, gif, atau webp.',
+            'image.max' => 'Ukuran gambar utama maksimal 2MB.',
+            'image_mobile.required' => 'Gambar mobile wajib diunggah.',
+            'image_mobile.image' => 'File gambar mobile harus berupa gambar.',
+            'image_mobile.mimes' => 'Format gambar mobile harus jpeg, png, jpg, gif, atau webp.',
+            'image_mobile.max' => 'Ukuran gambar mobile maksimal 2MB.',
         ]);
 
         // Update image if provided
