@@ -162,7 +162,7 @@
                             @endif
                             <div class="flex flex-col sm:flex-row gap-5 justify-center pointer-events-auto">
                                 <a href="{{ route('products') }}"
-                                    class="inline-flex justify-center items-center 
+                                    class="hidden md:block inline-flex justify-center items-center 
                                             bg-transparent border border-white text-white
                                             md:bg-white md:text-black md:border-0
                                             px-9 py-4 rounded-full font-bold text-base
