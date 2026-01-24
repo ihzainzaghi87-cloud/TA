@@ -579,77 +579,75 @@
                 </div>
             </section>
 
-            {{-- Rewards Section --}}
-            <section class="py-12 md:py-16 bg-gray-50">
+    {{-- Rewards Section --}}
+    <section class="py-12 md:py-16 bg-gray-50">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            
             <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8 md:mb-12">
                 <div>
-                    <h2 class="text-3xl sm:text-4xl md:text-5xl font-bold text-black mb-2">
-                        REWARD
-                    </h2>
+                    <h2 class="text-3xl sm:text-4xl md:text-5xl font-bold text-black mb-2">REWARD</h2>
                     <p class="text-sm md:text-lg text-gray-600 max-w-3xl">
                         Redeem your points for exclusive reward products!
                     </p>
                 </div>
                 <a href="{{ route('rewards') }}"
-                    class="bg-black text-white px-4 md:px-6 py-2 md:py-3 rounded-full font-semibold hover:bg-gray-800 transition duration-300 transform hover:scale-105 shadow-lg text-sm md:text-base">
+                class="bg-black text-white px-4 md:px-6 py-2 md:py-3 rounded-full font-semibold hover:bg-gray-800 transition duration-300 transform hover:scale-105 shadow-lg text-sm md:text-base">
                     View All
                 </a>
             </div>
 
-            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-4 gap-y-8 md:gap-x-6 md:gap-y-10">
-                 @forelse($rewardProducts as $product)
-                    <div class="group flex flex-col gap-3 border border-gray-200 bg-white rounded-[30px] p-4 hover:shadow-2xl transition-all duration-300 shadow-sm">
+            @if ($rewardProducts->count() > 0)
+                <!-- Swiper Container for Rewards -->
+                <div class="swiper rewardSwiper pb-12">
+                    <div class="swiper-wrapper">
+                        @foreach ($rewardProducts as $product)
+                        <div class="swiper-slide">
+                            <div class="group flex flex-col gap-3 border border-gray-200 bg-white rounded-[30px] p-4 hover:shadow-2xl transition-all duration-300 shadow-sm h-full">
+                                
+                                <a href="{{ route('reward.detail', $product->slug) }}"
+                                    class="block relative w-full bg-[#f4f4f4] rounded-[20px] md:rounded-[30px] overflow-hidden aspect-[4/3] shadow-sm flex items-center justify-center">
+                                    
+                                    @if ($product->images->count() > 0)
+                                        <img src="{{ asset('storage/products/' . $product->images->first()->image) }}" 
+                                            alt="{{ $product->name }}"
+                                            class="w-full h-full object-cover p-0 group-hover:scale-110 transition-transform duration-500 mix-blend-multiply">
+                                    @else
+                                        <div class="w-full h-full flex items-center justify-center text-gray-400">
+                                            <i class="fas fa-gift text-3xl"></i>
+                                        </div>
+                                    @endif
 
-                        <a href="{{ route('reward.detail', $product->slug) }}"
-                            class="block relative w-full bg-[#f4f4f4] rounded-[20px] md:rounded-[30px] overflow-hidden aspect-[4/3] shadow-sm flex items-center justify-center">
+                                    <!-- Reward Badge -->
+                                    <div class="absolute top-3 left-3 bg-black text-white font-bold text-[10px] md:text-xs px-2.5 py-1 rounded-full z-10 shadow-sm">
+                                        <i class="fas fa-star mr-1 text-yellow-400"></i>Reward
+                                    </div>
+                                </a>
 
-                            @if ($product->images->count() > 0)
-                                <img src="{{ asset('storage/products/' . $product->images->first()->image) }}"
-                                    alt="{{ $product->name }}"
-                                    class="w-full h-full object-cover p-0 group-hover:scale-110 transition-transform duration-500 mix-blend-multiply">
-                            @else
-                                <div class="w-full h-full flex items-center justify-center text-gray-400">
-                                    <i class="fas fa-gift text-3xl"></i>
+                                <div class="flex justify-between items-start px-1">
+                                    <div class="flex flex-col gap-1 pr-2">
+                                        <h3 class="text-sm md:text-base font-bold text-[#0c0c25] leading-tight group-hover:text-yellow-600 transition-colors line-clamp-2">
+                                            {{ $product->name }}
+                                        </h3>
+                                        <span class="text-xs text-gray-500">{{ $product->category->name ?? 'Reward' }}</span>
+                                    </div>
+                                    <div class="flex-shrink-0">
+                                        <p class="text-xs sm:text-sm md:text-base font-bold text-[#0c0c25] whitespace-nowrap flex items-center">
+                                            <i class="fas fa-coins mr-1 text-yellow-500 text-xs"></i>
+                                            {{ number_format($product->point_price ?? 0, 0, ',', '.') }}
+                                        </p>
+                                    </div>
                                 </div>
-                            @endif
 
-                            <div
-                                class="absolute top-3 left-3 bg-black text-white font-bold text-[10px] md:text-xs px-2.5 py-1 rounded-full z-10 shadow-sm">
-                                <i class="fas fa-star mr-1 text-yellow-400"></i>Reward
                             </div>
-                        </a>
-
-                        <div class="flex justify-between items-start px-1">
-
-                            <div class="flex flex-col gap-1 pr-2">
-                                <h3
-                                    class="text-sm md:text-base font-bold text-[#0c0c25] leading-tight group-hover:text-yellow-600 transition-colors line-clamp-2">
-                                    {{ $product->name }}
-                                </h3>
-                                <span class="text-xs text-gray-500">
-                                    {{ $product->category->name ?? 'Reward' }}
-                                </span>
-                            </div>
-
-                            <div class="flex-shrink-0">
-                                <p
-                                    class="text-xs sm:text-sm md:text-base font-bold text-[#0c0c25] whitespace-nowrap flex items-center">
-                                    <i class="fas fa-coins mr-1 text-yellow-500 text-xs"></i>
-                                    {{ number_format($product->point_price ?? 0, 0, ',', '.') }}
-                                </p>
-                            </div>
-
                         </div>
+                        @endforeach
                     </div>
-                @empty
-                    <div class="col-span-full text-center py-12">
-                        <i class="fas fa-gift text-gray-300 text-5xl mb-4"></i>
-                        <p class="text-gray-500">Belum ada produk reward tersedia</p>
-                    </div>
-                    @endforelse
-            </div>
+                </div>
+            @else
+                <div class="text-center py-12">
+                    <i class="fas fa-gift text-gray-300 text-5xl mb-4"></i>
+                    <p class="text-gray-500">Belum ada produk reward tersedia</p>
+                </div>
+            @endif
         </div>
     </section>
 
@@ -746,6 +744,34 @@
 .productSwiper:active {
     cursor: grabbing;
 }
+
+/* Custom Pagination for Reward Swiper */
+.rewardSwiper .swiper-pagination {
+    bottom: 0 !important;
+}
+
+.rewardSwiper .swiper-pagination-bullet {
+    width: 10px;
+    height: 10px;
+    background: #d1d5db;
+    opacity: 1;
+    transition: all 0.3s ease;
+}
+
+.rewardSwiper .swiper-pagination-bullet-active {
+    background: #000;
+    width: 24px;
+    border-radius: 5px;
+}
+
+/* Smooth cursor for dragging */
+.rewardSwiper {
+    cursor: grab;
+}
+
+.rewardSwiper:active {
+    cursor: grabbing;
+}
 </style>
 @endpush
 
@@ -755,20 +781,19 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
+    // Product Swiper
     const productSwiper = new Swiper('.productSwiper', {
         slidesPerView: 2,
         spaceBetween: 16,
         loop: false,
         grabCursor: true,
         
-        // Pagination
         pagination: {
             el: '.productSwiper .swiper-pagination',
             clickable: true,
             dynamicBullets: true,
         },
         
-        // Mousewheel / Touchpad Support
         mousewheel: {
             enabled: true,
             forceToAxis: true,
@@ -776,7 +801,6 @@ document.addEventListener('DOMContentLoaded', function() {
             releaseOnEdges: true,
         },
         
-        // Free Mode for smoother scrolling
         freeMode: {
             enabled: true,
             sticky: true,
@@ -784,7 +808,6 @@ document.addEventListener('DOMContentLoaded', function() {
             momentumVelocityRatio: 0.5,
         },
         
-        // Responsive breakpoints
         breakpoints: {
             640: {
                 slidesPerView: 2,
@@ -800,7 +823,6 @@ document.addEventListener('DOMContentLoaded', function() {
             },
         },
         
-        // Enhanced touch/swipe settings
         touchRatio: 1,
         touchAngle: 45,
         simulateTouch: true,
@@ -815,6 +837,63 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     console.log('Product Swiper with Touchpad support initialized');
+
+    // Reward Swiper (dengan konfigurasi yang sama)
+    const rewardSwiper = new Swiper('.rewardSwiper', {
+        slidesPerView: 2,
+        spaceBetween: 16,
+        loop: false,
+        grabCursor: true,
+        
+        pagination: {
+            el: '.rewardSwiper .swiper-pagination',
+            clickable: true,
+            dynamicBullets: true,
+        },
+        
+        mousewheel: {
+            enabled: true,
+            forceToAxis: true,
+            sensitivity: 1,
+            releaseOnEdges: true,
+        },
+        
+        freeMode: {
+            enabled: true,
+            sticky: true,
+            momentumRatio: 0.5,
+            momentumVelocityRatio: 0.5,
+        },
+        
+        breakpoints: {
+            640: {
+                slidesPerView: 2,
+                spaceBetween: 16,
+            },
+            768: {
+                slidesPerView: 3,
+                spaceBetween: 20,
+            },
+            1024: {
+                slidesPerView: 4,
+                spaceBetween: 24,
+            },
+        },
+        
+        touchRatio: 1,
+        touchAngle: 45,
+        simulateTouch: true,
+        shortSwipes: true,
+        longSwipes: true,
+        longSwipesRatio: 0.5,
+        longSwipesMs: 300,
+        followFinger: true,
+        threshold: 5,
+        resistance: true,
+        resistanceRatio: 0.85,
+    });
+
+    console.log('Reward Swiper with Touchpad support initialized');
 });
 </script>
 @endpush

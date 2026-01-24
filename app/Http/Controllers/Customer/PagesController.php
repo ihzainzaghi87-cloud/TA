@@ -24,7 +24,7 @@ class PagesController extends Controller
         $popularProducts = Product::where('is_active', true)
             ->where('is_reward', false)
             ->with(['category', 'images', 'variations'])
-            ->orderBy('created_at', 'desc')
+            ->orderBy('created_at', 'asc')
             ->take(8)
             ->get();
 
@@ -33,7 +33,7 @@ class PagesController extends Controller
             ->where('is_reward', true)
             ->with(['category', 'images', 'variations'])
             ->orderBy('created_at', 'asc')
-            ->take(4)
+            ->take(8)
             ->get();
 
         // Ambil banners jika ada
