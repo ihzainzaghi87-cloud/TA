@@ -58,11 +58,12 @@ class AuthController extends Controller
             'name'         => ['required','string','max:255'],
             'email'        => ['required','email','max:255','unique:users,email'],
             'password'     => ['required','confirmed', Password::min(8)
-                                ->mixedCase()
-                                ->letters()
-                                ->numbers()
-                                ->symbols()
-                                ->uncompromised()],
+                                // ->mixedCase()
+                                // ->letters()
+                                // ->numbers()
+                                // ->symbols()
+                                // ->uncompromised()],
+                                ->mixedCase()],
             'username'     => ['nullable','string','max:255','unique:users,username'],
             'phone_number' => ['nullable','string','max:30'],
         ]);
