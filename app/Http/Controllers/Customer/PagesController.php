@@ -25,14 +25,14 @@ class PagesController extends Controller
             ->where('is_reward', false)
             ->with(['category', 'images', 'variations'])
             ->orderBy('created_at', 'desc')
-            ->take(4)
+            ->take(8)
             ->get();
 
         // Ambil produk reward (produk yang aktif dan adalah reward)
         $rewardProducts = Product::where('is_active', true)
             ->where('is_reward', true)
             ->with(['category', 'images', 'variations'])
-            ->orderBy('created_at', 'desc')
+            ->orderBy('created_at', 'asc')
             ->take(4)
             ->get();
 

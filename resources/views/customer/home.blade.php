@@ -428,7 +428,7 @@
     </section>
 
     {{-- Category Navigation Bar & Catalog Section --}}
-    <section class="pt-8 pb-8 bg-gray-50" x-data="productFilter()">
+    <section class="pt-8 pb-8 bg-gray-50">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="mb-6 md:mb-8 text-left">
                 <h1 class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black text-black mb-2 md:mb-4">PRODUCT</h1>
@@ -436,80 +436,58 @@
                     Redefine your wardrobe with fashion that's chic, versatile, and uniquely you
                 </p>
             </div>
-            <div
-                class="flex flex-wrap justify-center gap-2 sm:gap-4 md:gap-6 lg:gap-10 rounded-2xl md:rounded-3xl bg-[#1A1A1D] p-2 md:p-3">
-                <button @click="filterByCategory('all')"
-                    :class="activeCategory === 'all' ? 'bg-white text-black' : 'text-white hover:bg-white/20'"
-                    class="px-4 sm:px-6 md:px-8 py-2 md:py-3 rounded-full text-sm md:text-base font-semibold transition-all duration-300 transform">
-                    All
-                </button>
-
-                @foreach ($categories->take(4) as $category)
-                    <button @click="filterByCategory('{{ $category->id }}')"
-                        :class="activeCategory === '{{ $category->id }}' ? 'bg-white text-black' :
-                            'text-white hover:bg-white/20'"
-                        class="px-4 sm:px-6 md:px-8 py-2 md:py-3 rounded-full text-sm md:text-base font-semibold transition-all duration-300 transform">
-                        {{ $category->name }}
-                    </button>
-                @endforeach
-            </div>
         </div>
 
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-5">
-            <div x-show="isLoading" class="flex justify-center py-12">
-                <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-black"></div>
-            </div>
+            <!-- Swiper Container -->
+            <div class="swiper productSwiper pb-12">
+                <div class="swiper-wrapper">
+                    @foreach ($popularProducts as $product)
+                    <div class="swiper-slide">
+                        <div class="group flex flex-col gap-3 border border-gray-200 bg-white rounded-[30px] p-4 hover:shadow-2xl transition-all duration-300 shadow-sm h-full">
+                            
+                            <a href="{{ route('product.detail', $product->slug) }}"
+                                class="block relative w-full bg-[#f4f4f4] rounded-[20px] md:rounded-[30px] overflow-hidden aspect-[4/3] shadow-sm flex items-center justify-center">
+                                
+                                @if ($product->images && $product->images->count() > 0)
+                                    <img src="{{ asset('storage/products/' . $product->images->first()->image) }}" 
+                                        alt="{{ $product->name }}"
+                                        class="w-full h-full object-cover p-0 group-hover:scale-110 transition-transform duration-500 mix-blend-multiply">
+                                @else
+                                    <div class="w-full h-full flex items-center justify-center text-gray-400">
+                                        <i class="fas fa-image text-3xl"></i>
+                                    </div>
+                                @endif
+                            </a>
 
-            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-4 gap-y-8 md:gap-x-6 md:gap-y-10">
-
-                <template x-for="product in filteredProducts" :key="product.id">
-                    <div class="group flex flex-col gap-3 border border-gray-200 bg-white rounded-[30px] p-4 hover:shadow-2xl transition-all duration-300 shadow-sm">
-
-                        <a :href="'/products/' + product.slug"
-                            class="block relative w-full bg-[#f4f4f4] rounded-[20px] md:rounded-[30px] overflow-hidden aspect-[4/3] shadow-sm flex items-center justify-center">
-
-                            <template x-if="product.image">
-                                <img :src="product.image" :alt="product.name"
-                                    class="w-full h-full object-cover p-0 group-hover:scale-110 transition-transform duration-500 mix-blend-multiply">
-                            </template>
-
-                            <template x-if="!product.image">
-                                <div class="w-full h-full flex items-center justify-center text-gray-400">
-                                    <i class="fas fa-image text-3xl"></i>
+                            <div class="flex justify-between items-start px-1">
+                                <div class="flex flex-col gap-1 pr-2">
+                                    <h3 class="text-sm md:text-base font-bold text-[#0c0c25] leading-tight group-hover:text-yellow-600 transition-colors line-clamp-2">
+                                        {{ $product->name }}
+                                    </h3>
+                                    <span class="text-xs text-gray-500">{{ $product->category->name ?? 'Gaya Hidup' }}</span>
                                 </div>
-                            </template>
-                        </a>
+                                <div class="flex-shrink-0">
+                                    <p class="text-xs sm:text-sm md:text-base font-bold text-[#0c0c25] whitespace-nowrap">
+                                        Rp {{ number_format($product->price, 0, ',', '.') }}
+                                    </p>
+                                </div>
+                            </div>
 
-                        <div class="flex justify-between items-start px-1">
-                            <div class="flex flex-col gap-1 pr-2">
-                                <h3 class="text-sm md:text-base font-bold text-[#0c0c25] leading-tight group-hover:text-yellow-600 transition-colors line-clamp-2"
-                                    x-text="product.name"></h3>
-                                <span class="text-xs text-gray-500" x-text="product.category_name || 'Gaya Hidup'"></span>
-                            </div>
-                            <div class="flex-shrink-0">
-                                <p class="text-xs sm:text-sm md:text-base font-bold text-[#0c0c25] whitespace-nowrap"
-                                    x-text="'Rp ' + product.price_formatted"></p>
-                            </div>
                         </div>
-
                     </div>
-                </template>
-
-                <template x-if="filteredProducts.length === 0">
-                    <div class="col-span-full text-center py-12">
-                        <p class="text-gray-500">Produk tidak ditemukan.</p>
-                    </div>
-                </template>
-
+                    @endforeach
+                </div>
             </div>
-            <div class="text-center mt-6 md:mt-8" x-show="filteredProducts.length > 0">
-                <a :href="activeCategory === 'all' ? '{{ route('products') }}' : '{{ route('products') }}?category=' + activeCategory"
-               class="inline-block bg-black text-white px-6 md:px-8 py-2.5 md:py-3 rounded-full font-semibold hover:bg-gray-800 transition duration-300 transform hover:scale-105 shadow-lg text-sm md:text-base">
-                View All Products
-            </a>
+
+            <div class="text-center mt-6 md:mt-8">
+                <a href="{{ route('products') }}"
+                class="inline-block bg-black text-white px-6 md:px-8 py-2.5 md:py-3 rounded-full font-semibold hover:bg-gray-800 transition duration-300 transform hover:scale-105 shadow-lg text-sm md:text-base">
+                    View All Products
+                </a>
+            </div>
         </div>
-    </div>
-</section>
+    </section>
 
 @php
     $productsData = $popularProducts
@@ -735,4 +713,109 @@
             </div>
         </div>
     </section>
+
+@push('styles')
+<!-- Swiper CSS -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+
+<style>
+/* Custom Pagination */
+.productSwiper .swiper-pagination {
+    bottom: 0 !important;
+}
+
+.productSwiper .swiper-pagination-bullet {
+    width: 10px;
+    height: 10px;
+    background: #d1d5db;
+    opacity: 1;
+    transition: all 0.3s ease;
+}
+
+.productSwiper .swiper-pagination-bullet-active {
+    background: #000;
+    width: 24px;
+    border-radius: 5px;
+}
+
+/* Smooth cursor for dragging */
+.productSwiper {
+    cursor: grab;
+}
+
+.productSwiper:active {
+    cursor: grabbing;
+}
+</style>
+@endpush
+
+@push('scripts')
+<!-- Swiper JS -->
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const productSwiper = new Swiper('.productSwiper', {
+        slidesPerView: 2,
+        spaceBetween: 16,
+        loop: false,
+        grabCursor: true,
+        
+        // Pagination
+        pagination: {
+            el: '.productSwiper .swiper-pagination',
+            clickable: true,
+            dynamicBullets: true,
+        },
+        
+        // Mousewheel / Touchpad Support
+        mousewheel: {
+            enabled: true,
+            forceToAxis: true,
+            sensitivity: 1,
+            releaseOnEdges: true,
+        },
+        
+        // Free Mode for smoother scrolling
+        freeMode: {
+            enabled: true,
+            sticky: true,
+            momentumRatio: 0.5,
+            momentumVelocityRatio: 0.5,
+        },
+        
+        // Responsive breakpoints
+        breakpoints: {
+            640: {
+                slidesPerView: 2,
+                spaceBetween: 16,
+            },
+            768: {
+                slidesPerView: 3,
+                spaceBetween: 20,
+            },
+            1024: {
+                slidesPerView: 4,
+                spaceBetween: 24,
+            },
+        },
+        
+        // Enhanced touch/swipe settings
+        touchRatio: 1,
+        touchAngle: 45,
+        simulateTouch: true,
+        shortSwipes: true,
+        longSwipes: true,
+        longSwipesRatio: 0.5,
+        longSwipesMs: 300,
+        followFinger: true,
+        threshold: 5,
+        resistance: true,
+        resistanceRatio: 0.85,
+    });
+
+    console.log('Product Swiper with Touchpad support initialized');
+});
+</script>
+@endpush
 @endsection
