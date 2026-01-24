@@ -22,6 +22,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'role' => RoleMiddleware::class,
             'permission' => PermissionMiddleware::class,
             'role_or_permission' => RoleOrPermissionMiddleware::class,
+            'exclude_user_role' => \App\Http\Middleware\ExcludeUserRole::class,
         ]);
 
         // Register ShareCartCount to Web Middleware Group
