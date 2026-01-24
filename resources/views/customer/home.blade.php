@@ -358,71 +358,76 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8 md:mb-12">
                 <h2 class="text-2xl sm:text-3xl md:text-4xl font-bold text-black">
-                    Browse Product <br class="hidden sm:block"> By Category
+                    Browse Product <br class="hidden sm:block" />By Category
                 </h2>
-                <a href="{{ route('products') }}"
-                    class="inline-block bg-black text-white px-6 md:px-8 py-2.5 md:py-3 rounded-full font-bold hover:bg-gray-800 transition duration-300 transform hover:scale-105 shadow-lg text-sm md:text-base">
+                <a href="{{ route('products') }}" 
+                class="inline-block bg-black text-white px-6 md:px-8 py-2.5 md:py-3 rounded-full font-bold hover:bg-gray-800 transition duration-300 transform hover:scale-105 shadow-lg text-sm md:text-base">
                     View All
                 </a>
             </div>
 
-            <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-4">
-                @php
-                    $categoryIcons = [
-                        't-shirt' => 'fa-tshirt',
-                        'tshirt' => 'fa-tshirt',
-                        'kaos' => 'fa-tshirt',
-                        'shirt' => 'fa-tshirt',
-                        'jacket' => 'fa-vest',
-                        'jaket' => 'fa-vest',
-                        'hoodie' => 'fa-vest',
-                        'pants' => 'fa-socks',
-                        'celana' => 'fa-socks',
-                        'jeans' => 'fa-socks',
-                        'hat' => 'fa-hat-cowboy',
-                        'topi' => 'fa-hat-cowboy',
-                        'cap' => 'fa-hat-cowboy',
-                        'bag' => 'fa-shopping-bag',
-                        'tas' => 'fa-shopping-bag',
-                        'accessories' => 'fa-gem',
-                        'aksesoris' => 'fa-gem',
-                        'shoes' => 'fa-shoe-prints',
-                        'sepatu' => 'fa-shoe-prints',
-                    ];
-                    $hoverColors = ['hover:bg-gray-800', 'hover:bg-gray-700', 'hover:bg-gray-900'];
-                @endphp
+            @php
+                $categoryIcons = [
+                    't-shirt' => 'fa-tshirt',
+                    'tshirt' => 'fa-tshirt',
+                    'kaos' => 'fa-tshirt',
+                    'shirt' => 'fa-tshirt',
+                    'jacket' => 'fa-vest',
+                    'jaket' => 'fa-vest',
+                    'hoodie' => 'fa-vest',
+                    'pants' => 'fa-socks',
+                    'celana' => 'fa-socks',
+                    'jeans' => 'fa-socks',
+                    'hat' => 'fa-hat-cowboy',
+                    'topi' => 'fa-hat-cowboy',
+                    'cap' => 'fa-hat-cowboy',
+                    'bag' => 'fa-shopping-bag',
+                    'tas' => 'fa-shopping-bag',
+                    'accessories' => 'fa-gem',
+                    'aksesoris' => 'fa-gem',
+                    'shoes' => 'fa-shoe-prints',
+                    'sepatu' => 'fa-shoe-prints',
+                ];
 
-                @foreach ($categories->take(8) as $index => $category)
-                    @php
-                        $iconKey = strtolower($category->slug ?? $category->name);
-                        $icon = 'fa-tag';
-                        foreach ($categoryIcons as $key => $value) {
-                            if (str_contains($iconKey, $key)) {
-                                $icon = $value;
-                                break;
+                $hoverColors = ['hover:bg-gray-800', 'hover:bg-gray-700', 'hover:bg-gray-900'];
+            @endphp
+
+            <!-- Swiper Container for Categories -->
+            <div class="swiper categorySwiper pb-12">
+                <div class="swiper-wrapper">
+                    @foreach ($categories->take(12) as $index => $category)
+                        @php
+                            $iconKey = strtolower($category->slug ?? $category->name);
+                            $icon = 'fa-tag';
+                            foreach ($categoryIcons as $key => $value) {
+                                if (str_contains($iconKey, $key)) {
+                                    $icon = $value;
+                                    break;
+                                }
                             }
-                        }
-                        $hoverColor = $hoverColors[$index % count($hoverColors)];
-                    @endphp
-                    <a href="{{ route('products', ['category' => $category->id]) }}"
-                        class="group bg-white border-2 border-gray-100 rounded-2xl md:rounded-3xl shadow-sm hover:shadow-md hover:border-black transition-all duration-300 overflow-hidden flex items-center p-3 md:p-4">
-                        <div
-                            class="w-10 h-10 md:w-12 md:h-12 bg-black rounded-full flex items-center justify-center {{ $hoverColor }} transition-colors flex-shrink-0">
-                            <i class="fas {{ $icon }} text-white text-lg md:text-xl"></i>
+                            $hoverColor = $hoverColors[$index % count($hoverColors)];
+                        @endphp
+                        
+                        <div class="swiper-slide">
+                            <a href="{{ route('products', ['category' => $category->id]) }}" 
+                            class="group bg-white border-2 border-gray-100 rounded-2xl md:rounded-3xl shadow-sm hover:shadow-md hover:border-black transition-all duration-300 overflow-hidden flex items-center p-3 md:p-4 h-full">
+                                
+                                <div class="w-10 h-10 md:w-12 md:h-12 bg-black rounded-full flex items-center justify-center {{ $hoverColor }} transition-colors flex-shrink-0">
+                                    <i class="fas {{ $icon }} text-white text-lg md:text-xl"></i>
+                                </div>
+                                
+                                <div class="flex-1 pl-3 md:pl-4 min-w-0">
+                                    <h3 class="text-sm md:text-base font-semibold text-gray-900 truncate">{{ $category->name }}</h3>
+                                    <p class="text-xs text-gray-500">{{ $category->products_count ?? 0 }} Products</p>
+                                </div>
+                                
+                                <div class="flex-shrink-0 ml-2">
+                                    <i class="fas fa-chevron-right text-gray-400 group-hover:text-black transition-colors text-sm"></i>
+                                </div>
+                            </a>
                         </div>
-
-                        <div class="flex-1 pl-3 md:pl-4 min-w-0">
-                            <h3 class="text-sm md:text-base font-semibold text-gray-900 truncate">{{ $category->name }}
-                            </h3>
-                            <p class="text-xs text-gray-500">{{ $category->products_count ?? 0 }} Products</p>
-                        </div>
-
-                        <div class="flex-shrink-0 ml-2">
-                            <i
-                                class="fas fa-chevron-right text-gray-400 group-hover:text-black transition-colors text-sm"></i>
-                        </div>
-                    </a>
-                @endforeach
+                    @endforeach
+                </div>
             </div>
         </div>
     </section>
@@ -772,6 +777,33 @@
 .rewardSwiper:active {
     cursor: grabbing;
 }
+
+/* Custom Pagination for Category Swiper */
+.categorySwiper .swiper-pagination {
+    bottom: 0 !important;
+}
+
+.categorySwiper .swiper-pagination-bullet {
+    width: 10px;
+    height: 10px;
+    background: #d1d5db;
+    opacity: 1;
+    transition: all 0.3s ease;
+}
+
+.categorySwiper .swiper-pagination-bullet-active {
+    background: #000;
+    width: 24px;
+    border-radius: 5px;
+}
+
+.categorySwiper {
+    cursor: grab;
+}
+
+.categorySwiper:active {
+    cursor: grabbing;
+}
 </style>
 @endpush
 
@@ -838,7 +870,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     console.log('Product Swiper with Touchpad support initialized');
 
-    // Reward Swiper (dengan konfigurasi yang sama)
+    // Reward Swiper
     const rewardSwiper = new Swiper('.rewardSwiper', {
         slidesPerView: 2,
         spaceBetween: 16,
@@ -894,6 +926,63 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     console.log('Reward Swiper with Touchpad support initialized');
+
+    // Category Swiper
+    const categorySwiper = new Swiper('.categorySwiper', {
+        slidesPerView: 2,
+        spaceBetween: 12,
+        loop: false,
+        grabCursor: true,
+        
+        pagination: {
+            el: '.categorySwiper .swiper-pagination',
+            clickable: true,
+            dynamicBullets: true,
+        },
+        
+        mousewheel: {
+            enabled: true,
+            forceToAxis: true,
+            sensitivity: 1,
+            releaseOnEdges: true,
+        },
+        
+        freeMode: {
+            enabled: true,
+            sticky: true,
+            momentumRatio: 0.5,
+            momentumVelocityRatio: 0.5,
+        },
+        
+        breakpoints: {
+            640: {
+                slidesPerView: 2,
+                spaceBetween: 12,
+            },
+            768: {
+                slidesPerView: 3,
+                spaceBetween: 16,
+            },
+            1024: {
+                slidesPerView: 4,
+                spaceBetween: 16,
+            },
+        },
+        
+        touchRatio: 1,
+        touchAngle: 45,
+        simulateTouch: true,
+        shortSwipes: true,
+        longSwipes: true,
+        longSwipesRatio: 0.5,
+        longSwipesMs: 300,
+        followFinger: true,
+        threshold: 5,
+        resistance: true,
+        resistanceRatio: 0.85,
+    });
+
+    console.log('Category Swiper with Touchpad support initialized');
 });
 </script>
 @endpush
