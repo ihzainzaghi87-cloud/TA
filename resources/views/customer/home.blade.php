@@ -311,7 +311,7 @@
   </div>
 </section>
     {{-- Bottom Full Width Section --}}
-    <section class="w-full">
+    <section class="w-full mb-12">
         <div class="min-h-4 flex items-center justify-center bg-[#1A1A1D]">
             <div class="text-center text-white px-4">
                 <h2 class="font-bebas text-2xl md:text-6xl mt-7 mb-0 text-white">
