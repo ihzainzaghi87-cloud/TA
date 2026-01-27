@@ -654,7 +654,7 @@
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
                 <a href="{{ route('products') }}"
                     class="group relative overflow-hidden rounded-2xl md:rounded-3xl shadow-lg aspect-[4/5]">
-                    <img src="{{ asset('ui/casual-style.jpg') }}" alt="Casual Everyday"
+                    <img src="{{ asset('ui/chaos.jpeg') }}" alt="Casual Everyday"
                         class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
                     <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent"></div>
                     <div class="absolute bottom-0 left-0 right-0 p-4 md:p-6">
@@ -666,7 +666,7 @@
 
                 <a href="{{ route('products') }}"
                     class="group relative overflow-hidden rounded-2xl md:rounded-3xl shadow-lg aspect-[4/5]">
-                    <img src="{{ asset('ui/street-style.jpg') }}" alt="Street Style"
+                    <img src="{{ asset('ui/movement.jpeg') }}" alt="Street Style"
                         class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
                     <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent"></div>
                     <div class="absolute bottom-0 left-0 right-0 p-4 md:p-6">
@@ -677,7 +677,7 @@
 
                 <a href="{{ route('products') }}"
                     class="group relative overflow-hidden rounded-2xl md:rounded-3xl shadow-lg aspect-[4/5] md:col-span-2 lg:col-span-1">
-                    <img src="{{ asset('ui/minimalist-style.jpg') }}" alt="Minimalist Essentials"
+                    <img src="{{ asset('ui/growth.jpeg') }}" alt="Minimalist Essentials"
                         class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
                     <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent"></div>
                     <div class="absolute bottom-0 left-0 right-0 p-4 md:p-6">
