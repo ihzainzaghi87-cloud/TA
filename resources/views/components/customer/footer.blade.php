@@ -33,8 +33,8 @@
 
                 <div class="text-center border-t border-gray-200 pt-4">
                     <div class="space-y-1">
-                        <p class="text-xs text-gray-700 font-medium">+1 (999) 999-99-99</p>
-                        <p class="text-xs text-gray-600">theparanoia1@gmail.com</p>
+                        <p class="text-xs text-gray-700 font-medium">082310885367</p>
+                        <p class="text-xs text-gray-600">theparanoia.official1@gmail.com</p>
                     </div>
                 </div>
             </div>
@@ -72,8 +72,8 @@
 
                     <td class="align-top text-right w-1/4 pl-6 border-l border-gray-200">
                         <div class="space-y-1">
-                            <p style="font-size: 11px;" class="text-gray-800 font-medium">+1 (999) 999-99-99</p>
-                            <p style="font-size: 11px;" class="text-gray-600">theparanoia1@gmail.com</p>
+                            <p style="font-size: 11px;" class="text-gray-800 font-medium">082310885367</p>
+                            <p style="font-size: 11px;" class="text-gray-600">theparanoia.official1@gmail.com</p>
                         </div>
                     </td>
                 </tr>
@@ -112,7 +112,7 @@
             </div>
 
             <div class="text-gray-500 text-xs text-center order-1 md:order-2">
-                Jl. Contoh Alamat No. 123, Jakarta 12345
+                Jl benteng betawi no 14, kota tangerang, banten 15122 
             </div>
 
             <div class="flex items-center space-x-2 order-3">
@@ -138,7 +138,7 @@
                 </p>
 
                 <div class="flex w-full max-w-md">
-                    <form action="mailto:theparanoia1@gmail.com" method="post" enctype="text/plain" class="flex w-full">
+                    <form action="mailto:theparanoia.official1@gmail.com" method="post" enctype="text/plain" class="flex w-full">
                         <input
                             type="email"
                             name="email"
