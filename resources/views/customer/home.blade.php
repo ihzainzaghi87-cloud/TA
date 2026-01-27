@@ -512,13 +512,13 @@
         <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8 md:mb-16">
             <div>
                 <h2 class="text-3xl sm:text-4xl md:text-5xl font-bold text-black mb-2">
-                    ABOUT OUR BRAND
+                    ABOUT THE PARANOIA
                 </h2>
-                <p class="text-sm md:text-lg text-gray-600 max-w-3xl">
+                <!-- <p class="text-sm md:text-lg text-gray-600 max-w-3xl">
                    About Us: Our Brand Story
-                </p>
+                </p> -->
             </div>
-            <a href="#" class="bg-black text-white px-4 md:px-6 py-2 md:py-3 rounded-full font-semibold hover:bg-gray-800 transition duration-300 transform hover:scale-105 shadow-lg text-sm md:text-base">
+            <a href="{{ route('about') }}" class="bg-black text-white px-4 md:px-6 py-2 md:py-3 rounded-full font-semibold hover:bg-gray-800 transition duration-300 transform hover:scale-105 shadow-lg text-sm md:text-base">
                 View More
             </a>
         </div>
@@ -530,26 +530,34 @@
 
             <div class="hidden md:block absolute top-8 right-8 lg:right-16 bg-white p-4 md:p-6 rounded-lg shadow-lg max-w-sm lg:max-w-md border border-gray-100">
                 <h3 class="text-xl md:text-2xl font-bold text-black mb-3 md:mb-4">
-                    Our Story
+                    THE PARANOIA
                 </h3>
                 <p class="text-gray-600 mb-3 md:mb-4 leading-relaxed text-sm md:text-base">
-                    Founded with a vision to revolutionize the fashion industry, we started as a small boutique with big dreams. Today, we're proud to be one of the most trusted names in online fashion retail.
+                    THE PARANOIA lahir dari sekumpulan anak muda dengan latar belakang yang berbeda-beda. Kami tumbuh di lingkungan yang penuh tekanan, banyak kekacauan, dan nggak selalu ramah. Awalnya, PARANOIA bukan brand, tapi ruang ekspresi. Tempat untuk tukar cerita, saling memahami, dan saling mendukung.
                             </p>
                             <p class="text-gray-600 leading-relaxed text-sm md:text-base">
-                                Our commitment to quality, style, and customer satisfaction has helped us build a community of fashion lovers who trust us for their wardrobe needs.
+                                Seiring waktu, kami sadar kalau terus diam di tempat yang sama, kami nggak akan ke mana-mana. Dari situ, kami sepakat membawa PARANOIA ke arah yang lebih positif. Dari sebuah geng, jadi sebuah brand bernama THE PARANOIA.
+                            </p>
+                            <br>
+                            <p class="text-gray-600 leading-relaxed text-sm md:text-base">
+                                Bagi kami, pakaian bukan cuma soal gaya. Ini cara kami bercerita tentang hidup, persaudaraan, dan perubahan.
                             </p>
                         </div>
                     </div>
 
                     <div class="md:hidden bg-white p-4 rounded-lg shadow-sm -mt-4">
                         <h3 class="text-lg font-bold text-black mb-3">
-                            Our Story
+                            THE PARANOIA
                         </h3>
                         <p class="text-gray-600 mb-3 leading-relaxed text-sm">
-                            Founded with a vision to revolutionize the fashion industry, we started as a small boutique with big dreams. Today, we're proud to be one of the most trusted names in online fashion retail.
+                            THE PARANOIA lahir dari sekumpulan anak muda dengan latar belakang yang berbeda-beda. Kami tumbuh di lingkungan yang penuh tekanan, banyak kekacauan, dan nggak selalu ramah. Awalnya, PARANOIA bukan brand, tapi ruang ekspresi. Tempat untuk tukar cerita, saling memahami, dan saling mendukung.
                         </p>
                         <p class="text-gray-600 leading-relaxed text-sm">
-                            Our commitment to quality, style, and customer satisfaction has helped us build a community of fashion lovers.
+                            Komitmen kami terhadap kualitas, gaya, dan kepuasan pelanggan telah membantu kami membangun komunitas pecinta fashion.
+                        </p>
+                        <br>
+                        <p class="text-gray-600 leading-relaxed text-sm">
+                            Bagi kami, pakaian bukan cuma soal gaya. Ini cara kami bercerita tentang hidup, persaudaraan, dan perubahan.
                         </p>
                     </div>
                 </div>
