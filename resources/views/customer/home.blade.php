@@ -635,15 +635,15 @@
         </div>
     </section>
 
-    {{-- Style Inspiration Section --}}
+    {{-- Paranoia Journey Section --}}
     <section id="style-inspiration" class="py-12 md:py-16 bg-gray-50">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8 md:mb-12">
                 <div>
                     <h2 class="text-3xl sm:text-4xl md:text-5xl font-bold text-black mb-2">
-                        STYLE INSPIRATION
+                        PARANOIA JOURNEY
                     </h2>
-                    <p class="text-gray-600 text-sm md:text-base">Get inspired by our latest fashion lookbook</p>
+                    <p class="text-gray-600 text-sm md:text-base">Fases</p>
                 </div>
                 <a href="{{ route('products') }}"
                     class="bg-black text-white px-6 py-2.5 md:py-3 rounded-full font-semibold hover:bg-gray-800 transition duration-300 transform hover:scale-105 shadow-lg text-sm md:text-base">
@@ -658,10 +658,8 @@
                         class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
                     <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent"></div>
                     <div class="absolute bottom-0 left-0 right-0 p-4 md:p-6">
-                        <span
-                            class="inline-block bg-white text-black text-xs font-bold px-3 py-1 rounded-full mb-2 md:mb-3">TRENDING</span>
-                        <h3 class="text-xl md:text-2xl font-bold text-white mb-1 md:mb-2">Casual Everyday</h3>
-                        <p class="text-white/80 text-xs md:text-sm line-clamp-2">Effortless style for your daily adventures
+                        <h3 class="text-xl md:text-2xl font-bold text-white mb-1 md:mb-2">Chaos</h3>
+                        <p class="text-white/80 text-xs md:text-sm line-clamp-2">Dipakai oleh yang tau rasanya
                         </p>
                     </div>
                 </a>
@@ -672,11 +670,8 @@
                         class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
                     <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent"></div>
                     <div class="absolute bottom-0 left-0 right-0 p-4 md:p-6">
-                        <span
-                            class="inline-block bg-black text-white text-xs font-bold px-3 py-1 rounded-full mb-2 md:mb-3">NEW
-                            ARRIVAL</span>
-                        <h3 class="text-xl md:text-2xl font-bold text-white mb-1 md:mb-2">Street Style</h3>
-                        <p class="text-white/80 text-xs md:text-sm line-clamp-2">Bold looks that make a statement</p>
+                        <h3 class="text-xl md:text-2xl font-bold text-white mb-1 md:mb-2">Movement</h3>
+                        <p class="text-white/80 text-xs md:text-sm line-clamp-2">Tidak untuk semua orang</p>
                     </div>
                 </a>
 
@@ -686,10 +681,8 @@
                         class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
                     <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent"></div>
                     <div class="absolute bottom-0 left-0 right-0 p-4 md:p-6">
-                        <span
-                            class="inline-block bg-gray-800 text-white text-xs font-bold px-3 py-1 rounded-full mb-2 md:mb-3">BESTSELLER</span>
-                        <h3 class="text-xl md:text-2xl font-bold text-white mb-1 md:mb-2">Minimalist Essentials</h3>
-                        <p class="text-white/80 text-xs md:text-sm line-clamp-2">Timeless pieces for a polished look</p>
+                        <h3 class="text-xl md:text-2xl font-bold text-white mb-1 md:mb-2">Growth</h3>
+                        <p class="text-white/80 text-xs md:text-sm line-clamp-2">Terus bergerak</p>
                     </div>
                 </a>
             </div>
