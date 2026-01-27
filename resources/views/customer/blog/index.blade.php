@@ -73,65 +73,7 @@
 @endpush
 
 @section('content')
-<div class="min-h-screen bg-gray-50">
-
-    <section class="w-full px-4 md:px-8 font-sans">
-        <div class="bg-[#1A1A1D] rounded-[2.5rem] overflow-hidden min-h-[140px] flex items-stretch pt-4 pb-2 md:pt-16 md:pb-0 my-8 md:my-10 relative w-full">
-
-            <div class="container mx-auto px-6 lg:px-12 flex flex-col justify-center h-full relative z-10">
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 h-full items-center">
-
-                    <div class="text-white space-y-6 self-center lg:pb-0">
-                        <span class="text-gray-400 text-xs md:text-sm font-bold tracking-[0.2em] uppercase block">
-                            Latest Updates
-                        </span>
-                        <h1 class="text-5xl lg:text-7xl font-bold leading-tight">
-                            Fashion & <br>Lifestyle Blog
-                        </h1>
-                        <p class="text-lg lg:text-xl font-medium leading-relaxed opacity-90 max-w-lg text-gray-300">
-                            Discover the latest trends, tips, and stories from The Paranoia fashion experts.
-                        </p>
-                        <div class="pt-4">
-                            <a href="#latest-posts" class="hidden lg:inline-block bg-white text-black text-lg font-semibold px-10 py-4 rounded-full shadow-lg hover:bg-gray-200 transition duration-300 transform hover:scale-105">
-                                Start Reading
-                            </a>
-                        </div>
-                    </div>
-
-                    <div class="relative h-full flex items-end justify-center lg:justify-end mt-12 lg:mt-0 self-end">
-                        <div class="relative w-full max-w-[450px]">
-
-                            <img src="{{ asset('ui/hero.png') }}"
-                                 alt="Model Fashion"
-                                 class="hidden md:block w-full h-auto object-cover relative z-10 block"
-                            >
-
-                            <!-- <div class="absolute top-10 -left-4 lg:-left-20 z-20 bg-white p-3 pr-6 rounded-2xl shadow-xl flex items-center gap-4 animate-bounce-slow">
-                                <div class="w-12 h-12 bg-black rounded-full flex items-center justify-center text-white flex-shrink-0">
-                                    <i class="fas fa-pen-nib"></i>
-                                </div>
-                                <div class="flex flex-col text-sm font-bold text-gray-900 leading-tight">
-                                    <span>Expert</span>
-                                    <span>Writers</span>
-                                </div>
-                            </div>
-
-                            <div class="absolute bottom-12 -right-2 lg:-right-10 z-20 bg-white p-5 rounded-3xl shadow-xl flex flex-col items-center gap-2 text-center w-32">
-                                <div class="w-12 h-12 bg-black rounded-full flex items-center justify-center text-white mb-1">
-                                    <i class="fas fa-newspaper"></i>
-                                </div>
-                                <div class="text-xs font-bold text-gray-900 leading-tight">
-                                    Daily<br>Updates
-                                </div>
-                            </div> -->
-
-                        </div>
-                    </div>
-
-                </div>
-            </div>
-        </div>
-    </section>
+<div class="min-h-screen bg-gray-50 pt-8">
 
     {{-- Breadcrumb --}}
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
