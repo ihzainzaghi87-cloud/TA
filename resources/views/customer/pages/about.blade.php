@@ -206,12 +206,9 @@
         <div class="container mx-auto px-6 lg:px-12">
             <div class="text-center max-w-3xl mx-auto mb-16 lg:mb-24">
                 <h2 class="text-4xl lg:text-6xl font-bold text-black leading-tight mb-6">
-                    How the <span class="text-gray-400">Ordering</span><br>
-                    The Product??
+                    How to <span class="text-gray-400">Order</span><br>
+                    The Paranoia products
                 </h2>
-                <p class="text-gray-500 text-lg leading-relaxed">
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                </p>
             </div>
 
             <div class="flex flex-col lg:flex-row items-start justify-between gap-12 lg:gap-8 relative">
@@ -221,7 +218,7 @@
                     </div>
                     <h3 class="text-2xl font-bold text-black mb-4">Select your product</h3>
                     <p class="text-gray-500 leading-relaxed px-4">
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                        Pilih koleksi yang tersedia.
                     </p>
                 </div>
 
@@ -237,7 +234,7 @@
                     </div>
                     <h3 class="text-2xl font-bold text-black mb-4">Payment</h3>
                     <p class="text-gray-500 leading-relaxed px-4">
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                        Selesaikan Pembayaran.
                     </p>
                 </div>
 
@@ -253,7 +250,7 @@
                     </div>
                     <h3 class="text-2xl font-bold text-black mb-4">Delivery</h3>
                     <p class="text-gray-500 leading-relaxed px-4">
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                        Pesanan dikirim.
                     </p>
                 </div>
             </div>
