@@ -72,30 +72,22 @@
 }" x-init="setTimeout(() => animateStats(), 500)">
 
     <section class="w-full px-4 md:px-8 font-sans">
-    <div class="bg-[#1A1A1D] rounded-[2.5rem] overflow-hidden min-h-[80px] flex items-stretch pt-2 pb-2 md:min-h-[320px] md:pt-16 md:pb-0 my-8 md:my-12 relative w-full">
+    <div class="bg-[#1A1A1D] rounded-[2.5rem] overflow-hidden min-h-[550px] md:min-h-[400px] flex items-stretch my-8 md:my-12 relative w-full">
 
         <div class="container mx-auto px-6 lg:px-12 flex flex-col justify-center h-full relative z-10">
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 h-full items-center">
-
-                <div class="text-white space-y-6 self-center lg:pb-0">
+            <div class="flex flex-col items-center justify-center h-full">
+                <div class="text-white space-y-6 text-center">
                     <h1 class="text-5xl lg:text-7xl font-bold leading-tight">
                         About Us
                     </h1>
-                    <p class="text-lg lg:text-xl font-medium leading-relaxed opacity-90 max-w-lg text-gray-300">
-                        The Paranoia is not just a clothing brand; it’s a state of mind. Born from the shadows of the concrete jungle, 
-                        we craft monochrome aesthetics for those who dare to embrace the unknown. Silence the noise, wear the statement.
+                    <p class="text-lg lg:text-xl font-medium leading-relaxed opacity-90 max-w-2xl mx-auto text-gray-300">
+                        THE PARANOIA terbentuk dari latar yang berbeda dan kondisi yang tidak selalu ramah. Awalnya bukan brand, melainkan ruang untuk mengekspresikan apa yang dialami dan dirasakan.
                     </p>
-                    <div class="pt-4">
-                        <a href="#" class="hidden lg:inline-block bg-white text-black text-lg font-semibold px-10 py-4 rounded-full shadow-lg hover:bg-gray-200 transition duration-300 transform hover:scale-105">
-                            Learn More
-                        </a>
-                    </div>
+                    <p class="text-lg lg:text-xl font-medium leading-relaxed opacity-90 max-w-2xl mx-auto text-gray-300">
+                        Hari ini, nilai yang sama kami bawa ke bentuk yang lebih nyata. Setiap koleksi dirancang sebagai medium cerita—tentang hidup, kebersamaan, dan proses bergerak ke depan.
+                    </p>
                 </div>
-
-                <div class="relative h-full flex items-end justify-center lg:justify-end mt-12 lg:mt-0 self-end">
-                    <div class="relative w-full max-w-[450px]">
-
-                        <img src="{{ asset('ui/hero.png') }}"
+            </div>
                              alt="Model Fashion"
                              class="hidden md:block w-full h-auto object-cover relative z-10 block"
                         >
