@@ -98,40 +98,32 @@
 
                 <div>
                     <h2 class="text-5xl lg:text-7xl font-bold text-black mb-6 leading-tight">
-                        Shopping
+                        Koleksi
                     </h2>
                     <p class="text-gray-500 text-lg leading-relaxed mb-12 max-w-lg">
-                        Explore our premium selection. From heavy-weight tees to structured outerwear. Crafted for those who find color in the darkness.
+                        Dibentuk dari pengalaman
                     </p>
 
                     <div class="grid grid-cols-2 gap-6">
                         <div class="bg-white p-8 rounded-[30px] shadow-[0_10px_40px_-10px_rgba(0,0,0,0.08)] text-center border border-gray-100 hover:-translate-y-2 transition duration-300">
                             <div class="flex justify-center items-start gap-1">
-                                <span class="text-4xl font-bold text-black">13</span>
-                                <span class="text-black text-2xl font-bold mt-1">+</span>
+                                <span class="text-lg font-bold text-black">Terbentuk sebelum disebut brand</span>
                             </div>
-                            <p class="text-gray-500 text-sm mt-2 font-medium">Years Experience</p>
                         </div>
                         <div class="bg-white p-8 rounded-[30px] shadow-[0_10px_40px_-10px_rgba(0,0,0,0.08)] text-center border border-gray-100 hover:-translate-y-2 transition duration-300">
                             <div class="flex justify-center items-start gap-1">
-                                <span class="text-4xl font-bold text-black">100K</span>
-                                <span class="text-black text-2xl font-bold mt-1">+</span>
+                                <span class="text-lg font-bold text-black">Dirilis dalam jumlah terbatas</span>
                             </div>
-                            <p class="text-gray-500 text-sm mt-2 font-medium">Fashion And Brand</p>
                         </div>
                         <div class="bg-white p-8 rounded-[30px] shadow-[0_10px_40px_-10px_rgba(0,0,0,0.08)] text-center border border-gray-100 hover:-translate-y-2 transition duration-300">
                             <div class="flex justify-center items-start gap-1">
-                                <span class="text-4xl font-bold text-black">6K</span>
-                                <span class="text-black text-2xl font-bold mt-1">+</span>
+                                <span class="text-lg font-bold text-black">Terbatas karena pilihan</span>
                             </div>
-                            <p class="text-gray-500 text-sm mt-2 font-medium">Order completed</p>
                         </div>
                         <div class="bg-white p-8 rounded-[30px] shadow-[0_10px_40px_-10px_rgba(0,0,0,0.08)] text-center border border-gray-100 hover:-translate-y-2 transition duration-300">
                             <div class="flex justify-center items-start gap-1">
-                                <span class="text-4xl font-bold text-black">99</span>
-                                <span class="text-black text-2xl font-bold mt-1">+</span>
+                                <span class="text-lg font-bold text-black">Dibuat dengan pengalaman nyata</span>
                             </div>
-                            <p class="text-gray-500 text-sm mt-2 font-medium">Partners</p>
                         </div>
                     </div>
                 </div>
