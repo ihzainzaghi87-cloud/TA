@@ -130,13 +130,13 @@
 
                 <div class="relative mt-12 lg:mt-0 h-[500px] lg:h-[600px] w-full">
                     <div class="absolute top-0 right-0 w-3/4 h-64 lg:h-80 rounded-3xl overflow-hidden z-0">
-                        <img src="https://images.unsplash.com/photo-1553413077-190dd305871c?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"
-                             alt="Factory Background"
+                        <img src="{{ asset('ui/chaos.jpeg') }}"
+                             alt="Chaos Paranoia"
                              class="w-full h-full object-cover opacity-90 grayscale hover:grayscale-0 transition duration-700">
                     </div>
                     <div class="absolute top-20 lg:top-32 left-0 lg:left-8 w-2/3 h-96 lg:h-[450px] rounded-3xl overflow-hidden z-10 shadow-2xl">
-                        <img src="https://images.unsplash.com/photo-1512413914633-b5043f4041ea?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80"
-                             alt="Sewing Machine Detail"
+                        <img src="{{ asset('ui/movement.jpeg') }}"
+                             alt="Movement Paranoia"
                              class="w-full h-full object-cover grayscale hover:grayscale-0 transition duration-500">
                     </div>
                 </div>
