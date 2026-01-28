@@ -31,7 +31,7 @@ class AuthController extends Controller
         ]);
 
         if ($v->fails()) {
-            return ResponseFormatter::error('Validation error', 422, $v->errors());
+            return ResponseFormatter::error($v->errors(), 'Validation error', 422);
         }
 
         try {
@@ -62,7 +62,7 @@ class AuthController extends Controller
                 'permissions'  => $user->getAllPermissions()->pluck('name'),
             ], 'Registration successful.');
         } catch (\Throwable $e) {
-            return ResponseFormatter::error('Registration failed', 500, ['exception' => $e->getMessage()]);
+            return ResponseFormatter::error(['exception' => $e->getMessage()], 'Registration failed', 500);
         }
     }
 
@@ -79,13 +79,13 @@ class AuthController extends Controller
         ]);
 
         if ($v->fails()) {
-            return ResponseFormatter::error('Validation error', 422, $v->errors());
+            return ResponseFormatter::error($v->errors(), 'Validation error', 422);
         }
 
         $user = User::where('email', $request->email)->first();
 
         if (! $user || ! Hash::check($request->password, $user->password)) {
-            return ResponseFormatter::error('Invalid credentials.', 401);
+            return ResponseFormatter::error(null, 'Invalid credentials.', 401);
         }
 
         if ($request->boolean('single')) {
@@ -137,7 +137,7 @@ class AuthController extends Controller
 
             return ResponseFormatter::success(null, 'Logged out.');
         } catch (\Throwable $e) {
-            return ResponseFormatter::error('Logout failed', 500, ['exception' => $e->getMessage()]);
+            return ResponseFormatter::error(['exception' => $e->getMessage()], 'Logout failed', 500);
         }
     }
 }

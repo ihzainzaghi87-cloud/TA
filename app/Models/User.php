@@ -8,6 +8,7 @@ use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
 use Illuminate\Auth\Passwords\CanResetPassword;
 use Illuminate\Auth\Notifications\ResetPassword as ResetPasswordNotification;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 // Spatie:
 use Spatie\Permission\Traits\HasRoles;
 // Import WAJIB untuk relasi ✅
@@ -16,7 +17,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class User extends Authenticatable implements CanResetPasswordContract
 {
-    use HasApiTokens, Notifiable, HasRoles, CanResetPassword;
+    use HasApiTokens, Notifiable, HasRoles, CanResetPassword, HasFactory;
 
     protected $guard_name = 'web';
 
