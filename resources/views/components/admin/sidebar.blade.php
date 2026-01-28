@@ -174,10 +174,10 @@
             @endcanany
 
             <!-- Divider -->
-            <div class="my-3 border-t border-gray-200 dark:border-gray-700"></div>
+            <!-- <div class="my-3 border-t border-gray-200 dark:border-gray-700"></div> -->
 
             <!-- Analytics Dropdown -->
-            <div class="space-y-1" x-data="{ open: {{ request()->routeIs('admin.analytics.*') ? 'true' : 'false' }} }">
+            <!-- <div class="space-y-1" x-data="{ open: {{ request()->routeIs('admin.analytics.*') ? 'true' : 'false' }} }">
                 <button @click="open = !open" 
                         class="group w-full flex items-center justify-between px-3 py-2.5 text-sm font-medium rounded-lg transition-all duration-200 {{ request()->routeIs('admin.analytics.*') ? 'bg-gradient-to-r from-pink-600 to-rose-600 text-white shadow-md' : 'text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700' }}">
                     <div class="flex items-center">
@@ -193,7 +193,6 @@
                     </svg>
                 </button>
 
-                <!-- Dropdown Menu -->
                 <div x-show="open" 
                     x-transition:enter="transition ease-out duration-200"
                     x-transition:enter-start="opacity-0 -translate-y-2"
@@ -203,7 +202,6 @@
                     x-transition:leave-end="opacity-0 -translate-y-2"
                     class="ml-6 space-y-1">
                     
-                    <!-- Overview -->
                     <a href="{{ route('admin.analytics.index') }}" 
                     class="group flex items-center px-3 py-2 text-sm font-medium rounded-lg transition-all duration-200 {{ request()->routeIs('admin.analytics.index') ? 'bg-gradient-to-r from-indigo-500 to-purple-600 text-white shadow-md' : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700' }}">
                         <div class="flex items-center justify-center w-5 h-5 rounded-md {{ request()->routeIs('admin.analytics.index') ? 'bg-white bg-opacity-20' : 'bg-gray-100 dark:bg-gray-700 group-hover:bg-indigo-100 dark:group-hover:bg-indigo-900' }} mr-3 transition-colors duration-200">
@@ -214,7 +212,6 @@
                         <span class="text-xs">Overview</span>
                     </a>
 
-                    <!-- Sales Analysis -->
                     <a href="{{ route('admin.analytics.sales') }}" 
                     class="group flex items-center px-3 py-2 text-sm font-medium rounded-lg transition-all duration-200 {{ request()->routeIs('admin.analytics.sales') ? 'bg-gradient-to-r from-blue-500 to-cyan-600 text-white shadow-md' : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700' }}">
                         <div class="flex items-center justify-center w-5 h-5 rounded-md {{ request()->routeIs('admin.analytics.sales') ? 'bg-white bg-opacity-20' : 'bg-gray-100 dark:bg-gray-700 group-hover:bg-blue-100 dark:group-hover:bg-blue-900' }} mr-3 transition-colors duration-200">
@@ -225,7 +222,6 @@
                         <span class="text-xs">Sales Analysis</span>
                     </a>
 
-                    <!-- Product Performance -->
                     <a href="{{ route('admin.analytics.products') }}" 
                     class="group flex items-center px-3 py-2 text-sm font-medium rounded-lg transition-all duration-200 {{ request()->routeIs('admin.analytics.products') ? 'bg-gradient-to-r from-green-500 to-emerald-600 text-white shadow-md' : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700' }}">
                         <div class="flex items-center justify-center w-5 h-5 rounded-md {{ request()->routeIs('admin.analytics.products') ? 'bg-white bg-opacity-20' : 'bg-gray-100 dark:bg-gray-700 group-hover:bg-green-100 dark:group-hover:bg-green-900' }} mr-3 transition-colors duration-200">
@@ -236,7 +232,6 @@
                         <span class="text-xs">Products</span>
                     </a>
 
-                    <!-- Customer Insights -->
                     <a href="{{ route('admin.analytics.customers') }}" 
                     class="group flex items-center px-3 py-2 text-sm font-medium rounded-lg transition-all duration-200 {{ request()->routeIs('admin.analytics.customers') ? 'bg-gradient-to-r from-yellow-500 to-orange-600 text-white shadow-md' : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700' }}">
                         <div class="flex items-center justify-center w-5 h-5 rounded-md {{ request()->routeIs('admin.analytics.customers') ? 'bg-white bg-opacity-20' : 'bg-gray-100 dark:bg-gray-700 group-hover:bg-yellow-100 dark:group-hover:bg-yellow-900' }} mr-3 transition-colors duration-200">
@@ -247,7 +242,6 @@
                         <span class="text-xs">Customers</span>
                     </a>
 
-                    <!-- Points System -->
                     <a href="{{ route('admin.analytics.points') }}" 
                     class="group flex items-center px-3 py-2 text-sm font-medium rounded-lg transition-all duration-200 {{ request()->routeIs('admin.analytics.points') ? 'bg-gradient-to-r from-purple-500 to-pink-600 text-white shadow-md' : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700' }}">
                         <div class="flex items-center justify-center w-5 h-5 rounded-md {{ request()->routeIs('admin.analytics.points') ? 'bg-white bg-opacity-20' : 'bg-gray-100 dark:bg-gray-700 group-hover:bg-purple-100 dark:group-hover:bg-purple-900' }} mr-3 transition-colors duration-200">
@@ -258,7 +252,6 @@
                         <span class="text-xs">Points</span>
                     </a>
 
-                    <!-- Content Analytics -->
                     <a href="{{ route('admin.analytics.content') }}" 
                     class="group flex items-center px-3 py-2 text-sm font-medium rounded-lg transition-all duration-200 {{ request()->routeIs('admin.analytics.content') ? 'bg-gradient-to-r from-red-500 to-rose-600 text-white shadow-md' : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700' }}">
                         <div class="flex items-center justify-center w-5 h-5 rounded-md {{ request()->routeIs('admin.analytics.content') ? 'bg-white bg-opacity-20' : 'bg-gray-100 dark:bg-gray-700 group-hover:bg-red-100 dark:group-hover:bg-red-900' }} mr-3 transition-colors duration-200">
@@ -269,7 +262,7 @@
                         <span class="text-xs">Content</span>
                     </a>
                 </div>
-            </div>
+            </div> -->
 
             @canany(['banners.index', 'articles.index'])
             <!-- Divider -->
