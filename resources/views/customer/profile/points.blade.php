@@ -262,38 +262,6 @@
                     </div>
                     @endif
                 </div>
-
-                <!-- How to Earn Points -->
-                <div class="profile-card p-8">
-                    <h3 class="text-xl font-bold text-[#1A1A1D] mb-8 flex items-center gap-2 uppercase tracking-wide">
-                        <i class="fas fa-lightbulb"></i>
-                        Cara Mendapatkan Poin
-                    </h3>
-
-                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
-                        <div class="text-center p-6 bg-gray-50 rounded-xl border border-gray-100 hover:border-[#1A1A1D] transition-all">
-                            <div class="w-16 h-16 mx-auto bg-[#1A1A1D] rounded-full flex items-center justify-center mb-4">
-                                <i class="fas fa-shopping-bag text-white text-2xl"></i>
-                            </div>
-                            <h4 class="font-bold text-[#1A1A1D] mb-2">Belanja</h4>
-                            <p class="text-sm text-gray-500">Setiap Rp 10.000 = 1 poin</p>
-                        </div>
-                        <div class="text-center p-6 bg-gray-50 rounded-xl border border-gray-100 hover:border-[#1A1A1D] transition-all">
-                            <div class="w-16 h-16 mx-auto bg-[#1A1A1D] rounded-full flex items-center justify-center mb-4">
-                                <i class="fas fa-star text-white text-2xl"></i>
-                            </div>
-                            <h4 class="font-bold text-[#1A1A1D] mb-2">Review Produk</h4>
-                            <p class="text-sm text-gray-500">10 poin per review</p>
-                        </div>
-                        <div class="text-center p-6 bg-gray-50 rounded-xl border border-gray-100 hover:border-[#1A1A1D] transition-all">
-                            <div class="w-16 h-16 mx-auto bg-[#1A1A1D] rounded-full flex items-center justify-center mb-4">
-                                <i class="fas fa-birthday-cake text-white text-2xl"></i>
-                            </div>
-                            <h4 class="font-bold text-[#1A1A1D] mb-2">Ulang Tahun</h4>
-                            <p class="text-sm text-gray-500">Bonus 100 poin</p>
-                        </div>
-                    </div>
-                </div>
             </div>
         </div>
     </div>
